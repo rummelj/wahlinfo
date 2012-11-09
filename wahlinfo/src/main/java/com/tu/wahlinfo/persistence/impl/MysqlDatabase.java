@@ -18,6 +18,7 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 @Stateless
 public class MysqlDatabase implements Database {
 
+	static final String MYSQL_QUOTE = "\"";
 	static int MAX_BULK_INSERT_SIZE = 50;
 
 	@Inject
@@ -55,7 +56,7 @@ public class MysqlDatabase implements Database {
 				for (String column : columns) {
 					String columnValue = splicedValues.get(column).get(bulk)
 							.get(row);
-					bulkSql.append(columnValue);
+					bulkSql.append(sanitise(columnValue));
 					if (!column.equals(lastColumn)) {
 						bulkSql.append(", ");
 					}
@@ -70,6 +71,12 @@ public class MysqlDatabase implements Database {
 			databaseAccessor.executeStatement(bulkSql.toString());
 		}
 
+	}
+
+	String sanitise(String value) {
+		return String.format("%s%s%s", MYSQL_QUOTE,
+				value.replaceAll(MYSQL_QUOTE, MYSQL_QUOTE + MYSQL_QUOTE),
+				MYSQL_QUOTE);
 	}
 
 	void bulkInsertCheckInput(String tableName, Map<String, List<String>> values) {
