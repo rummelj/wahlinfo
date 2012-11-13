@@ -1,4 +1,4 @@
-package com.tu.wahlinfo.csv.impl;
+package com.tu.wahlinfo.csv;
 
 /**
  *
