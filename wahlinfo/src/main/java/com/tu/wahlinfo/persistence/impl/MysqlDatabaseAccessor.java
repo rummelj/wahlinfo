@@ -15,7 +15,15 @@ public class MysqlDatabaseAccessor implements DatabaseAccessor {
 
 	@Override
 	public void executeStatement(String sql) throws DatabaseException {
-		entityManager.createNativeQuery(sql).executeUpdate();
+		if (sql == null || sql.isEmpty() || sql.trim().length() == 0) {
+			// TODO: Log
+		} else {
+			try {
+				entityManager.createNativeQuery(sql).executeUpdate();
+			} catch (Exception e) {
+				throw new DatabaseException("Could not execute " + sql, e);
+			}
+		}
 	}
 
 }

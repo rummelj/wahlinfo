@@ -17,8 +17,7 @@ public class DatabaseSetupTrigger {
 
 	@PostConstruct
 	public void init() throws DatabaseException {
-		// TODO: Fix
-		// databaseSetup.setup();
+		databaseSetup.setup();
 	}
 
 }
