@@ -6,6 +6,8 @@ import com.tu.wahlinfo.csv.entities.CsvAbstractCandidate;
 
 public class CsvDirectCandidate extends CsvAbstractCandidate {
 
+    private final static String TABLE_NAME = "WIDirectCandidate";
+    
     private long electoralDistrictId;
 
     public CsvDirectCandidate(String firstname, String surname, String yearOfBirth, long partyId, ElectionYear candidatureYear,
@@ -45,6 +47,11 @@ public class CsvDirectCandidate extends CsvAbstractCandidate {
 	Map<String, String> res = super.toRelationalStruct();
 	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
 	return res;
+    }
+
+    @Override
+    public String getTargetTableName() {
+	return TABLE_NAME;
     }
 
 }

@@ -6,6 +6,8 @@ import com.tu.wahlinfo.csv.entities.CsvAbstractCandidate;
 
 public class CsvListCandidate extends CsvAbstractCandidate {
 
+    private static final String TABLE_NAME = "WIListCandidate";
+
     private long federalStateId;
     private int partyListRank;
 
@@ -53,8 +55,13 @@ public class CsvListCandidate extends CsvAbstractCandidate {
     public Map<String, String> toRelationalStruct() {
 	Map<String, String> res = super.toRelationalStruct();
 	res.put("federalStateId", Long.toString(this.federalStateId));
-	res.put("partyListRank", Integer.toString(this.partyListRank));
+	res.put("rank", Integer.toString(this.partyListRank));
 	return res;
+    }
+
+    @Override
+    public String getTargetTableName() {
+	return TABLE_NAME;
     }
 
 }

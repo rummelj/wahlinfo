@@ -3,7 +3,7 @@ package com.tu.wahlinfo.csv.entities.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tu.wahlinfo.csv.entities.Persistable;
+import com.tu.wahlinfo.model.Persistable;
 
 /**
  * 
@@ -12,6 +12,8 @@ import com.tu.wahlinfo.csv.entities.Persistable;
  */
 public class CsvParty implements Persistable{
 
+    private static final String TABLE_NAME ="WIParty";
+    
     private long partyId;
     private String partyName;
 
@@ -59,11 +61,16 @@ public class CsvParty implements Persistable{
 
     @Override
     public Map<String, String> toRelationalStruct() {
-	Map<String, String> res = new HashMap<String, String>();
-	res.put(TABLE_NAME_KEY, "WIParty");
+	Map<String, String> res = new HashMap<String, String>();	
 	res.put("id", Long.toString(this.partyId));
 	res.put("name", this.partyName);
 	return res;
     }
+
+    @Override
+    public String getTargetTableName() {
+	return TABLE_NAME;
+    }
+    
 
 }

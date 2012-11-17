@@ -3,10 +3,12 @@ package com.tu.wahlinfo.csv.entities.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tu.wahlinfo.csv.entities.Persistable;
+import com.tu.wahlinfo.model.Persistable;
 
 public class CsvGeneratedVote implements Persistable {
 
+    private static final String TABLE_NAME = "WIFilledVotingPaper";
+    
     private long tmpId;
     private long electoralDistrictId;
     private long directVotePartyId;
@@ -87,10 +89,16 @@ public class CsvGeneratedVote implements Persistable {
     @Override
     public Map<String, String> toRelationalStruct() {
 	Map<String, String> res = new HashMap<String, String>();
-	res.put("tmpID", Long.toString(this.tmpId));
+	res.put("id", Long.toString(this.tmpId));
 	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
-
+	res.put("partyId", Long.toString(this.listVotePartyId));
+	res.put("directVotePartyId", Long.toString(this.directVotePartyId));
 	res.put("electionYear", this.year.toCleanString());
 	return res;
+    }
+
+    @Override
+    public String getTargetTableName() {
+	return TABLE_NAME;
     }
 }

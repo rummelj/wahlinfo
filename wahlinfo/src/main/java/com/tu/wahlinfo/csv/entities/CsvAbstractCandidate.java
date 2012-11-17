@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
+import com.tu.wahlinfo.model.Persistable;
 
 public abstract class CsvAbstractCandidate implements Persistable {
 
@@ -88,9 +89,8 @@ public abstract class CsvAbstractCandidate implements Persistable {
 
     @Override
     public Map<String, String> toRelationalStruct() {
-	Map<String, String> res = new HashMap<String, String>();
-	res.put("firstnames", this.firstnames);
-	res.put("surname", this.surname);
+	Map<String, String> res = new HashMap<String, String>();	
+	res.put("name", this.surname.concat(",").concat(firstnames));	
 	res.put("candidatureYear", this.candidatureYear.toCleanString());
 	res.put("partyId", Long.toString(this.partyId));
 	res.put("yearOfBirth", Integer.toString(this.yearOfBirth));
