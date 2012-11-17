@@ -9,8 +9,8 @@ public class CsvGeneratedVote implements Persistable {
 
     private long tmpId;
     private long electoralDistrictId;
-    private String directVoteParty;
-    private String listVoteParty;
+    private long directVotePartyId;
+    private long listVotePartyId;
     private ElectionYear year;
 
     /**
@@ -22,24 +22,24 @@ public class CsvGeneratedVote implements Persistable {
      * @param directVoteParty
      * @param listVoteParty
      */
-    public CsvGeneratedVote(long tmpId, ElectionYear year, long electoralDistrictId, String directVoteParty, String listVoteParty) {
+    public CsvGeneratedVote(long tmpId, ElectionYear year, long electoralDistrictId, long directVotePartyId, long listVotePartyId) {
 	this.tmpId = tmpId;
 	this.year = year;
 	this.electoralDistrictId = electoralDistrictId;
-	this.directVoteParty = directVoteParty;
-	this.listVoteParty = listVoteParty;
+	this.directVotePartyId = directVotePartyId;
+	this.listVotePartyId = listVotePartyId;
     }
 
     public long getElectoralDistrictId() {
 	return electoralDistrictId;
     }
 
-    public String getDirectVoteParty() {
-	return directVoteParty;
+    public long getDirectVotePartyId() {
+	return directVotePartyId;
     }
 
-    public String getListVoteParty() {
-	return listVoteParty;
+    public long getListVotePartyId() {
+	return listVotePartyId;
     }
 
     public long getTmpId() {
@@ -54,9 +54,9 @@ public class CsvGeneratedVote implements Persistable {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((directVoteParty == null) ? 0 : directVoteParty.hashCode());
+	result = prime * result + (int) (directVotePartyId ^ (directVotePartyId >>> 32));
 	result = prime * result + (int) (electoralDistrictId ^ (electoralDistrictId >>> 32));
-	result = prime * result + ((listVoteParty == null) ? 0 : listVoteParty.hashCode());
+	result = prime * result + (int) (listVotePartyId ^ (listVotePartyId >>> 32));
 	result = prime * result + (int) (tmpId ^ (tmpId >>> 32));
 	result = prime * result + ((year == null) ? 0 : year.hashCode());
 	return result;
@@ -71,17 +71,11 @@ public class CsvGeneratedVote implements Persistable {
 	if (getClass() != obj.getClass())
 	    return false;
 	CsvGeneratedVote other = (CsvGeneratedVote) obj;
-	if (directVoteParty == null) {
-	    if (other.directVoteParty != null)
-		return false;
-	} else if (!directVoteParty.equals(other.directVoteParty))
+	if (directVotePartyId != other.directVotePartyId)
 	    return false;
 	if (electoralDistrictId != other.electoralDistrictId)
 	    return false;
-	if (listVoteParty == null) {
-	    if (other.listVoteParty != null)
-		return false;
-	} else if (!listVoteParty.equals(other.listVoteParty))
+	if (listVotePartyId != other.listVotePartyId)
 	    return false;
 	if (tmpId != other.tmpId)
 	    return false;
@@ -95,8 +89,7 @@ public class CsvGeneratedVote implements Persistable {
 	Map<String, String> res = new HashMap<String, String>();
 	res.put("tmpID", Long.toString(this.tmpId));
 	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
-	res.put("directVotePary", this.directVoteParty);
-	res.put("listVoteParty", this.listVoteParty);
+
 	res.put("electionYear", this.year.toCleanString());
 	return res;
     }

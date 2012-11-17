@@ -18,9 +18,9 @@ public class CsvVoteAggregation {
 
     }
 
-    public void addPartialVoteAggregation(String partyName, String numDirectVotes2005, String numDirectVotes2009, String numListVotes2005,
+    public void addPartialVoteAggregation(long partyId, String numDirectVotes2005, String numDirectVotes2009, String numListVotes2005,
 	    String numListVotes2009) {
-	this.partialAggregations.add(new CsvPartialVoteAggregation(partyName, numDirectVotes2005, numDirectVotes2009, numListVotes2005,
+	this.partialAggregations.add(new CsvPartialVoteAggregation(partyId, numDirectVotes2005, numDirectVotes2009, numListVotes2005,
 		numListVotes2009));
     }
 

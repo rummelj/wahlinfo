@@ -7,6 +7,7 @@ import com.tu.wahlinfo.csv.entities.impl.CsvDirectCandidate;
 import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrict;
 import com.tu.wahlinfo.csv.entities.impl.CsvFederalState;
 import com.tu.wahlinfo.csv.entities.impl.CsvListCandidate;
+import com.tu.wahlinfo.csv.entities.impl.CsvParty;
 import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
 
 /**
@@ -15,11 +16,22 @@ import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
  * 
  * @author cg
  */
-public interface ICsvParser extends IVoteGenerator{
+public interface ICsvParser extends IVoteGenerator {
+
+    /**
+     * Parses all available parties from the internally available candidate
+     * csvs.
+     * 
+     * @return A list of all parties with generated ids starting from 0.
+     * @throws CsvParserException
+     *             In case an exception occurred while accessing the csv files.
+     */
+    public Collection<CsvParty> parseParties() throws CsvParserException;
 
     /**
      * Parses all vote aggregations from an internally available csv. The parser
-     * does not store respective results.
+     * does not store respective results. Also parties are parse beforehand to
+     * correctly assign candidate party ids.
      * 
      * @param startElId
      *            Limits the number electoral districts to be included. Any
@@ -70,6 +82,8 @@ public interface ICsvParser extends IVoteGenerator{
      * methods do not lead to an additional parsing). In order to correctly
      * assign federal state ids, electoral districts and federal states must
      * have been or are actively parsed before the execution of this method.
+     * Also parties are parse beforehand to correctly assign candidate party
+     * ids.
      * 
      * @return A collection of the create direct candidate objects.
      * @throws CsvParserException
@@ -84,7 +98,8 @@ public interface ICsvParser extends IVoteGenerator{
      * (consequently, further invocations of any of the respective methods do
      * not lead to an additional parsing). In order to correctly assign federal
      * state ids, electoral districts and federal states must have been or are
-     * actively parsed before the execution of this method.
+     * actively parsed before the execution of this method. Also parties are
+     * parse beforehand to correctly assign candidate party ids.
      * 
      * @return A collection of the create list candidate objects.
      * @throws CsvParserException
@@ -100,6 +115,8 @@ public interface ICsvParser extends IVoteGenerator{
      * methods do not lead to an additional parsing). In order to correctly
      * assign federal state ids, electoral districts and federal states must
      * have been or are actively parsed before the execution of this method.
+     * Also parties are parse beforehand to correctly assign candidate party
+     * ids.
      * 
      * @return A collection of the create direct candidate objects.
      * @throws CsvParserException
@@ -114,7 +131,8 @@ public interface ICsvParser extends IVoteGenerator{
      * (consequently, further invocations of any of the respective methods do
      * not lead to an additional parsing). In order to correctly assign federal
      * state ids, electoral districts and federal states must have been or are
-     * actively parsed before the execution of this method.
+     * actively parsed before the execution of this method. Also parties are
+     * parse beforehand to correctly assign candidate party ids.
      * 
      * @return A collection of the create list candidate objects.
      * @throws CsvParserException

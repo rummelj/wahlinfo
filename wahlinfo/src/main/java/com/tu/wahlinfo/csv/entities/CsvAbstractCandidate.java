@@ -5,21 +5,20 @@ import java.util.Map;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 
-
-public abstract class CsvAbstractCandidate implements Persistable{
+public abstract class CsvAbstractCandidate implements Persistable {
 
     private String firstnames;
     private String surname;
     private int yearOfBirth;
-    private String party;
+    private long partyId;
     private ElectionYear candidatureYear;
 
-    public CsvAbstractCandidate(String firstnames, String surname, String yearOfBirth, String party, ElectionYear candidatureYear) {
+    public CsvAbstractCandidate(String firstnames, String surname, String yearOfBirth, long partyId, ElectionYear candidatureYear) {
 	super();
 	this.firstnames = firstnames;
 	this.surname = surname;
 	this.yearOfBirth = Integer.parseInt(yearOfBirth);
-	this.party = party;
+	this.partyId = partyId;
 	this.candidatureYear = candidatureYear;
     }
 
@@ -35,8 +34,12 @@ public abstract class CsvAbstractCandidate implements Persistable{
 	return yearOfBirth;
     }
 
-    public String getParty() {
-	return party;
+    public long getPartyId() {
+	return partyId;
+    }
+
+    public void setPartyId(long partyId) {
+	this.partyId = partyId;
     }
 
     public String getCandidatureYear() {
@@ -49,7 +52,7 @@ public abstract class CsvAbstractCandidate implements Persistable{
 	int result = 1;
 	result = prime * result + ((candidatureYear == null) ? 0 : candidatureYear.hashCode());
 	result = prime * result + ((firstnames == null) ? 0 : firstnames.hashCode());
-	result = prime * result + ((party == null) ? 0 : party.hashCode());
+	result = prime * result + (int) (partyId ^ (partyId >>> 32));
 	result = prime * result + ((surname == null) ? 0 : surname.hashCode());
 	result = prime * result + yearOfBirth;
 	return result;
@@ -71,10 +74,7 @@ public abstract class CsvAbstractCandidate implements Persistable{
 		return false;
 	} else if (!firstnames.equals(other.firstnames))
 	    return false;
-	if (party == null) {
-	    if (other.party != null)
-		return false;
-	} else if (!party.equals(other.party))
+	if (partyId != other.partyId)
 	    return false;
 	if (surname == null) {
 	    if (other.surname != null)
@@ -85,14 +85,14 @@ public abstract class CsvAbstractCandidate implements Persistable{
 	    return false;
 	return true;
     }
-    
+
     @Override
     public Map<String, String> toRelationalStruct() {
-	Map<String,String> res = new HashMap<String, String>();
+	Map<String, String> res = new HashMap<String, String>();
 	res.put("firstnames", this.firstnames);
 	res.put("surname", this.surname);
 	res.put("candidatureYear", this.candidatureYear.toCleanString());
-	res.put("party", this.party);
+	res.put("partyId", Long.toString(this.partyId));
 	res.put("yearOfBirth", Integer.toString(this.yearOfBirth));
 	return res;
     }

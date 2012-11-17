@@ -9,9 +9,9 @@ public class CsvListCandidate extends CsvAbstractCandidate {
     private long federalStateId;
     private int partyListRank;
 
-    public CsvListCandidate(String firstname, String surname, String yearOfBirth, String party, ElectionYear candidatureYear, long federalStateId,
+    public CsvListCandidate(String firstname, String surname, String yearOfBirth, long partyId, ElectionYear candidatureYear, long federalStateId,
 	    String partyListRank) {
-	super(firstname, surname, yearOfBirth, party, candidatureYear);
+	super(firstname, surname, yearOfBirth, partyId, candidatureYear);
 	this.federalStateId = federalStateId;
 	this.partyListRank = Integer.parseInt(partyListRank);
     }

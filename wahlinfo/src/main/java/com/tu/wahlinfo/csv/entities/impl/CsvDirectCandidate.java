@@ -8,9 +8,9 @@ public class CsvDirectCandidate extends CsvAbstractCandidate {
 
     private long electoralDistrictId;
 
-    public CsvDirectCandidate(String firstname, String surname, String yearOfBirth, String party, ElectionYear candidatureYear,
+    public CsvDirectCandidate(String firstname, String surname, String yearOfBirth, long partyId, ElectionYear candidatureYear,
 	    String electoralDistrictId) {
-	super(firstname, surname, yearOfBirth, party, candidatureYear);
+	super(firstname, surname, yearOfBirth, partyId, candidatureYear);
 	this.electoralDistrictId = Long.parseLong(electoralDistrictId);
     }
 
