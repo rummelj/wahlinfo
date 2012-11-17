@@ -1,5 +1,10 @@
 package com.tu.wahlinfo.persistence.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,4 +31,38 @@ public class MysqlDatabaseAccessor implements DatabaseAccessor {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, List<String>> executeQuery(String query,
+			String... columnNames) throws DatabaseException {
+		Map<String, List<String>> result = new HashMap<String, List<String>>();
+		for (String columnName : columnNames) {
+			result.put(columnName, new ArrayList<String>(8));
+		}
+
+		// Check uniqueness
+		if (result.size() < columnNames.length) {
+			throw new DatabaseException("Column names are not unique!");
+		}
+
+		List<Object> rows = entityManager.createNativeQuery(query)
+				.getResultList();
+		for (Object row : rows) {
+			if (row instanceof Object[]) {
+				Object[] rowArray = (Object[]) row;
+				if (rowArray.length != columnNames.length) {
+					throw new DatabaseException(
+							"Not enough columns specified. Expected <"
+									+ rowArray.length + ">, actual <"
+									+ columnNames.length + ">");
+				}
+				for (int i = 0; i < rowArray.length; i++) {
+					result.get(columnNames[i]).add(rowArray[i].toString());
+				}
+			} else {
+				result.get(columnNames[0]).add(row.toString());
+			}
+		}
+		return result;
+	}
 }

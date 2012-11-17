@@ -1,4 +1,5 @@
 SET foreign_key_checks = 0;
+DROP TABLE IF EXISTS hibernate_sequence;
 DROP TABLE IF EXISTS WIElection;
 DROP TABLE IF EXISTS WIPartyVotes;
 DROP TABLE IF EXISTS WIPartyRank;
@@ -10,6 +11,13 @@ DROP TABLE IF EXISTS WIFederalState;
 DROP TABLE IF EXISTS WIElectoralDistrict;
 DROP TABLE IF EXISTS WIFilledVotingPaper;
 SET foreign_key_checks = 1;
+
+CREATE TABLE hibernate_sequence(
+	next_val INTEGER UNSIGNED NOT NULL,
+	PRIMARY KEY (next_val)
+);
+
+INSERT INTO hibernate_sequence VALUES (0);
 
 CREATE TABLE WIElection (
 	id INTEGER UNSIGNED NOT NULL, 
@@ -55,6 +63,7 @@ CREATE TABLE WIPartyVotes (
 
 CREATE TABLE WIDirectCandidate (
 	id INTEGER UNSIGNED NOT NULL,
+	name VARCHAR(255),
 	partyId INTEGER UNSIGNED NOT NULL,
 	electoralDistrictId SMALLINT UNSIGNED NOT NULL,
 	electionId INTEGER UNSIGNED NOT NULL,
@@ -75,6 +84,7 @@ CREATE TABLE WIDirectVote (
 
 CREATE TABLE WIListCandidate (
 	id INTEGER UNSIGNED NOT NULL,
+	name VARCHAR(255),
 	profession VARCHAR(255),
 	rank INTEGER UNSIGNED NOT NULL,
 	partyId INTEGER UNSIGNED NOT NULL,
