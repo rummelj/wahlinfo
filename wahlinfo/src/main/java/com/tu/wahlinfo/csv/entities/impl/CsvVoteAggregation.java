@@ -3,6 +3,11 @@ package com.tu.wahlinfo.csv.entities.impl;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ *  "In-the-middle" class. Thus not conceptualized for persistence.
+ * @author cg
+ *
+ */
 public class CsvVoteAggregation {
 
     private long electoralDistrictId;

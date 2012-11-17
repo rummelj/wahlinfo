@@ -1,5 +1,7 @@
 package com.tu.wahlinfo.csv.entities.impl;
 
+import java.util.Map;
+
 import com.tu.wahlinfo.csv.entities.CsvAbstractCandidate;
 
 public class CsvDirectCandidate extends CsvAbstractCandidate {
@@ -36,6 +38,13 @@ public class CsvDirectCandidate extends CsvAbstractCandidate {
 	if (electoralDistrictId != other.electoralDistrictId)
 	    return false;
 	return true;
+    }
+
+    @Override
+    public Map<String, String> toRelationalStruct() {
+	Map<String, String> res = super.toRelationalStruct();
+	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
+	return res;
     }
 
 }

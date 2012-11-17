@@ -15,13 +15,19 @@ import com.tu.wahlinfo.csv.parser.IVoteGenerator;
  */
 public class VoteGenerator implements IVoteGenerator {
 
+    /**
+     * Generates single votes out of a vote aggregation. 
+     * @param aggregation
+     * @param shadowIdStart Required to prevent hash collisions between otherwise identical votes.    
+     * @return
+     */
     public Collection<CsvGeneratedVote> generateVotes(CsvVoteAggregation aggregation, long shadowIdStart) {
 	Collection<CsvGeneratedVote> part1 = generateVotes(aggregation, shadowIdStart, ElectionYear._2005);
 	Collection<CsvGeneratedVote> part2 = generateVotes(aggregation, part1.size(), ElectionYear._2009);
 	part1.addAll(part2);
 	return part1;
     }
-
+   
     private Collection<CsvGeneratedVote> generateVotes(CsvVoteAggregation aggregation, long shadowIdStart, ElectionYear year) {
 	Collection<CsvGeneratedVote> votes = new HashSet<CsvGeneratedVote>();
 

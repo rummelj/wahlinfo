@@ -13,10 +13,12 @@ import com.tu.wahlinfo.csv.CsvParserException;
 import com.tu.wahlinfo.csv.entities.impl.CsvDirectCandidate;
 import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrict;
 import com.tu.wahlinfo.csv.entities.impl.CsvFederalState;
+import com.tu.wahlinfo.csv.entities.impl.CsvGeneratedVote;
 import com.tu.wahlinfo.csv.entities.impl.CsvListCandidate;
 import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.csv.parser.ICsvParser;
+import com.tu.wahlinfo.csv.parser.IVoteGenerator;
 
 /**
  * 
@@ -46,8 +48,14 @@ public class CsvParser implements ICsvParser {
     private Collection<CsvListCandidate> listCandidates2009 = new HashSet<CsvListCandidate>();
     // Federal states
     private Map<String, CsvFederalState> federalStates = new HashMap<String, CsvFederalState>();
+    //vote generator
+    private IVoteGenerator voteGenerator = new VoteGenerator();
 
     public CsvParser() {
+    }
+    
+    public Collection<CsvGeneratedVote> generateVotes(CsvVoteAggregation aggregation, long shadowIdStart) {
+	return this.voteGenerator.generateVotes(aggregation, shadowIdStart);
     }
 
     public Collection<CsvVoteAggregation> parseVoteAggregations(int startElId, int endELId) throws CsvParserException {

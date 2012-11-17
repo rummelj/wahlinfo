@@ -1,6 +1,10 @@
 package com.tu.wahlinfo.csv.entities.impl;
 
-
+/**
+ * "In-the-middle" class. Thus not conceptualized for persistence.
+ * @author cg
+ *
+ */
 public class CsvPartialVoteAggregation {
 
     private String partyName;

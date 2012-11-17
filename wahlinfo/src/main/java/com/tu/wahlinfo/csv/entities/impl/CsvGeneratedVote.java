@@ -1,8 +1,13 @@
 package com.tu.wahlinfo.csv.entities.impl;
 
-public class CsvGeneratedVote {
+import java.util.HashMap;
+import java.util.Map;
 
-    private long tempId;
+import com.tu.wahlinfo.csv.entities.Persistable;
+
+public class CsvGeneratedVote implements Persistable {
+
+    private long tmpId;
     private long electoralDistrictId;
     private String directVoteParty;
     private String listVoteParty;
@@ -10,15 +15,15 @@ public class CsvGeneratedVote {
 
     /**
      * 
-     * @param tempId
-     *            The temp id is necessary to avoid equals() collisions of
+     * @param tmpId
+     *            The temp id is necessary to avoid equals()/ hash-collisions of
      *            matching votes.
      * @param electoralDistrictId
      * @param directVoteParty
      * @param listVoteParty
      */
-    public CsvGeneratedVote(long tempId, ElectionYear year, long electoralDistrictId, String directVoteParty, String listVoteParty) {
-	this.tempId = tempId;
+    public CsvGeneratedVote(long tmpId, ElectionYear year, long electoralDistrictId, String directVoteParty, String listVoteParty) {
+	this.tmpId = tmpId;
 	this.year = year;
 	this.electoralDistrictId = electoralDistrictId;
 	this.directVoteParty = directVoteParty;
@@ -37,8 +42,8 @@ public class CsvGeneratedVote {
 	return listVoteParty;
     }
 
-    public long getTempId() {
-	return tempId;
+    public long getTmpId() {
+	return tmpId;
     }
 
     public String getYear() {
@@ -52,7 +57,7 @@ public class CsvGeneratedVote {
 	result = prime * result + ((directVoteParty == null) ? 0 : directVoteParty.hashCode());
 	result = prime * result + (int) (electoralDistrictId ^ (electoralDistrictId >>> 32));
 	result = prime * result + ((listVoteParty == null) ? 0 : listVoteParty.hashCode());
-	result = prime * result + (int) (tempId ^ (tempId >>> 32));
+	result = prime * result + (int) (tmpId ^ (tmpId >>> 32));
 	result = prime * result + ((year == null) ? 0 : year.hashCode());
 	return result;
     }
@@ -78,11 +83,21 @@ public class CsvGeneratedVote {
 		return false;
 	} else if (!listVoteParty.equals(other.listVoteParty))
 	    return false;
-	if (tempId != other.tempId)
+	if (tmpId != other.tmpId)
 	    return false;
 	if (year != other.year)
 	    return false;
 	return true;
     }
 
+    @Override
+    public Map<String, String> toRelationalStruct() {
+	Map<String, String> res = new HashMap<String, String>();
+	res.put("tmpID", Long.toString(this.tmpId));
+	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
+	res.put("directVotePary", this.directVoteParty);
+	res.put("listVoteParty", this.listVoteParty);
+	res.put("electionYear", this.year.toCleanString());
+	return res;
+    }
 }

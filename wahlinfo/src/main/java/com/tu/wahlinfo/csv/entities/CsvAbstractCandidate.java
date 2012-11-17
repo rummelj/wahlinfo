@@ -1,9 +1,12 @@
 package com.tu.wahlinfo.csv.entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 
 
-public abstract class CsvAbstractCandidate {
+public abstract class CsvAbstractCandidate implements Persistable{
 
     private String firstnames;
     private String surname;
@@ -81,6 +84,17 @@ public abstract class CsvAbstractCandidate {
 	if (yearOfBirth != other.yearOfBirth)
 	    return false;
 	return true;
+    }
+    
+    @Override
+    public Map<String, String> toRelationalStruct() {
+	Map<String,String> res = new HashMap<String, String>();
+	res.put("firstnames", this.firstnames);
+	res.put("surname", this.surname);
+	res.put("candidatureYear", this.candidatureYear.toCleanString());
+	res.put("party", this.party);
+	res.put("yearOfBirth", Integer.toString(this.yearOfBirth));
+	return res;
     }
 
 }

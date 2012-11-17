@@ -1,6 +1,11 @@
 package com.tu.wahlinfo.csv.entities.impl;
 
-public class CsvFederalState {
+import java.util.HashMap;
+import java.util.Map;
+
+import com.tu.wahlinfo.csv.entities.Persistable;
+
+public class CsvFederalState implements Persistable{
 
     private String name;
     private long federalStateId;
@@ -44,6 +49,14 @@ public class CsvFederalState {
 	} else if (!name.equals(other.name))
 	    return false;
 	return true;
+    }
+
+    @Override
+    public Map<String, String> toRelationalStruct() {
+	Map<String, String> res = new HashMap<String, String>();
+	res.put("federalStateId", Long.toString(this.federalStateId));
+	res.put("name", this.name);
+	return res;
     }
 
 }

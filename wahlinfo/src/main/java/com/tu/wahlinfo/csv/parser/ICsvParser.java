@@ -15,7 +15,7 @@ import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
  * 
  * @author cg
  */
-public interface ICsvParser {
+public interface ICsvParser extends IVoteGenerator{
 
     /**
      * Parses all vote aggregations from an internally available csv. The parser

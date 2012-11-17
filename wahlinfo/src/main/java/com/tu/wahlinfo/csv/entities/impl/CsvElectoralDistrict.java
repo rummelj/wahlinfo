@@ -1,6 +1,11 @@
 package com.tu.wahlinfo.csv.entities.impl;
 
-public class CsvElectoralDistrict {
+import java.util.HashMap;
+import java.util.Map;
+
+import com.tu.wahlinfo.csv.entities.Persistable;
+
+public class CsvElectoralDistrict implements Persistable {
 
     private long electoralDistrictId;
     private String electoralDistrictName;
@@ -57,6 +62,15 @@ public class CsvElectoralDistrict {
 	if (federalStateId != other.federalStateId)
 	    return false;
 	return true;
+    }
+
+    @Override
+    public Map<String, String> toRelationalStruct() {
+	Map<String, String> res = new HashMap<String, String>();
+	res.put("federalStateId", Long.toString(this.federalStateId));
+	res.put("electoralDistrictName", this.electoralDistrictName);
+	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
+	return res;
     }
 
 }
