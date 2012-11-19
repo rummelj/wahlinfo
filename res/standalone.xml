@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-
+﻿<?xml version='1.0' encoding='UTF-8'?>
 <server xmlns="urn:jboss:domain:1.2">
 
     <extensions>
@@ -93,28 +92,35 @@
         <subsystem xmlns="urn:jboss:domain:configadmin:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:1.0">
             <datasources>
-                 <datasource jndi-name="java:jboss/datasources/MySqlDS" pool-name="MySqlDS">
-                    <connection-url>jdbc:mysql://localhost:3306/wahlinfo</connection-url>
-                    <driver>com.mysql</driver>
-                    <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
-                    <pool>
-                        <min-pool-size>10</min-pool-size>
-                        <max-pool-size>100</max-pool-size>
-                        <prefill>true</prefill>
-                    </pool>
-                    <security>
-                        <user-name>root</user-name>
-                    </security>
-                    <statement>
-                        <prepared-statement-cache-size>32</prepared-statement-cache-size>
-                        <share-prepared-statements>true</share-prepared-statements>
-                    </statement>
-                </datasource>
-                <drivers>
-                    <driver name="com.mysql" module="com.mysql">
-                        <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
-                    </driver>
-                </drivers>
+				<datasource jndi-name="java:jboss/postgresDS" pool-name="postgresDS" enabled="true" jta="false" use-java-context="true" use-ccm="false">
+					<connection-url>jdbc:postgresql://localhost:5432/wahlinfo</connection-url>
+					<driver-class>org.postgresql.Driver</driver-class>
+					<driver>postgresql</driver>
+					<pool>
+						<min-pool-size>2</min-pool-size>
+						<max-pool-size>20</max-pool-size>
+					</pool>
+					<security>
+						<user-name>wahlinfo</user-name>
+						<password>wahlinfo</password>
+					</security>
+					<validation>
+						<validate-on-match>false</validate-on-match>
+						<background-validation>false</background-validation>
+						<background-validation-millis>1</background-validation-millis>
+					</validation>
+					<statement>
+						<prepared-statement-cache-size>0</prepared-statement-cache-size>
+						<share-prepared-statements>false</share-prepared-statements>
+					</statement>
+				</datasource>
+				<drivers>
+					<driver name="postgresql" module="org.postgresql">
+						<xa-datasource-class>
+							org.postgresql.xa.PGXADataSource
+						</xa-datasource-class>
+					</driver>
+				</drivers>
             </datasources>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:1.1">
