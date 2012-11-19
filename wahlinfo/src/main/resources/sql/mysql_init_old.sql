@@ -1,61 +1,60 @@
-﻿-- SET foreign_key_checks = 0;
+SET foreign_key_checks = 0;
 DROP TABLE IF EXISTS hibernate_sequence;
-DROP TABLE IF EXISTS WIFilledVotingPaper;
+DROP TABLE IF EXISTS WIElection;
 DROP TABLE IF EXISTS WIPartyVotes;
--- old table name
-DROP TABLE IF EXISTS WIDirectVote;
-DROP TABLE IF EXISTS WIDirectVotes;
-DROP TABLE IF EXISTS WIListCandidate;
+DROP TABLE IF EXISTS WIPartyRank;
 DROP TABLE IF EXISTS WIDirectCandidate;
+DROP TABLE IF EXISTS WIDirectVote;
+DROP TABLE IF EXISTS WIListCandidate;
 DROP TABLE IF EXISTS WIParty;
 DROP TABLE IF EXISTS WIFederalState;
 DROP TABLE IF EXISTS WIElectoralDistrict;
-DROP TABLE IF EXISTS WIElection;
--- SET foreign_key_checks = 1;
+DROP TABLE IF EXISTS WIFilledVotingPaper;
+SET foreign_key_checks = 1;
 
 CREATE TABLE hibernate_sequence(
-	next_val BIGINT  NOT NULL,
+	next_val INTEGER UNSIGNED NOT NULL,
 	PRIMARY KEY (next_val) 
 );
 
 INSERT INTO hibernate_sequence VALUES (0);
 
 CREATE TABLE WIElection (
-	id BIGINT  NOT NULL, 
-	start int, 
-	ending int NOT NULL,
+	id INTEGER UNSIGNED NOT NULL, 
+	start DATETIME, 
+	end DATETIME, year YEAR NOT NULL,
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE WIElectoralDistrict (
-	number SMALLINT  NOT NULL,
+	number SMALLINT UNSIGNED NOT NULL,
 	name VARCHAR(255),
-	possibleVotes BIGINT NOT NULL,
-	validVotes BIGINT NOT NULL DEFAULT 0,
-	invalidVotes BIGINT NOT NULL DEFAULT 0,
+	possibleVotes INTEGER NOT NULL,
+	validVotes INTEGER NOT NULL DEFAULT 0,
+	invalidVotes INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY (number)
 );
 
 CREATE TABLE WIFederalState (
-	federalStateId BIGINT  NOT NULL,
+	federalStateId INTEGER UNSIGNED NOT NULL,
 	name VARCHAR(255),
-	possibleVotes BIGINT  NOT NULL,
-	validVotes BIGINT  NOT NULL DEFAULT 0,
-	invalidVotes BIGINT  NOT NULL DEFAULT 0,
+	possibleVotes INTEGER UNSIGNED NOT NULL,
+	validVotes INTEGER UNSIGNED NOT NULL DEFAULT 0,
+	invalidVotes INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	PRIMARY KEY (federalStateId)
 );
 
 CREATE TABLE WIParty (
-	id BIGINT  NOT NULL,
+	id INTEGER UNSIGNED NOT NULL,
 	name VARCHAR(255),
 	PRIMARY KEY (id)
 );
 
 CREATE TABLE WIPartyVotes (
-	federalStateId BIGINT  NOT NULL,
-	partyId BIGINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
-	receivedVotes BIGINT  NOT NULL DEFAULT 0,
+	federalStateId INTEGER UNSIGNED NOT NULL,
+	partyId INTEGER UNSIGNED NOT NULL,
+	electionId INTEGER UNSIGNED NOT NULL,
+	receivedVotes INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	FOREIGN KEY (federalStateId) REFERENCES WIFederalState (federalStateId),
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (electionId) REFERENCES WIElection (id),
@@ -63,36 +62,34 @@ CREATE TABLE WIPartyVotes (
 );
 
 CREATE TABLE WIDirectCandidate (
-	id BIGINT  NOT NULL,
+	id INTEGER UNSIGNED NOT NULL,
 	name VARCHAR(255),
-	partyId BIGINT  NOT NULL,
-	electoralDistrictId SMALLINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
+	partyId INTEGER UNSIGNED NOT NULL,
+	electoralDistrictId SMALLINT UNSIGNED NOT NULL,
+	electionId INTEGER UNSIGNED NOT NULL,
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number), 
 	FOREIGN KEY (electionId) REFERENCES WIElection (id),
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE WIDirectVotes (
-	electoralDistrictId SMALLINT  NOT NULL,
-	directCandidateId BIGINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
-	receivedVotes BIGINT  NOT NULL DEFAULT 0,
+CREATE TABLE WIDirectVote (
+	electoralDistrictId SMALLINT UNSIGNED NOT NULL,
+	directCandidateId INTEGER UNSIGNED NOT NULL,
+	receivedVotes INTEGER UNSIGNED NOT NULL DEFAULT 0,
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number), 
 	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
 	PRIMARY KEY (electoralDistrictId, directCandidateId)
 );
 
 CREATE TABLE WIListCandidate (
-	id BIGINT  NOT NULL,
+	id INTEGER UNSIGNED NOT NULL,
 	name VARCHAR(255),
 	profession VARCHAR(255),
-	rank BIGINT  NOT NULL,
-	partyId BIGINT  NOT NULL,
-	federalStateId BIGINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
+	rank INTEGER UNSIGNED NOT NULL,
+	partyId INTEGER UNSIGNED NOT NULL,
+	federalStateId INTEGER UNSIGNED NOT NULL,
+	electionId INTEGER UNSIGNED NOT NULL,
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (federalStateId) REFERENCES WIFederalState (federalStateId),
 	FOREIGN KEY (electionId) REFERENCES WIElection (id),
@@ -100,12 +97,12 @@ CREATE TABLE WIListCandidate (
 );
 
 CREATE TABLE WIFilledVotingPaper (
-	id BIGINT  NOT NULL,
-	electoralDistrictId SMALLINT  NOT NULL,
-	federalStateId BIGINT  NOT NULL,
-	partyId BIGINT ,
-	directCandidateId BIGINT ,
-	electionId BIGINT  NOT NULL,
+	id INTEGER UNSIGNED NOT NULL,
+	electoralDistrictId SMALLINT UNSIGNED NOT NULL,
+	federalStateId INTEGER UNSIGNED NOT NULL,
+	partyId INTEGER UNSIGNED,
+	directCandidateId INTEGER UNSIGNED,
+	electionId INTEGER UNSIGNED NOT NULL,
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number),
 	FOREIGN KEY (federalStateId) REFERENCES WIFederalState (federalStateId),
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
