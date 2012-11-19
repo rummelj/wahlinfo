@@ -1,4 +1,4 @@
-﻿-- SET foreign_key_checks = 0;
+-- SET foreign_key_checks = 0;
 DROP TABLE IF EXISTS hibernate_sequence;
 DROP TABLE IF EXISTS WIFilledVotingPaper;
 DROP TABLE IF EXISTS WIPartyVotes;
@@ -27,15 +27,6 @@ CREATE TABLE WIElection (
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE WIElectoralDistrict (
-	number SMALLINT  NOT NULL,
-	name VARCHAR(255),
-	possibleVotes BIGINT NOT NULL,
-	validVotes BIGINT NOT NULL DEFAULT 0,
-	invalidVotes BIGINT NOT NULL DEFAULT 0,
-	PRIMARY KEY (number)
-);
-
 CREATE TABLE WIFederalState (
 	federalStateId BIGINT  NOT NULL,
 	name VARCHAR(255),
@@ -43,6 +34,17 @@ CREATE TABLE WIFederalState (
 	validVotes BIGINT  NOT NULL DEFAULT 0,
 	invalidVotes BIGINT  NOT NULL DEFAULT 0,
 	PRIMARY KEY (federalStateId)
+);
+
+CREATE TABLE WIElectoralDistrict (
+	number SMALLINT  NOT NULL,
+	name VARCHAR(255),
+	federalStateId BIGINT,
+	possibleVotes BIGINT NOT NULL,
+	validVotes BIGINT NOT NULL DEFAULT 0,
+	invalidVotes BIGINT NOT NULL DEFAULT 0,
+	PRIMARY KEY (number),
+	FOREIGN KEY (federalStateId) REFERENCES WIFederalState
 );
 
 CREATE TABLE WIParty (
