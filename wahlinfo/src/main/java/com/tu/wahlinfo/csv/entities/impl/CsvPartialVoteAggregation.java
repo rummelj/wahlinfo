@@ -2,20 +2,21 @@ package com.tu.wahlinfo.csv.entities.impl;
 
 /**
  * "In-the-middle" class. Thus not conceptualized for persistence.
+ * 
  * @author cg
- *
+ * 
  */
 public class CsvPartialVoteAggregation {
 
-    private String partyName;
+    private long partyId;
     private long numDirectVotes2005;
     private long numDirectVotes2009;
     private long numListVotes2005;
     private long numListVotes2009;
 
-    public CsvPartialVoteAggregation(String partyName, String numDirectVotes2005, String numDirectVotes2009, String numListVotes2005,
+    public CsvPartialVoteAggregation(long partyId, String numDirectVotes2005, String numDirectVotes2009, String numListVotes2005,
 	    String numListVotes2009) {
-	this.partyName = partyName;
+	this.partyId = partyId;
 	this.numDirectVotes2005 = parseValue(numDirectVotes2005);
 	this.numDirectVotes2009 = parseValue(numDirectVotes2009);
 	this.numListVotes2005 = parseValue(numListVotes2005);
@@ -47,8 +48,8 @@ public class CsvPartialVoteAggregation {
 	}
     }
 
-    public String getPartyName() {
-	return partyName;
+    public long getPartyId() {
+	return partyId;
     }
 
     public long getNumDirectVotes2005() {
@@ -75,7 +76,7 @@ public class CsvPartialVoteAggregation {
 	result = prime * result + (int) (numDirectVotes2009 ^ (numDirectVotes2009 >>> 32));
 	result = prime * result + (int) (numListVotes2005 ^ (numListVotes2005 >>> 32));
 	result = prime * result + (int) (numListVotes2009 ^ (numListVotes2009 >>> 32));
-	result = prime * result + ((partyName == null) ? 0 : partyName.hashCode());
+	result = prime * result + (int) (partyId ^ (partyId >>> 32));
 	return result;
     }
 
@@ -96,10 +97,7 @@ public class CsvPartialVoteAggregation {
 	    return false;
 	if (numListVotes2009 != other.numListVotes2009)
 	    return false;
-	if (partyName == null) {
-	    if (other.partyName != null)
-		return false;
-	} else if (!partyName.equals(other.partyName))
+	if (partyId != other.partyId)
 	    return false;
 	return true;
     }

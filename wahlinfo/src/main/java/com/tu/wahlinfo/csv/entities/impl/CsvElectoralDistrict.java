@@ -76,8 +76,8 @@ public class CsvElectoralDistrict implements Persistable {
 	public Map<String, String> toRelationalStruct() {
 		Map<String, String> res = new HashMap<String, String>();
 		res.put("federalStateId", Long.toString(this.federalStateId));
-		res.put("electoralDistrictName", this.electoralDistrictName);
-		res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
+		res.put("name", this.electoralDistrictName);
+		res.put("number", Long.toString(this.electoralDistrictId));
 		return res;
 	}
 

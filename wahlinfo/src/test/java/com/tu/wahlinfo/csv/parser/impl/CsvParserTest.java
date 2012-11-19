@@ -12,6 +12,7 @@ import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrict;
 import com.tu.wahlinfo.csv.entities.impl.CsvFederalState;
 import com.tu.wahlinfo.csv.entities.impl.CsvGeneratedVote;
 import com.tu.wahlinfo.csv.entities.impl.CsvListCandidate;
+import com.tu.wahlinfo.csv.entities.impl.CsvParty;
 import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
 
 public class CsvParserTest {
@@ -22,6 +23,16 @@ public class CsvParserTest {
     public void setUp() {
 	this.parser = new CsvParser();
 
+    }
+
+    @Test
+    @Ignore
+    public void testParseParties() throws Exception {
+	Collection<CsvParty> parties = parser.parseParties();
+	for (CsvParty st : parties) {
+	    String out = st.getPartyId() + "\t" + st.getPartyName();
+	    System.out.println(out);
+	}
     }
 
     @Test
@@ -47,41 +58,12 @@ public class CsvParserTest {
 
     @Test
     @Ignore
-    public void stupidVotesTest() throws Exception {
-	Collection<CsvVoteAggregation> voteAGs = parser.parseVoteAggregations(1, 1);
-	Collection<CsvGeneratedVote> votes = parser.generateVotes(voteAGs.toArray(new CsvVoteAggregation[0])[0], 0);
-
-	long counter1 = 0;
-	long counter2 = 0;
-	for (CsvGeneratedVote vote : votes) {
-	    String out = vote.getTmpId() + "\t" + vote.getElectoralDistrictId() + "\t" + vote.getDirectVoteParty() + "\t" + vote.getListVoteParty();
-	    if (vote.getDirectVoteParty().equals("NPD")) {
-		counter1++;
-	    }
-	    if (vote.getListVoteParty().equals("NPD")) {
-		counter2++;
-	    }
-	    System.out.println(out);
-	}
-	System.out.println(counter1 + " | " + counter2);
-
-	CsvReader reader = new CsvReader("src/main/resources/csv/AllVotes.csv", ';');
-	reader.readHeaders();
-	reader.readRecord();
-	System.out.println("checksum");
-	System.out.println(reader.get("NPD_Erst_2009") + " | " + reader.get("NPD_Erst_2005"));
-	System.out.println(reader.get("NPD_Zweit_2009") + " | " + reader.get("NPD_Zweit_2005"));
-
-    }
-
-    @Test
-    @Ignore
     public void stupidCandidatesTest() throws Exception {
 	Collection<CsvDirectCandidate> dcs = parser.parseDirectCandidates2005();
 	Collection<CsvListCandidate> lcs = parser.parseListCandidates2005();
 
 	for (CsvDirectCandidate dc : dcs) {
-	    String out = dc.getSurname() + "\t" + dc.getYearOfBirth() + "\t" + dc.getParty() + "\t" + dc.getElectoralDistrictId();
+	    String out = dc.getSurname() + "\t" + dc.getYearOfBirth() + "\t" + dc.getPartyId() + "\t" + dc.getElectoralDistrictId();
 	    System.out.println(out);
 	}
 
@@ -93,12 +75,29 @@ public class CsvParserTest {
 	System.out.println();
 
 	for (CsvListCandidate lc : lcs) {
-	    String out = lc.getSurname() + "\t" + lc.getYearOfBirth() + "\t" + lc.getParty() + "\t" + lc.getFederalStateId() + "\t"
+	    String out = lc.getSurname() + "\t" + lc.getYearOfBirth() + "\t" + lc.getPartyId() + "\t" + lc.getFederalStateId() + "\t"
 		    + lc.getPartyListRank();
 	    System.out.println(out);
 	}
 
 	System.out.println("dc: " + dcs.size() + " | " + "lc: " + lcs.size());
+
+    }
+
+    @Test
+    @Ignore
+    public void stupidParseVotesTest() throws Exception {
+	Collection<CsvVoteAggregation> aggs = parser.parseVoteAggregations(1, 1);
+	Collection<CsvGeneratedVote> votes = null;
+	for (CsvVoteAggregation ag : aggs) {
+	    votes = parser.generateVotes(ag, 0);
+	    break;
+	}
+	for (CsvGeneratedVote vote : votes) {
+	    String out = vote.getTmpId() + "\t" + vote.getElectoralDistrictId() + "\t" + vote.getDirectVotePartyId() + "\t"
+		    + vote.getListVotePartyId();
+	    System.out.println(out);
+	}
 
     }
 
