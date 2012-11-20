@@ -27,6 +27,14 @@ import com.tu.wahlinfo.persistence.IdGenerator;
 public class DatabasePersisterImpl implements DatabasePersister {
 
 	private static final String WI_DIRECT_CANDIDATE_TABLE_NAME = "WIDirectCandidate";
+	private static final String WI_FEDERAL_STATE_TABLE_NAME = "WIFederalState";
+	private static final String WI_ELECTORAL_DISTRICT_TABLE_NAME = "WIElectoralDistrict";
+	private static final String WI_PARTY_TABLE_NAME = "WIParty";
+	private static final String WI_ELECTION_TABLE_NAME = "WIElection";
+	private static final String WI_PARTY_VOTES_TABLE_NAME = "WIPartyVotes";
+	private static final String WI_DIRECT_VOTES_TABLE_NAME = "WIDirectVotes";
+	private static final String WI_LIST_CANDIDATE_TABLE_NAME = "WIListCandidate";
+	private static final String WI_FILLED_VOTING_PAPER_TABLE_NAME = "WIFilledVotingPaper";
 
 	private static final String NULL = "null";
 
@@ -44,8 +52,8 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	 * .model.Persistable)
 	 */
 	@Override
-	public void persist(Persistable persistable) throws DatabaseException {
-		persist(Collections.singleton(persistable));
+	public Long persist(Persistable persistable) throws DatabaseException {
+		return persist(Collections.singleton(persistable)).get(persistable);
 	}
 
 	/*
@@ -56,7 +64,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	 * tu.wahlinfo .model.Persistable>)
 	 */
 	@Override
-	public void persist(Collection<Persistable> persistables)
+	public Map<Persistable, Long> persist(Collection<Persistable> persistables)
 			throws DatabaseException {
 		Map<String, Collection<Persistable>> persistablesSortedAfterTargetTable = new HashMap<String, Collection<Persistable>>();
 		for (Persistable persistable : persistables) {
@@ -70,23 +78,31 @@ public class DatabasePersisterImpl implements DatabasePersister {
 					persistable);
 		}
 
+		Map<Persistable, Long> result = new HashMap<Persistable, Long>();
 		for (Collection<Persistable> persistablesOfOneTargetTable : persistablesSortedAfterTargetTable
 				.values()) {
-			persistToOneTable(persistablesOfOneTargetTable);
+			Map<Persistable, Long> idsOfOneTable = persistToOneTable(persistablesOfOneTargetTable);
+			result.putAll(idsOfOneTable);
 		}
+		return result;
 	}
 
 	/**
 	 * Requires all persistable to have the same target table name.
 	 * 
+	 * @return
+	 * 
 	 * @throws DatabaseException
 	 */
-	void persistToOneTable(Collection<Persistable> persistables)
-			throws DatabaseException {
+	Map<Persistable, Long> persistToOneTable(
+			Collection<Persistable> persistables) throws DatabaseException {
+		Map<Persistable, Long> result = new HashMap<Persistable, Long>();
 		if (!persistables.isEmpty()) {
 			Map<String, List<String>> bulkInserValues = new HashMap<String, List<String>>();
 			for (Persistable persistable : persistables) {
 				Map<String, String> values = convertToValues(persistable);
+				result.put(persistable,
+						getKey(persistable.getTargetTableName(), values));
 				for (Entry<String, String> value : values.entrySet()) {
 					if (!bulkInserValues.containsKey(value.getKey())) {
 						bulkInserValues.put(value.getKey(),
@@ -99,40 +115,137 @@ public class DatabasePersisterImpl implements DatabasePersister {
 					.getTargetTableName();
 			database.bulkInsert(tableName, bulkInserValues);
 		}
+		return result;
+	}
+
+	Long getKey(String targetTableName, Map<String, String> entityValues) {
+		String keyString = null;
+		switch (targetTableName) {
+		case WI_FEDERAL_STATE_TABLE_NAME:
+			keyString = entityValues.get("federalStateId");
+			break;
+		case WI_ELECTORAL_DISTRICT_TABLE_NAME:
+			keyString = entityValues.get("number");
+			break;
+		default:
+			if (entityValues.containsKey("id")) {
+				keyString = entityValues.get("id");
+			}
+		}
+		return keyString == null ? null : Long.valueOf(keyString);
 	}
 
 	Map<String, String> convertToValues(Persistable persistable)
 			throws DatabaseException {
 		String tableName = persistable.getTargetTableName();
 		switch (tableName) {
+		case WI_FEDERAL_STATE_TABLE_NAME:
+			return convertFederalState(persistable.toRelationalStruct());
+		case WI_ELECTORAL_DISTRICT_TABLE_NAME:
+			return convertElectoralDistrict(persistable.toRelationalStruct());
 		case WI_DIRECT_CANDIDATE_TABLE_NAME:
 			return convertDirectCandidate(persistable.toRelationalStruct());
+		case WI_PARTY_TABLE_NAME:
+			return convertParty(persistable.toRelationalStruct());
+		case WI_DIRECT_VOTES_TABLE_NAME:
+			return conertDirectVotes(persistable.toRelationalStruct());
+		case WI_ELECTION_TABLE_NAME:
+			return convertElectoralDistrict(persistable.toRelationalStruct());
+		case WI_FILLED_VOTING_PAPER_TABLE_NAME:
+			return convertFilledVotingPaper(persistable.toRelationalStruct());
+		case WI_LIST_CANDIDATE_TABLE_NAME:
+			return convertListCandidate(persistable.toRelationalStruct());
+		case WI_PARTY_VOTES_TABLE_NAME:
+			return convertPartyVotes(persistable.toRelationalStruct());
 		default:
 			return persistable.toRelationalStruct();
 		}
 	}
 
+	Map<String, String> conertDirectVotes(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "electoralDistrictId",
+				"directCandidateId", "electionId", "receivedVotes");
+		checkRequired(values, "electoralDistrictId", "directCandidateId",
+				"electionId");
+		replaceIfNotContained(values, "receivedVotes", "0");
+		return values;
+	}
+
+	Map<String, String> convertFilledVotingPaper(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "id", "electoralDistrictId",
+				"federalStateId", "partyId", "directCandidateId", "electionId");
+		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		checkRequired(values, "electoralDistrictId", "federalStateId",
+				"partyId", "directCandidateId", "electionId");
+		return values;
+	}
+
+	Map<String, String> convertListCandidate(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "id", "name", "profession", "rank",
+				"partyId", "federalStateId", "electionId");
+		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		checkRequired(values, "rank", "partyId", "federalStateId", "electionId");
+		values = fillUpMissing(values, "name", "profession");
+		return values;
+	}
+
+	Map<String, String> convertPartyVotes(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "federalStateId", "partyId",
+				"electionId", "receivedVotes");
+		checkRequired(values, "federalStateId", "partyId", "electionId");
+		values = fillUpMissing(values, "receivedVotes");
+		return values;
+	}
+
+	Map<String, String> convertParty(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "id", "name");
+		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		values = fillUpMissing(values, "name");
+		return values;
+	}
+
+	Map<String, String> convertFederalState(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "federalStateId", "name",
+				"possibleVotes", "validVotes", "invalidVotes");
+		replaceIfNotContained(values, "federalStateId",
+				String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "possibleVotes", "0");
+		values = fillUpMissing(values, "validVotes", "invalidVotes");
+		return values;
+	}
+
+	Map<String, String> convertElectoralDistrict(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "number", "name", "federalStateId",
+				"possibleVotes", "validVotes", "invalidVotes");
+		replaceIfNotContained(values, "number",
+				String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "possibleVotes", "0");
+		values = fillUpMissing(values, "validVotes", "invalidVotes");
+		return values;
+	}
+
 	Map<String, String> convertDirectCandidate(Map<String, String> values)
 			throws DatabaseException {
-		/*
-		 * id INTEGER UNSIGNED NOT NULL, name VARCHAR(255), partyId INTEGER
-		 * UNSIGNED NOT NULL, electoralDistrictId SMALLINT UNSIGNED NOT NULL,
-		 * electionId INTEGER UNSIGNED NOT NULL,
-		 */
-
 		values = removeAllBut(values, "id", "name", "partyId",
 				"electoralDistrictId", "electionId");
-
-		if (!values.containsKey("id")) {
-			values.put("id", String.valueOf(idGenerator.getId()));
-		}
-
+		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
 		checkRequired(values, "partyId", "electoralDistrictId", "electionId");
-
 		values = fillUpMissing(values, "id", "name", "partyId",
 				"electoralDistrictId", "electionId");
-
 		return values;
+	}
+
+	<T, O> void replaceIfNotContained(Map<T, O> input, T key, O defaultValue) {
+		if (!input.containsKey(key)) {
+			input.put(key, defaultValue);
+		}
 	}
 
 	void checkRequired(Map<String, String> values, String... keys)
