@@ -16,11 +16,13 @@ public class CsvParty implements Persistable{
     
     private long partyId;
     private String partyName;
+    private ElectionYear candidatureYear;
 
-    public CsvParty(long partyId, String partyName) {
+    public CsvParty(long partyId, String partyName, ElectionYear candidatureYear) {
 	super();
 	this.partyId = partyId;
 	this.partyName = partyName;
+	this.candidatureYear = candidatureYear;
     }
 
     public long getPartyId() {
@@ -30,11 +32,20 @@ public class CsvParty implements Persistable{
     public String getPartyName() {
 	return partyName;
     }
+    
+    
+
+    public ElectionYear getCandidatureYear() {
+        return candidatureYear;
+    }
+
+    
 
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
+	result = prime * result + ((candidatureYear == null) ? 0 : candidatureYear.hashCode());
 	result = prime * result + (int) (partyId ^ (partyId >>> 32));
 	result = prime * result + ((partyName == null) ? 0 : partyName.hashCode());
 	return result;
@@ -49,6 +60,8 @@ public class CsvParty implements Persistable{
 	if (getClass() != obj.getClass())
 	    return false;
 	CsvParty other = (CsvParty) obj;
+	if (candidatureYear != other.candidatureYear)
+	    return false;
 	if (partyId != other.partyId)
 	    return false;
 	if (partyName == null) {
@@ -64,6 +77,7 @@ public class CsvParty implements Persistable{
 	Map<String, String> res = new HashMap<String, String>();	
 	res.put("id", Long.toString(this.partyId));
 	res.put("name", this.partyName);
+	res.put("electionId", candidatureYear.toCleanString());
 	return res;
     }
 

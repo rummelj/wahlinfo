@@ -12,8 +12,7 @@ public class CsvGeneratedVote implements Persistable {
     private long tmpId;
     private long electoralDistrictId;
     private long directVotePartyId;
-    private long listVotePartyId;
-    private ElectionYear year;
+    private long listVotePartyId;   
 
     /**
      * 
@@ -24,9 +23,8 @@ public class CsvGeneratedVote implements Persistable {
      * @param directVoteParty
      * @param listVoteParty
      */
-    public CsvGeneratedVote(long tmpId, ElectionYear year, long electoralDistrictId, long directVotePartyId, long listVotePartyId) {
-	this.tmpId = tmpId;
-	this.year = year;
+    public CsvGeneratedVote(long tmpId, long electoralDistrictId, long directVotePartyId, long listVotePartyId) {
+	this.tmpId = tmpId;	
 	this.electoralDistrictId = electoralDistrictId;
 	this.directVotePartyId = directVotePartyId;
 	this.listVotePartyId = listVotePartyId;
@@ -48,9 +46,7 @@ public class CsvGeneratedVote implements Persistable {
 	return tmpId;
     }
 
-    public String getYear() {
-	return year.toCleanString();
-    }
+    
 
     @Override
     public int hashCode() {
@@ -60,7 +56,6 @@ public class CsvGeneratedVote implements Persistable {
 	result = prime * result + (int) (electoralDistrictId ^ (electoralDistrictId >>> 32));
 	result = prime * result + (int) (listVotePartyId ^ (listVotePartyId >>> 32));
 	result = prime * result + (int) (tmpId ^ (tmpId >>> 32));
-	result = prime * result + ((year == null) ? 0 : year.hashCode());
 	return result;
     }
 
@@ -81,8 +76,6 @@ public class CsvGeneratedVote implements Persistable {
 	    return false;
 	if (tmpId != other.tmpId)
 	    return false;
-	if (year != other.year)
-	    return false;
 	return true;
     }
 
@@ -92,8 +85,7 @@ public class CsvGeneratedVote implements Persistable {
 	res.put("id", Long.toString(this.tmpId));
 	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
 	res.put("partyId", Long.toString(this.listVotePartyId));
-	res.put("directVotePartyId", Long.toString(this.directVotePartyId));
-	res.put("electionYear", this.year.toCleanString());
+	res.put("directVotePartyId", Long.toString(this.directVotePartyId));	
 	return res;
     }
 

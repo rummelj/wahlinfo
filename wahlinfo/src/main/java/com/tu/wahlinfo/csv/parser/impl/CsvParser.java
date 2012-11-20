@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,12 +55,13 @@ public class CsvParser implements ICsvParser {
     // vote generator
     private IVoteGenerator voteGenerator = new VoteGenerator();
     // Party matching
-    private Map<String, Long> partyIds = new HashMap<String, Long>();
+    private Map<ElectionYear, HashMap<String, Long>> partyIds = new EnumMap<ElectionYear, HashMap<String, Long>>(ElectionYear.class);
     private Map<String, String> partyNameReplacements = new HashMap<String, String>();
 
     public CsvParser() {
 	this.initPartyNameReplacements();
-	this.initPartyIds();
+	this.partyIds.put(ElectionYear._2005, new HashMap<String, Long>());
+	this.partyIds.put(ElectionYear._2009, new HashMap<String, Long>());
     }
 
     /**
@@ -77,41 +79,16 @@ public class CsvParser implements ICsvParser {
 	this.partyNameReplacements.put("Volksabst.", "Volksabstimmung");
     }
 
-    private void initPartyIds() {
-	this.partyIds.put("Ungueltig", 0L);
-	this.partyIds.put("Gueltig", 1L);
-	this.partyIds.put("Uebrige", 2L);
-    }
-
-    @Override
-    public Collection<CsvParty> parseParties() throws CsvParserException {
-	Collection<CsvParty> parties = processParseParties(FILE_PATH_CANDIDATES_2005, PARTY_ID_START_NUM, 7);
-	parties.addAll(processParseParties(FILE_PATH_CANDIDATES_2009, PARTY_ID_START_NUM + parties.size(), 3));
-	return parties;
-    }
-
-    private Collection<CsvParty> processParseParties(String filePath, long startId, int partyNameIndex) throws CsvParserException {
-	Collection<CsvParty> parties = new HashSet<CsvParty>();
-	CsvReader reader = buildCsvReader(filePath);
-	String partyName;
-	try {
-	    reader.readHeaders();
-	    while (reader.readRecord()) {
-		partyName = this.processNewPartyName(reader.get(partyNameIndex));
-		if (partyName != null) {
-		    parties.add(new CsvParty(startId++, partyName));
-		    this.partyIds.put(partyName, startId);
-		}
-	    }
-	    reader.close();
-	    return parties;
-	} catch (IOException ex) {
-	    throw new CsvParserException(MSG_FILE_PATH_ERR.replace(":file", filePath));
+    private Long getPartyId(ElectionYear year, String partyName) {
+	if (partyName.equals("")) {
+	    return null;
+	} else {
+	    return this.partyIds.get(year).get(partyName);
 	}
     }
 
     /**
-     * Process a potentially new party name. First checks if a replacement
+     * Processes a potentially new party name. First checks if a replacement
      * exists. If so, it is used for the second check. During that the resulting
      * party name is compared with the ones already seen.
      * 
@@ -119,16 +96,56 @@ public class CsvParser implements ICsvParser {
      * @return Null if the second check is positive. Otherwise the argument or
      *         its replacement in case it exists.
      */
-    private String processNewPartyName(String pname) {
+    private String processNewPartyName(ElectionYear year, String pname) {
 	if (pname.isEmpty()) {
 	    return null;
 	}
 	String replacement = this.partyNameReplacements.get(pname);
 	replacement = (replacement == null) ? pname : replacement;
-	if (this.partyIds.containsKey(replacement)) {
+	if (this.partyIds.get(year).containsKey(replacement)) {
 	    return null;
 	} else {
 	    return replacement;
+	}
+    }
+
+    @Override
+    public Collection<CsvParty> parseParties() throws CsvParserException {
+	Collection<CsvParty> parties = processParseParties(FILE_PATH_CANDIDATES_2005, ElectionYear._2005, 7);
+	parties.addAll(processParseParties(FILE_PATH_CANDIDATES_2009, ElectionYear._2009, 3));
+	// manually add "non-real" parties which don't occur in candidates csv
+	parties.add(this.processNewCsvParty(0L, "Ungueltig", ElectionYear._2005));
+	parties.add(this.processNewCsvParty(0L, "Ungueltig", ElectionYear._2009));
+	parties.add(this.processNewCsvParty(1L, "Gueltig", ElectionYear._2005));
+	parties.add(this.processNewCsvParty(1L, "Gueltig", ElectionYear._2009));
+	parties.add(this.processNewCsvParty(2L, "Uebrige", ElectionYear._2005));
+	parties.add(this.processNewCsvParty(2L, "Uebrige", ElectionYear._2009));
+	return parties;
+    }
+
+    private CsvParty processNewCsvParty(long nonPrefixedPositiveId, String partyName, ElectionYear year) {
+	long prefixedId = Long.parseLong(year.getPrefix() + "" + nonPrefixedPositiveId);
+	this.partyIds.get(year).put(partyName, prefixedId);
+	return new CsvParty(prefixedId, partyName, year);
+    }
+
+    private Collection<CsvParty> processParseParties(String filePath, ElectionYear year, int partyNameIndex) throws CsvParserException {
+	Collection<CsvParty> parties = new HashSet<CsvParty>();
+	CsvReader reader = buildCsvReader(filePath);
+	long index = PARTY_ID_START_NUM;
+	String partyName;
+	try {
+	    reader.readHeaders();
+	    while (reader.readRecord()) {
+		partyName = this.processNewPartyName(year, reader.get(partyNameIndex));
+		if (partyName != null) {
+		    parties.add(this.processNewCsvParty(index++, partyName, year));
+		}
+	    }
+	    reader.close();
+	    return parties;
+	} catch (IOException ex) {
+	    throw new CsvParserException(MSG_FILE_PATH_ERR.replace(":file", filePath));
 	}
     }
 
@@ -139,8 +156,8 @@ public class CsvParser implements ICsvParser {
     public Collection<CsvVoteAggregation> parseVoteAggregations(int startElId, int endELId) throws CsvParserException {
 	Collection<CsvVoteAggregation> voteAggregations = new HashSet<CsvVoteAggregation>();
 	CsvVoteAggregation tmpAggregation;
-	long partyId;
-	if (this.partyIds.size() == PARTY_ID_START_NUM) {
+	String partyName;
+	if (this.partyIds.get(ElectionYear._2005).isEmpty()) {
 	    parseParties();
 	}
 	CsvReader reader = buildCsvReader(FILE_PATH_VOTES);
@@ -153,15 +170,16 @@ public class CsvParser implements ICsvParser {
 		if (Integer.valueOf(reader.get(0)).intValue() > endELId) {
 		    break;
 		}
-		tmpAggregation = new CsvVoteAggregation(reader.get(0));		
+		tmpAggregation = new CsvVoteAggregation(reader.get(0));
 		for (int k = 11; k < reader.getHeaderCount(); k += 4) {
 		    int index = k;
 		    if (index == 15) {
 			// skip entry for valid votes
 			continue;
-		    }		    
-		    partyId = this.partyIds.get(reader.getHeader(index).split(AFFILIATION_DELIMITER)[0]);		    
-		    tmpAggregation.addPartialVoteAggregation(partyId, reader.get(index + 1), reader.get(index), reader.get(index + 3),
+		    }
+		    partyName = reader.getHeader(index).split(AFFILIATION_DELIMITER)[0];
+		    tmpAggregation.addPartialVoteAggregation(this.getPartyId(ElectionYear._2005, partyName),
+			    this.getPartyId(ElectionYear._2009, partyName), reader.get(index + 1), reader.get(index), reader.get(index + 3),
 			    reader.get(index + 2));
 		}
 		voteAggregations.add(tmpAggregation);
@@ -254,7 +272,7 @@ public class CsvParser implements ICsvParser {
 	    this.listCandidates2005.clear();
 	}
 	parseDistrictsAndStates();
-	if (this.partyIds.size() == PARTY_ID_START_NUM) {
+	if (this.partyIds.get(ElectionYear._2005).isEmpty()) {
 	    parseParties();
 	}
 	String partyName;
@@ -267,12 +285,12 @@ public class CsvParser implements ICsvParser {
 		partyName = (this.partyNameReplacements.get(reader.get(7)) == null) ? reader.get(7) : this.partyNameReplacements.get(reader.get(7));
 		// direct candidate has no rank entry
 		if (reader.get(10).isEmpty()) {
-		    this.directCandidates2005.add(new CsvDirectCandidate(names[0], names[1], reader.get(2), this.partyIds.get(partyName),
-			    ElectionYear._2005, reader.get(8)));
+		    this.directCandidates2005.add(new CsvDirectCandidate(names[0], names[1], reader.get(2), this.getPartyId(ElectionYear._2005,
+			    partyName), ElectionYear._2005, reader.get(8)));
 		} else {
 		    long federalStateId = this.federalStates.get(reader.get(9)).getFederalStateId();
-		    this.listCandidates2005.add(new CsvListCandidate(names[0], names[1], reader.get(2), this.partyIds.get(partyName),
-			    ElectionYear._2005, federalStateId, reader.get(10)));
+		    this.listCandidates2005.add(new CsvListCandidate(names[0], names[1], reader.get(2), this
+			    .getPartyId(ElectionYear._2005, partyName), ElectionYear._2005, federalStateId, reader.get(10)));
 		}
 	    }
 	    reader.close();
@@ -310,7 +328,7 @@ public class CsvParser implements ICsvParser {
 	    this.listCandidates2009.clear();
 	}
 	parseDistrictsAndStates();
-	if (this.partyIds.size() == PARTY_ID_START_NUM) {
+	if (this.partyIds.get(ElectionYear._2005).isEmpty()) {
 	    parseParties();
 	}
 	String partyName;
@@ -320,14 +338,14 @@ public class CsvParser implements ICsvParser {
 	    while (reader.readRecord()) {
 		partyName = (this.partyNameReplacements.get(reader.get(3)) == null) ? reader.get(3) : this.partyNameReplacements.get(reader.get(3));
 		// direct candidate has no rank entry
-		if (reader.get(11).isEmpty()) {
-		    this.directCandidates2009.add(new CsvDirectCandidate(reader.get(0), reader.get(1), reader.get(2), this.partyIds.get(partyName),
-			    ElectionYear._2009, reader.get(4)));
+		if (reader.get(6).isEmpty()) {
+		    this.directCandidates2009.add(new CsvDirectCandidate(reader.get(0), reader.get(1), reader.get(2), this.getPartyId(
+			    ElectionYear._2009, partyName), ElectionYear._2009, reader.get(4)));
 
 		} else {
 		    long federalStateId = this.federalStates.get(reader.get(5)).getFederalStateId();
-		    this.listCandidates2009.add(new CsvListCandidate(reader.get(0), reader.get(1), reader.get(2), this.partyIds.get(partyName),
-			    ElectionYear._2009, federalStateId, reader.get(6)));
+		    this.listCandidates2009.add(new CsvListCandidate(reader.get(0), reader.get(1), reader.get(2), this.getPartyId(ElectionYear._2009,
+			    partyName), ElectionYear._2009, federalStateId, reader.get(6)));
 		}
 	    }
 	    reader.close();
