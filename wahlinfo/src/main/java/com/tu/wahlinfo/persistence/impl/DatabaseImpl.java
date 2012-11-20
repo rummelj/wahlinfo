@@ -16,7 +16,7 @@ import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
 @Stateless
-public class MysqlDatabase implements Database {
+public class DatabaseImpl implements Database {
 
 	static final String MYSQL_QUOTE = "\"";
 	static int MAX_BULK_INSERT_SIZE = 50;

@@ -16,7 +16,7 @@ import com.tu.wahlinfo.persistence.DatabaseSetup;
  * 
  */
 @Stateless
-public class MysqlDatabaseSetup implements DatabaseSetup {
+public class DatabaseSetupImpl implements DatabaseSetup {
 
 	private static final String INIT_SCRIPT_PATH = "/sql/mysql_init.sql";
 

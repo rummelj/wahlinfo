@@ -24,7 +24,7 @@ import com.tu.wahlinfo.persistence.IdGenerator;
  * 
  */
 @Stateless
-public class MysqlDatabasePersister implements DatabasePersister {
+public class DatabasePersisterImpl implements DatabasePersister {
 
 	private static final String WI_DIRECT_CANDIDATE_TABLE_NAME = "WIDirectCandidate";
 

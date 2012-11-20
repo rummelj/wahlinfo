@@ -13,7 +13,7 @@ import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
 @Stateless
-public class MysqlDatabaseAccessor implements DatabaseAccessor {
+public class DatabaseAccessorImpl implements DatabaseAccessor {
 
 	@PersistenceContext(unitName = "wahlinfo")
 	EntityManager entityManager;

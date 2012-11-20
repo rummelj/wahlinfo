@@ -31,24 +31,24 @@ public class MysqlDatabaseTest {
 	@Mock
 	DatabaseAccessor databaseAccessorMock;
 
-	MysqlDatabase underTest;
+	DatabaseImpl underTest;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		MysqlDatabase.MAX_BULK_INSERT_SIZE = MAX_BULK_INSERT_SIZE;
+		DatabaseImpl.MAX_BULK_INSERT_SIZE = MAX_BULK_INSERT_SIZE;
 
 		MockitoAnnotations.initMocks(this);
 
-		underTest = new MysqlDatabase();
+		underTest = new DatabaseImpl();
 		underTest.databaseAccessor = databaseAccessorMock;
 	}
 
 	/**
 	 * Test method for
-	 * {@link com.tu.wahlinfo.persistence.impl.MysqlDatabase#insert(java.lang.String, java.util.Map)}
+	 * {@link com.tu.wahlinfo.persistence.impl.DatabaseImpl#insert(java.lang.String, java.util.Map)}
 	 * .
 	 * 
 	 * @throws DatabaseException
@@ -65,7 +65,7 @@ public class MysqlDatabaseTest {
 
 	/**
 	 * Test method for
-	 * {@link com.tu.wahlinfo.persistence.impl.MysqlDatabase#bulkInsert(java.lang.String, java.util.Map)}
+	 * {@link com.tu.wahlinfo.persistence.impl.DatabaseImpl#bulkInsert(java.lang.String, java.util.Map)}
 	 * .
 	 * 
 	 * @throws DatabaseException
@@ -84,7 +84,7 @@ public class MysqlDatabaseTest {
 
 	/**
 	 * Test method for
-	 * {@link com.tu.wahlinfo.persistence.impl.MysqlDatabase#bulkInsert(java.lang.String, java.util.Map)}
+	 * {@link com.tu.wahlinfo.persistence.impl.DatabaseImpl#bulkInsert(java.lang.String, java.util.Map)}
 	 * .
 	 * 
 	 * @throws DatabaseException

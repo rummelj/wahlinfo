@@ -15,7 +15,7 @@ import com.tu.wahlinfo.persistence.IdGenerator;
  * 
  */
 @Stateless
-public class MysqlIdGenerator implements IdGenerator {
+public class IdGeneratorImpl implements IdGenerator {
 
 	@Inject
 	DatabaseAccessor databaseAccessor;
@@ -23,7 +23,7 @@ public class MysqlIdGenerator implements IdGenerator {
 	/**
 	 * 
 	 */
-	public MysqlIdGenerator() {
+	public IdGeneratorImpl() {
 		// TODO Auto-generated constructor stub
 	}
 
