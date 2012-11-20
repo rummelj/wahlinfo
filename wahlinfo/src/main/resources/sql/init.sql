@@ -66,19 +66,11 @@ CREATE TABLE WIDirectCandidate (
 	partyId BIGINT  NOT NULL,
 	electoralDistrictId SMALLINT  NOT NULL,
 	electionId BIGINT  NOT NULL,
+	receivedVotes BIGINT NOT NULL DEFAULT 0,
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number), 
 	FOREIGN KEY (electionId) REFERENCES WIElection (id),
 	PRIMARY KEY (id)
-);
-
-CREATE TABLE WIDirectVotes (
-	electoralDistrictId SMALLINT  NOT NULL,
-	directCandidateId BIGINT  NOT NULL,	
-	receivedVotes BIGINT  NOT NULL DEFAULT 0,
-	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number), 
-	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),	
-	PRIMARY KEY (electoralDistrictId, directCandidateId)
 );
 
 CREATE TABLE WIListCandidate (
