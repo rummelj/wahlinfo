@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS hibernate_sequence;
+﻿DROP TABLE IF EXISTS hibernate_sequence;
 DROP TABLE IF EXISTS WIFilledVotingPaper;
 DROP TABLE IF EXISTS WIPartyVotes;
 DROP TABLE IF EXISTS WIDirectVotes;
 DROP TABLE IF EXISTS WIListCandidate;
 DROP TABLE IF EXISTS WIDirectCandidate;
 DROP TABLE IF EXISTS WIParty;
-DROP TABLE IF EXISTS WIFederalState;
 DROP TABLE IF EXISTS WIElectoralDistrict;
+DROP TABLE IF EXISTS WIFederalState;
 DROP TABLE IF EXISTS WIElection;
 
 CREATE TABLE hibernate_sequence(
@@ -46,17 +46,17 @@ CREATE TABLE WIElectoralDistrict (
 CREATE TABLE WIParty (
 	id BIGINT  NOT NULL,
 	name VARCHAR(255),
-	PRIMARY KEY (id)
+	electionId BIGINT NOT NULL,
+	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	PRIMARY KEY (id)	
 );
 
 CREATE TABLE WIPartyVotes (
 	federalStateId BIGINT  NOT NULL,
-	partyId BIGINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
+	partyId BIGINT  NOT NULL,	
 	receivedVotes BIGINT  NOT NULL DEFAULT 0,
 	FOREIGN KEY (federalStateId) REFERENCES WIFederalState (federalStateId),
-	FOREIGN KEY (partyId) REFERENCES WIParty (id),
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	FOREIGN KEY (partyId) REFERENCES WIParty (id),	
 	PRIMARY KEY (federalStateId, partyId)
 );
 
@@ -74,12 +74,10 @@ CREATE TABLE WIDirectCandidate (
 
 CREATE TABLE WIDirectVotes (
 	electoralDistrictId SMALLINT  NOT NULL,
-	directCandidateId BIGINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
+	directCandidateId BIGINT  NOT NULL,	
 	receivedVotes BIGINT  NOT NULL DEFAULT 0,
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number), 
-	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),	
 	PRIMARY KEY (electoralDistrictId, directCandidateId)
 );
 
@@ -99,15 +97,11 @@ CREATE TABLE WIListCandidate (
 
 CREATE TABLE WIFilledVotingPaper (
 	id BIGINT  NOT NULL,
-	electoralDistrictId SMALLINT  NOT NULL,
-	federalStateId BIGINT  NOT NULL,
+	electoralDistrictId SMALLINT  NOT NULL,	
 	partyId BIGINT ,
-	directCandidateId BIGINT ,
-	electionId BIGINT  NOT NULL,
-	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number),
-	FOREIGN KEY (federalStateId) REFERENCES WIFederalState (federalStateId),
+	directCandidateId BIGINT ,	
+	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number),	
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
-	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),	
 	PRIMARY KEY (id)
 );
