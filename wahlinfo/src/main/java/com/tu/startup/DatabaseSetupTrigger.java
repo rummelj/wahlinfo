@@ -1,16 +1,13 @@
 package com.tu.startup;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.persistence.DatabasePersister;
 import com.tu.wahlinfo.persistence.DatabaseSetup;
 
-@Singleton
-@Startup
+@Stateless
 public class DatabaseSetupTrigger {
 
 	@Inject
@@ -19,9 +16,12 @@ public class DatabaseSetupTrigger {
 	@Inject
 	DatabasePersister databasePersister;
 
-	@PostConstruct
-	public void init() throws DatabaseException {
-		databaseSetup.setup();
+	public void init() {
+		try {
+			databaseSetup.setup();
+		} catch (DatabaseException e) {
+			// TODO Do logging
+		}
 	}
 
 }

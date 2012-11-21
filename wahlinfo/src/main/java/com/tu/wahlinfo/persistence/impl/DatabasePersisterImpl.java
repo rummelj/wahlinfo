@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -167,7 +168,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 				"directCandidateId", "electionId", "receivedVotes");
 		checkRequired(values, "electoralDistrictId", "directCandidateId",
 				"electionId");
-		replaceIfNotContained(values, "receivedVotes", "0");
+		values = fillUpDefault(values, "receivedVotes");
 		return values;
 	}
 
@@ -196,7 +197,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		values = removeAllBut(values, "federalStateId", "partyId",
 				"electionId", "receivedVotes");
 		checkRequired(values, "federalStateId", "partyId", "electionId");
-		values = fillUpMissing(values, "receivedVotes");
+		values = fillUpDefault(values, "receivedVotes");
 		return values;
 	}
 
@@ -215,7 +216,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		replaceIfNotContained(values, "federalStateId",
 				String.valueOf(idGenerator.getId()));
 		replaceIfNotContained(values, "possibleVotes", "0");
-		values = fillUpMissing(values, "validVotes", "invalidVotes");
+		values = fillUpDefault(values, "validVotes", "invalidVotes");
 		return values;
 	}
 
@@ -226,7 +227,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		replaceIfNotContained(values, "number",
 				String.valueOf(idGenerator.getId()));
 		replaceIfNotContained(values, "possibleVotes", "0");
-		values = fillUpMissing(values, "validVotes", "invalidVotes");
+		values = fillUpDefault(values, "validVotes", "invalidVotes");
 		return values;
 	}
 
@@ -256,6 +257,15 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		}
 	}
 
+	Map<String, String> fillUpDefault(Map<String, String> input, String... keys) {
+		for (String key : keys) {
+			if (!input.containsKey(key)) {
+				input.put(key, DatabaseConstants.DEFAULT);
+			}
+		}
+		return input;
+	}
+
 	Map<String, String> fillUpMissing(Map<String, String> input, String... keys) {
 		for (String key : keys) {
 			if (!input.containsKey(key)) {
@@ -268,9 +278,10 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	@SuppressWarnings("unchecked")
 	<P, Q> Map<P, Q> removeAllBut(Map<P, Q> input, P... keys) {
 		List<P> keysAsList = Arrays.asList(keys);
-		for (P keyCurrent : input.keySet()) {
+		for (Iterator<P> keyIt = input.keySet().iterator(); keyIt.hasNext();) {
+			P keyCurrent = keyIt.next();
 			if (!keysAsList.contains(keyCurrent)) {
-				input.remove(keyCurrent);
+				keyIt.remove();
 				// TODO: Log
 			}
 		}

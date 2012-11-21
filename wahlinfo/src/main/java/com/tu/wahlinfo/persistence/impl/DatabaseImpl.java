@@ -19,7 +19,7 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 @Stateless
 public class DatabaseImpl implements Database {
 
-	static final String MYSQL_QUOTE = "\"";
+	static final String POSTGRESQL_QUOTE = "'";
 	static int MAX_BULK_INSERT_SIZE = 50;
 
 	@Inject
@@ -75,12 +75,15 @@ public class DatabaseImpl implements Database {
 	}
 
 	String sanitise(String value) {
-		if (value.equals(DatabaseConstants.NULL)) {
-			return DatabaseConstants.NULL;
+		if (value.equals(DatabaseConstants.NULL)
+				|| value.equals(DatabaseConstants.DEFAULT)) {
+			return value;
 		} else {
-			return String.format("%s%s%s", MYSQL_QUOTE,
-					value.replaceAll(MYSQL_QUOTE, MYSQL_QUOTE + MYSQL_QUOTE),
-					MYSQL_QUOTE);
+			return String.format(
+					"%s%s%s",
+					POSTGRESQL_QUOTE,
+					value.replaceAll(POSTGRESQL_QUOTE, POSTGRESQL_QUOTE
+							+ POSTGRESQL_QUOTE), POSTGRESQL_QUOTE);
 		}
 	}
 
