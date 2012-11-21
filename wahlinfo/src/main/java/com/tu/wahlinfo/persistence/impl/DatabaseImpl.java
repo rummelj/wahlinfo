@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import com.tu.util.ListUtil;
 import com.tu.wahlinfo.persistence.Database;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
+import com.tu.wahlinfo.persistence.DatabaseConstants;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
 @Stateless
@@ -74,9 +75,13 @@ public class DatabaseImpl implements Database {
 	}
 
 	String sanitise(String value) {
-		return String.format("%s%s%s", MYSQL_QUOTE,
-				value.replaceAll(MYSQL_QUOTE, MYSQL_QUOTE + MYSQL_QUOTE),
-				MYSQL_QUOTE);
+		if (value.equals(DatabaseConstants.NULL)) {
+			return DatabaseConstants.NULL;
+		} else {
+			return String.format("%s%s%s", MYSQL_QUOTE,
+					value.replaceAll(MYSQL_QUOTE, MYSQL_QUOTE + MYSQL_QUOTE),
+					MYSQL_QUOTE);
+		}
 	}
 
 	void bulkInsertCheckInput(String tableName, Map<String, List<String>> values) {

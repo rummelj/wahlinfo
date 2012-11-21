@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import com.tu.wahlinfo.model.Persistable;
 import com.tu.wahlinfo.persistence.Database;
+import com.tu.wahlinfo.persistence.DatabaseConstants;
 import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.persistence.DatabasePersister;
 import com.tu.wahlinfo.persistence.IdGenerator;
@@ -35,8 +36,6 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	private static final String WI_DIRECT_VOTES_TABLE_NAME = "WIDirectVotes";
 	private static final String WI_LIST_CANDIDATE_TABLE_NAME = "WIListCandidate";
 	private static final String WI_FILLED_VOTING_PAPER_TABLE_NAME = "WIFilledVotingPaper";
-
-	private static final String NULL = "null";
 
 	@Inject
 	Database database;
@@ -260,7 +259,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	Map<String, String> fillUpMissing(Map<String, String> input, String... keys) {
 		for (String key : keys) {
 			if (!input.containsKey(key)) {
-				input.put(key, NULL);
+				input.put(key, DatabaseConstants.NULL);
 			}
 		}
 		return input;
