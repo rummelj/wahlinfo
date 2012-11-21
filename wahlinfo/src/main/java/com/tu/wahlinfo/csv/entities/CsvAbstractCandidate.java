@@ -11,10 +11,10 @@ public abstract class CsvAbstractCandidate implements Persistable {
     private String firstnames;
     private String surname;
     private int yearOfBirth;
-    private long partyId;
+    private Long partyId;
     private ElectionYear candidatureYear;
 
-    public CsvAbstractCandidate(String firstnames, String surname, String yearOfBirth, long partyId, ElectionYear candidatureYear) {
+    public CsvAbstractCandidate(String firstnames, String surname, String yearOfBirth, Long partyId, ElectionYear candidatureYear) {
 	super();
 	this.firstnames = firstnames;
 	this.surname = surname;
@@ -35,7 +35,7 @@ public abstract class CsvAbstractCandidate implements Persistable {
 	return yearOfBirth;
     }
 
-    public long getPartyId() {
+    public Long getPartyId() {
 	return partyId;
     }
 
@@ -53,7 +53,7 @@ public abstract class CsvAbstractCandidate implements Persistable {
 	int result = 1;
 	result = prime * result + ((candidatureYear == null) ? 0 : candidatureYear.hashCode());
 	result = prime * result + ((firstnames == null) ? 0 : firstnames.hashCode());
-	result = prime * result + (int) (partyId ^ (partyId >>> 32));
+	result = prime * result + ((partyId == null) ? 0 : partyId.hashCode());
 	result = prime * result + ((surname == null) ? 0 : surname.hashCode());
 	result = prime * result + yearOfBirth;
 	return result;
@@ -75,7 +75,10 @@ public abstract class CsvAbstractCandidate implements Persistable {
 		return false;
 	} else if (!firstnames.equals(other.firstnames))
 	    return false;
-	if (partyId != other.partyId)
+	if (partyId == null) {
+	    if (other.partyId != null)
+		return false;
+	} else if (!partyId.equals(other.partyId))
 	    return false;
 	if (surname == null) {
 	    if (other.surname != null)
@@ -89,10 +92,10 @@ public abstract class CsvAbstractCandidate implements Persistable {
 
     @Override
     public Map<String, String> toRelationalStruct() {
-	Map<String, String> res = new HashMap<String, String>();	
-	res.put("name", this.surname.concat(",").concat(firstnames));	
-	res.put("candidatureYear", this.candidatureYear.toCleanString());
-	res.put("partyId", Long.toString(this.partyId));
+	Map<String, String> res = new HashMap<String, String>();
+	res.put("name", this.surname.concat(",").concat(firstnames));
+	res.put("electionId", this.candidatureYear.toCleanString());
+	res.put("partyId", ((partyId == null) ? "null" : Long.toString(this.partyId)));
 	res.put("yearOfBirth", Integer.toString(this.yearOfBirth));
 	return res;
     }

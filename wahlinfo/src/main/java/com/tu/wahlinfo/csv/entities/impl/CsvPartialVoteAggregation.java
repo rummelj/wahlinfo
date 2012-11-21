@@ -8,15 +8,17 @@ package com.tu.wahlinfo.csv.entities.impl;
  */
 public class CsvPartialVoteAggregation {
 
-    private long partyId;
+    private Long partyId2005;
+    private Long partyId2009;
     private long numDirectVotes2005;
     private long numDirectVotes2009;
     private long numListVotes2005;
     private long numListVotes2009;
 
-    public CsvPartialVoteAggregation(long partyId, String numDirectVotes2005, String numDirectVotes2009, String numListVotes2005,
-	    String numListVotes2009) {
-	this.partyId = partyId;
+    public CsvPartialVoteAggregation(Long partyId2005, Long partyId2009, String numDirectVotes2005, String numDirectVotes2009,
+	    String numListVotes2005, String numListVotes2009) {
+	this.partyId2005 = partyId2005;
+	this.partyId2009 = partyId2009;
 	this.numDirectVotes2005 = parseValue(numDirectVotes2005);
 	this.numDirectVotes2009 = parseValue(numDirectVotes2009);
 	this.numListVotes2005 = parseValue(numListVotes2005);
@@ -40,6 +42,14 @@ public class CsvPartialVoteAggregation {
 
     }
 
+    public Long getPartyId(ElectionYear year) {
+	if (year.equals(ElectionYear._2005)) {
+	    return partyId2005;
+	} else {
+	    return partyId2009;
+	}
+    }
+
     public long getNumListVotes(ElectionYear year) {
 	if (year.equals(ElectionYear._2005)) {
 	    return numListVotes2005;
@@ -48,8 +58,12 @@ public class CsvPartialVoteAggregation {
 	}
     }
 
-    public long getPartyId() {
-	return partyId;
+    public Long getPartyId2005() {
+	return partyId2005;
+    }
+
+    public Long getPartyId2009() {
+	return partyId2009;
     }
 
     public long getNumDirectVotes2005() {
@@ -76,7 +90,8 @@ public class CsvPartialVoteAggregation {
 	result = prime * result + (int) (numDirectVotes2009 ^ (numDirectVotes2009 >>> 32));
 	result = prime * result + (int) (numListVotes2005 ^ (numListVotes2005 >>> 32));
 	result = prime * result + (int) (numListVotes2009 ^ (numListVotes2009 >>> 32));
-	result = prime * result + (int) (partyId ^ (partyId >>> 32));
+	result = prime * result + ((partyId2005 == null) ? 0 : partyId2005.hashCode());
+	result = prime * result + ((partyId2009 == null) ? 0 : partyId2009.hashCode());
 	return result;
     }
 
@@ -97,7 +112,15 @@ public class CsvPartialVoteAggregation {
 	    return false;
 	if (numListVotes2009 != other.numListVotes2009)
 	    return false;
-	if (partyId != other.partyId)
+	if (partyId2005 == null) {
+	    if (other.partyId2005 != null)
+		return false;
+	} else if (!partyId2005.equals(other.partyId2005))
+	    return false;
+	if (partyId2009 == null) {
+	    if (other.partyId2009 != null)
+		return false;
+	} else if (!partyId2009.equals(other.partyId2009))
 	    return false;
 	return true;
     }

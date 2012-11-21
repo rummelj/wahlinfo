@@ -4,9 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- *  "In-the-middle" class. Thus not conceptualized for persistence.
+ * "In-the-middle" class. Thus not conceptualized for persistence.
+ * 
  * @author cg
- *
+ * 
  */
 public class CsvVoteAggregation {
 
@@ -18,10 +19,10 @@ public class CsvVoteAggregation {
 
     }
 
-    public void addPartialVoteAggregation(long partyId, String numDirectVotes2005, String numDirectVotes2009, String numListVotes2005,
-	    String numListVotes2009) {
-	this.partialAggregations.add(new CsvPartialVoteAggregation(partyId, numDirectVotes2005, numDirectVotes2009, numListVotes2005,
-		numListVotes2009));
+    public void addPartialVoteAggregation(Long partyId2005, Long partyId2009, String numDirectVotes2005, String numDirectVotes2009,
+	    String numListVotes2005, String numListVotes2009) {
+	this.partialAggregations.add(new CsvPartialVoteAggregation(partyId2005, partyId2009, numDirectVotes2005, numDirectVotes2009,
+		numListVotes2005, numListVotes2009));
     }
 
     public long getElectoralDistrictId() {

@@ -59,11 +59,12 @@ public class CsvParserTest {
     @Test
     @Ignore
     public void stupidCandidatesTest() throws Exception {
-	Collection<CsvDirectCandidate> dcs = parser.parseDirectCandidates2005();
-	Collection<CsvListCandidate> lcs = parser.parseListCandidates2005();
+	Collection<CsvDirectCandidate> dcs = parser.parseDirectCandidates2009();
+	Collection<CsvListCandidate> lcs = parser.parseListCandidates2009();
 
 	for (CsvDirectCandidate dc : dcs) {
-	    String out = dc.getSurname() + "\t" + dc.getYearOfBirth() + "\t" + dc.getPartyId() + "\t" + dc.getElectoralDistrictId();
+	    String out = dc.getSurname() + "\t" + dc.getYearOfBirth() + "\t" + dc.getPartyId() + "\t" + dc.getElectoralDistrictId() + "\t"
+		    + dc.getCandidatureYear();
 	    System.out.println(out);
 	}
 
@@ -76,7 +77,7 @@ public class CsvParserTest {
 
 	for (CsvListCandidate lc : lcs) {
 	    String out = lc.getSurname() + "\t" + lc.getYearOfBirth() + "\t" + lc.getPartyId() + "\t" + lc.getFederalStateId() + "\t"
-		    + lc.getPartyListRank();
+		    + lc.getPartyListRank() + "\t" + lc.getCandidatureYear();
 	    System.out.println(out);
 	}
 
