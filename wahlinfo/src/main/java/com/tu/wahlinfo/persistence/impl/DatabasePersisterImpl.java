@@ -34,7 +34,6 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	private static final String WI_PARTY_TABLE_NAME = "WIParty";
 	private static final String WI_ELECTION_TABLE_NAME = "WIElection";
 	private static final String WI_PARTY_VOTES_TABLE_NAME = "WIPartyVotes";
-	private static final String WI_DIRECT_VOTES_TABLE_NAME = "WIDirectVotes";
 	private static final String WI_LIST_CANDIDATE_TABLE_NAME = "WIListCandidate";
 	private static final String WI_FILLED_VOTING_PAPER_TABLE_NAME = "WIFilledVotingPaper";
 
@@ -147,8 +146,6 @@ public class DatabasePersisterImpl implements DatabasePersister {
 			return convertDirectCandidate(persistable.toRelationalStruct());
 		case WI_PARTY_TABLE_NAME:
 			return convertParty(persistable.toRelationalStruct());
-		case WI_DIRECT_VOTES_TABLE_NAME:
-			return conertDirectVotes(persistable.toRelationalStruct());
 		case WI_ELECTION_TABLE_NAME:
 			return convertElectoralDistrict(persistable.toRelationalStruct());
 		case WI_FILLED_VOTING_PAPER_TABLE_NAME:
@@ -162,23 +159,13 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		}
 	}
 
-	Map<String, String> conertDirectVotes(Map<String, String> values)
-			throws DatabaseException {
-		values = removeAllBut(values, "electoralDistrictId",
-				"directCandidateId", "electionId", "receivedVotes");
-		checkRequired(values, "electoralDistrictId", "directCandidateId",
-				"electionId");
-		values = fillUpDefault(values, "receivedVotes");
-		return values;
-	}
-
 	Map<String, String> convertFilledVotingPaper(Map<String, String> values)
 			throws DatabaseException {
-		values = removeAllBut(values, "id", "electoralDistrictId",
-				"federalStateId", "partyId", "directCandidateId", "electionId");
+		values = removeAllBut(values, "id", "electoralDistrictId", "partyId",
+				"directCandidateId");
 		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
-		checkRequired(values, "electoralDistrictId", "federalStateId",
-				"partyId", "directCandidateId", "electionId");
+		checkRequired(values, "electoralDistrictId", "partyId",
+				"directCandidateId");
 		return values;
 	}
 
@@ -195,16 +182,17 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	Map<String, String> convertPartyVotes(Map<String, String> values)
 			throws DatabaseException {
 		values = removeAllBut(values, "federalStateId", "partyId",
-				"electionId", "receivedVotes");
-		checkRequired(values, "federalStateId", "partyId", "electionId");
+				"receivedVotes");
+		checkRequired(values, "federalStateId", "partyId");
 		values = fillUpDefault(values, "receivedVotes");
 		return values;
 	}
 
 	Map<String, String> convertParty(Map<String, String> values)
 			throws DatabaseException {
-		values = removeAllBut(values, "id", "name");
+		values = removeAllBut(values, "id", "name", "electionId");
 		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		checkRequired(values, "electionId");
 		values = fillUpMissing(values, "name");
 		return values;
 	}
@@ -234,9 +222,10 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	Map<String, String> convertDirectCandidate(Map<String, String> values)
 			throws DatabaseException {
 		values = removeAllBut(values, "id", "name", "partyId",
-				"electoralDistrictId", "electionId");
+				"electoralDistrictId", "electionId", "receivedVotes");
 		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
 		checkRequired(values, "partyId", "electoralDistrictId", "electionId");
+		fillUpDefault(values, "receivedVotes");
 		values = fillUpMissing(values, "id", "name", "partyId",
 				"electoralDistrictId", "electionId");
 		return values;
