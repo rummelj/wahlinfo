@@ -36,25 +36,21 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		Collection<CsvParty> parties = csvParser.parseParties();
 		Collection<CsvDirectCandidate> directCandidates2005 = csvParser
 				.parseDirectCandidates2005();
-		/*
-		 * Collection<CsvDirectCandidate> directCandidates2009 = csvParser
-		 * .parseDirectCandidates2009();
-		 */
+		Collection<CsvDirectCandidate> directCandidates2009 = csvParser
+				.parseDirectCandidates2009();
+
 		Collection<CsvListCandidate> listCandidates2005 = csvParser
 				.parseListCandidates2005();
-		/*
-		 * Collection<CsvListCandidate> listCandidates2009 = csvParser
-		 * .parseListCandidates2009();
-		 */
-
+		Collection<CsvListCandidate> listCandidates2009 = csvParser
+				.parseListCandidates2009();
 		Collection<Persistable> allEntities = new ArrayList<Persistable>(1024);
 		allEntities.addAll(electoralDistricts);
 		allEntities.addAll(federalStates);
 		allEntities.addAll(parties);
 		allEntities.addAll(directCandidates2005);
-		// allEntities.addAll(directCandidates2009);
+		allEntities.addAll(directCandidates2009);
 		allEntities.addAll(listCandidates2005);
-		// allEntities.addAll(listCandidates2009);
+		allEntities.addAll(listCandidates2009);
 
 		databasePersister.persist(allEntities);
 	}
