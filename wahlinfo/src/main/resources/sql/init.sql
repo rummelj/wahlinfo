@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS hibernate_sequence CASCADE;
+﻿DROP TABLE IF EXISTS hibernate_sequence CASCADE;
 DROP TABLE IF EXISTS WIFilledVotingPaper CASCADE;
 DROP TABLE IF EXISTS WIPartyVotes CASCADE;
 DROP TABLE IF EXISTS WIDirectVotes CASCADE;
@@ -8,6 +8,10 @@ DROP TABLE IF EXISTS WIParty CASCADE;
 DROP TABLE IF EXISTS WIFederalState CASCADE;
 DROP TABLE IF EXISTS WIElectoralDistrict CASCADE;
 DROP TABLE IF EXISTS WIElection CASCADE;
+DROP TABLE IF EXISTS WIDivisor CASCADE;
+DROP TABLE IF EXISTS WIPartySeatDistribution CASCADE;
+DROP TABLE IF EXISTS WIDirectMandateDistribution  CASCADE;
+DROP TABLE IF EXISTS WIListMandateDistribution  CASCADE;
 
 CREATE TABLE hibernate_sequence(
 	next_val BIGINT NOT NULL,
@@ -96,4 +100,35 @@ CREATE TABLE WIFilledVotingPaper (
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),	
 	PRIMARY KEY (id)
+);
+
+CREATE TABLE WIDivisor (
+	id BIGINT,
+	value SMALLINT NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE WIPartySeatDistribution (
+	partyId BIGINT,
+	seats SMALLINT NOT NULL,
+	electionId BIGINT,
+	FOREIGN KEY (partyId) REFERENCES WIParty(id),
+	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	PRIMARY KEY (partyId,electionId)
+);
+
+CREATE TABLE WIDirectMandateDistribution (
+	directCandidateId BIGINT,
+	electionId BIGINT,
+	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),
+	PRIMARY KEY (directCandidateId, electionId)	
+);
+
+CREATE TABLE WIListMandateDistribution (
+	listCandidateId BIGINT,
+	electionId BIGINT,
+	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	FOREIGN KEY (listCandidateId) REFERENCES WIListCandidate (id),
+	PRIMARY KEY (listCandidateId, electionId)
 );
