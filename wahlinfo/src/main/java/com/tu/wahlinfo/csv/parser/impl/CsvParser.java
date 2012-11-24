@@ -53,7 +53,10 @@ public class CsvParser implements ICsvParser {
 	private Collection<CsvDirectCandidate> directCandidates2005 = new HashSet<CsvDirectCandidate>();
 	private Collection<CsvDirectCandidate> directCandidates2009 = new HashSet<CsvDirectCandidate>();
 	private Collection<CsvListCandidate> listCandidates2005 = new HashSet<CsvListCandidate>();
-	private Collection<CsvListCandidate> listCandidates2009 = new HashSet<CsvListCandidate>();
+	private Collection<CsvListCandidate> listCandidates2009 = new HashSet<CsvListCandidate>();	
+	//Sorted direct candidates: elDir -> party -> candidate
+	private Map<Long, HashMap<Long,CsvDirectCandidate>> sortedDirectCandidates2005 = new HashMap<Long, HashMap<Long,CsvDirectCandidate>>();
+	private Map<Long, HashMap<Long,CsvDirectCandidate>> sortedDirectCandidates2009 = new HashMap<Long, HashMap<Long,CsvDirectCandidate>>();
 	// Federal states
 	private Map<String, CsvFederalState> federalStates = new HashMap<String, CsvFederalState>();
 	// vote generator
@@ -221,6 +224,46 @@ public class CsvParser implements ICsvParser {
 			throw new CsvParserException(MSG_FILE_PATH_ERR.replace(":file",
 					FILE_PATH_VOTES), ex);
 		}
+	}
+	
+	/**
+	 * Stores candidates in a two level map as: electoralDistrictId -> partyId -> CsvDirectCandidate
+	 * @throws CsvParserException
+	 */
+	private void createSortedCandidates() throws CsvParserException{
+	    if(!this.sortedDirectCandidates2005.isEmpty()){
+		return;
+	    }
+	    if(this.directCandidates2005.isEmpty()){
+		parseCandidates2005();
+	    }
+	    for(CsvDirectCandidate dirCan: this.directCandidates2005){
+		if(this.sortedDirectCandidates2005.get(dirCan.getElectoralDistrictId())==null){
+		    this.sortedDirectCandidates2005.put(dirCan.getElectoralDistrictId(), new HashMap<Long,CsvDirectCandidate>());
+		}
+		this.sortedDirectCandidates2005.get(dirCan.getElectoralDistrictId()).put(dirCan.getPartyId(), dirCan);				
+	    }
+	    if(!this.sortedDirectCandidates2009.isEmpty()){
+		return;
+	    }
+	    if(this.directCandidates2009.isEmpty()){
+		parseCandidates2009();
+	    }
+	    for(CsvDirectCandidate dirCan: this.directCandidates2009){
+		if(this.sortedDirectCandidates2009.get(dirCan.getElectoralDistrictId())==null){
+		    this.sortedDirectCandidates2009.put(dirCan.getElectoralDistrictId(), new HashMap<Long,CsvDirectCandidate>());
+		}
+		this.sortedDirectCandidates2009.get(dirCan.getElectoralDistrictId()).put(dirCan.getPartyId(), dirCan);				
+	    }
+	}
+	
+	private long getDirectCandidateId2005(Long partyId, long electoralDistrictId){
+	    //return this.sortedDirectCandidates2005.get(electoralDistricts).get(partyId);
+	    return 0L;
+	}
+	
+	private long getDirectCandidateId2009(Long partyId, long electoralDistrictId){
+	    return 0L;
 	}
 
 	public Collection<CsvFederalState> parseFederalStates()

@@ -8,20 +8,30 @@ import com.tu.wahlinfo.model.Persistable;
 
 public abstract class CsvAbstractCandidate implements Persistable {
 
+    private long id;
     private String firstnames;
     private String surname;
     private int yearOfBirth;
     private Long partyId;
     private ElectionYear candidatureYear;
 
-    public CsvAbstractCandidate(String firstnames, String surname, String yearOfBirth, Long partyId, ElectionYear candidatureYear) {
+    public CsvAbstractCandidate(long id, String firstnames, String surname, String yearOfBirth, Long partyId, ElectionYear candidatureYear) {
 	super();
+	this.id = id;
 	this.firstnames = firstnames;
 	this.surname = surname;
 	this.yearOfBirth = Integer.parseInt(yearOfBirth);
 	this.partyId = partyId;
 	this.candidatureYear = candidatureYear;
     }
+    
+    
+
+    public long getId() {
+        return id;
+    }
+
+
 
     public String getFirstnames() {
 	return firstnames;
@@ -47,17 +57,22 @@ public abstract class CsvAbstractCandidate implements Persistable {
 	return candidatureYear.toCleanString();
     }
 
+   
+
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((candidatureYear == null) ? 0 : candidatureYear.hashCode());
 	result = prime * result + ((firstnames == null) ? 0 : firstnames.hashCode());
+	result = prime * result + (int) (id ^ (id >>> 32));
 	result = prime * result + ((partyId == null) ? 0 : partyId.hashCode());
 	result = prime * result + ((surname == null) ? 0 : surname.hashCode());
 	result = prime * result + yearOfBirth;
 	return result;
     }
+
+
 
     @Override
     public boolean equals(Object obj) {
@@ -75,6 +90,8 @@ public abstract class CsvAbstractCandidate implements Persistable {
 		return false;
 	} else if (!firstnames.equals(other.firstnames))
 	    return false;
+	if (id != other.id)
+	    return false;
 	if (partyId == null) {
 	    if (other.partyId != null)
 		return false;
@@ -90,9 +107,12 @@ public abstract class CsvAbstractCandidate implements Persistable {
 	return true;
     }
 
+
+
     @Override
     public Map<String, String> toRelationalStruct() {
 	Map<String, String> res = new HashMap<String, String>();
+	
 	res.put("name", this.surname.concat(",").concat(firstnames));
 	res.put("electionId", this.candidatureYear.toCleanString());
 	res.put("partyId", ((partyId == null) ? "null" : Long.toString(this.partyId)));
