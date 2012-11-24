@@ -1,4 +1,4 @@
-﻿DROP TABLE IF EXISTS hibernate_sequence CASCADE;
+DROP TABLE IF EXISTS hibernate_sequence CASCADE;
 DROP TABLE IF EXISTS WIFilledVotingPaper CASCADE;
 DROP TABLE IF EXISTS WIPartyVotes CASCADE;
 DROP TABLE IF EXISTS WIDirectVotes CASCADE;
@@ -21,10 +21,8 @@ CREATE TABLE hibernate_sequence(
 INSERT INTO hibernate_sequence VALUES (0);
 
 CREATE TABLE WIElection (
-	id BIGINT  NOT NULL, 
-	start int, 
-	ending int NOT NULL,
-	PRIMARY KEY (id)
+	electionYear VARCHAR(4) NOT NULL, 
+	PRIMARY KEY (electionYear)
 );
 
 CREATE TABLE WIFederalState (
@@ -50,8 +48,8 @@ CREATE TABLE WIElectoralDistrict (
 CREATE TABLE WIParty (
 	id BIGINT  NOT NULL,
 	name VARCHAR(255),
-	electionId BIGINT  NOT NULL,
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	electionYear VARCHAR(4)  NOT NULL,
+	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
 	PRIMARY KEY (id)
 );
 
@@ -69,11 +67,11 @@ CREATE TABLE WIDirectCandidate (
 	name VARCHAR(255),
 	partyId BIGINT  NOT NULL,
 	electoralDistrictId SMALLINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
+	electionYear VARCHAR(4)  NOT NULL,
 	receivedVotes BIGINT NOT NULL DEFAULT 0,
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number), 
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
 	PRIMARY KEY (id)
 );
 
@@ -84,10 +82,10 @@ CREATE TABLE WIListCandidate (
 	rank BIGINT  NOT NULL,
 	partyId BIGINT  NOT NULL,
 	federalStateId BIGINT  NOT NULL,
-	electionId BIGINT  NOT NULL,
+	electionYear VARCHAR(4)  NOT NULL,
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (federalStateId) REFERENCES WIFederalState (federalStateId),
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
 	PRIMARY KEY (id)
 );
 
@@ -111,24 +109,24 @@ CREATE TABLE WIDivisor (
 CREATE TABLE WIPartySeatDistribution (
 	partyId BIGINT,
 	seats SMALLINT NOT NULL,
-	electionId BIGINT,
+	electionYear VARCHAR(4),
 	FOREIGN KEY (partyId) REFERENCES WIParty(id),
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
-	PRIMARY KEY (partyId,electionId)
+	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
+	PRIMARY KEY (partyId,electionYear)
 );
 
 CREATE TABLE WIDirectMandateDistribution (
 	directCandidateId BIGINT,
-	electionId BIGINT,
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	electionYear VARCHAR(4),
+	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
 	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),
-	PRIMARY KEY (directCandidateId, electionId)	
+	PRIMARY KEY (directCandidateId, electionYear)	
 );
 
 CREATE TABLE WIListMandateDistribution (
 	listCandidateId BIGINT,
-	electionId BIGINT,
-	FOREIGN KEY (electionId) REFERENCES WIElection (id),
+	electionYear VARCHAR(4),
+	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
 	FOREIGN KEY (listCandidateId) REFERENCES WIListCandidate (id),
-	PRIMARY KEY (listCandidateId, electionId)
+	PRIMARY KEY (listCandidateId, electionYear)
 );

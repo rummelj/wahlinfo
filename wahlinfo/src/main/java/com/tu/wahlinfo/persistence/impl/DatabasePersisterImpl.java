@@ -147,7 +147,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		case WI_PARTY_TABLE_NAME:
 			return convertParty(persistable.toRelationalStruct());
 		case WI_ELECTION_TABLE_NAME:
-			return convertElectoralDistrict(persistable.toRelationalStruct());
+			return convertElection(persistable.toRelationalStruct());
 		case WI_FILLED_VOTING_PAPER_TABLE_NAME:
 			return convertFilledVotingPaper(persistable.toRelationalStruct());
 		case WI_LIST_CANDIDATE_TABLE_NAME:
@@ -157,6 +157,13 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		default:
 			return persistable.toRelationalStruct();
 		}
+	}
+
+	Map<String, String> convertElection(Map<String, String> values)
+			throws DatabaseException {
+		values = removeAllBut(values, "electionYear");
+		checkRequired(values, "electionYear");
+		return values;
 	}
 
 	Map<String, String> convertFilledVotingPaper(Map<String, String> values)
@@ -172,9 +179,10 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	Map<String, String> convertListCandidate(Map<String, String> values)
 			throws DatabaseException {
 		values = removeAllBut(values, "id", "name", "profession", "rank",
-				"partyId", "federalStateId", "electionId");
+				"partyId", "federalStateId", "electionYear");
 		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
-		checkRequired(values, "rank", "partyId", "federalStateId", "electionId");
+		checkRequired(values, "rank", "partyId", "federalStateId",
+				"electionYear");
 		values = fillUpMissing(values, "name", "profession");
 		return values;
 	}
@@ -190,9 +198,9 @@ public class DatabasePersisterImpl implements DatabasePersister {
 
 	Map<String, String> convertParty(Map<String, String> values)
 			throws DatabaseException {
-		values = removeAllBut(values, "id", "name", "electionId");
+		values = removeAllBut(values, "id", "name", "electionYear");
 		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
-		checkRequired(values, "electionId");
+		checkRequired(values, "electionYear");
 		values = fillUpMissing(values, "name");
 		return values;
 	}
@@ -222,12 +230,12 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	Map<String, String> convertDirectCandidate(Map<String, String> values)
 			throws DatabaseException {
 		values = removeAllBut(values, "id", "name", "partyId",
-				"electoralDistrictId", "electionId", "receivedVotes");
+				"electoralDistrictId", "electionYear", "receivedVotes");
 		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
-		checkRequired(values, "partyId", "electoralDistrictId", "electionId");
+		checkRequired(values, "partyId", "electoralDistrictId", "electionYear");
 		fillUpDefault(values, "receivedVotes");
 		values = fillUpMissing(values, "id", "name", "partyId",
-				"electoralDistrictId", "electionId");
+				"electoralDistrictId", "electionYear");
 		return values;
 	}
 
