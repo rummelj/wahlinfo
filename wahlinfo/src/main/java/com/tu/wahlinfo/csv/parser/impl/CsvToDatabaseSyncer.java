@@ -39,8 +39,6 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 				.parseListCandidates2005()));
 		databasePersister.persist(new ArrayList<Persistable>(csvParser
 				.parseListCandidates2009()));
-		databasePersister.persist(new ArrayList<Persistable>(csvParser
-				.parseListCandidates2005()));
 	}
 
 }
