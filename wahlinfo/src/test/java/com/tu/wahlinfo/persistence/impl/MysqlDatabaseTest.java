@@ -60,7 +60,7 @@ public class MysqlDatabaseTest {
 		values.put("c", "d");
 		underTest.insert("table", values);
 		verify(databaseAccessorMock, times(1)).executeStatement(
-				"insert into table (a, c) values (\"b\", \"d\");");
+				"insert into table (a, c) values ('b', 'd');");
 	}
 
 	/**
@@ -74,12 +74,13 @@ public class MysqlDatabaseTest {
 	public void testBulkInsert() throws DatabaseException {
 		Map<String, List<String>> values = new LinkedHashMap<String, List<String>>();
 		values.put("a", toList("1", "2", "3", "4", "5"));
-		values.put("b", toList("6", "7", "8", "9", "1\"0"));
+		values.put("b", toList("6", "7", "8", "9", "1'0"));
 		underTest.bulkInsert("table", values);
+		verify(databaseAccessorMock, times(1))
+				.executeStatement(
+						"insert into table (a, b) values ('1', '6'), ('2', '7'), ('3', '8');");
 		verify(databaseAccessorMock, times(1)).executeStatement(
-				"insert into table (a, b) values (\"1\", \"6\"), (\"2\", \"7\"), (\"3\", \"8\");");
-		verify(databaseAccessorMock, times(1)).executeStatement(
-				"insert into table (a, b) values (\"4\", \"9\"), (\"5\", \"1\"\"0\");");
+				"insert into table (a, b) values ('4', '9'), ('5', '1''0');");
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class MysqlDatabaseTest {
 
 	@Test
 	public void testSanizise() {
-		assertEquals("\"a\"\"b\"", underTest.sanitise("a\"b"));
+		assertEquals("'a''b'", underTest.sanitise("a'b"));
 	}
 
 	@SuppressWarnings("unchecked")

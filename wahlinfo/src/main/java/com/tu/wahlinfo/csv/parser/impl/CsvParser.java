@@ -3,15 +3,18 @@ package com.tu.wahlinfo.csv.parser.impl;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import com.csvreader.CsvReader;
 import com.tu.wahlinfo.csv.CsvParserException;
 import com.tu.wahlinfo.csv.entities.impl.CsvDirectCandidate;
+import com.tu.wahlinfo.csv.entities.impl.CsvElection;
 import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrict;
 import com.tu.wahlinfo.csv.entities.impl.CsvFederalState;
 import com.tu.wahlinfo.csv.entities.impl.CsvGeneratedVote;
@@ -461,5 +464,13 @@ public class CsvParser implements ICsvParser {
 	private CsvReader buildCsvReader(String filePath) throws CsvParserException {
 		return new CsvReader(new InputStreamReader(getClass()
 				.getResourceAsStream(filePath)), CSV_ENTRY_DELIMITER);
+	}
+
+	@Override
+	public Collection<CsvElection> parseElections() {
+		List<CsvElection> elections = new ArrayList<CsvElection>();
+		elections.add(new CsvElection(ElectionYear._2005));
+		elections.add(new CsvElection(ElectionYear._2009));
+		return elections;
 	}
 }
