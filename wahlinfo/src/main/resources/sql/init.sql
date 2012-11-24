@@ -65,7 +65,7 @@ CREATE TABLE WIPartyVotes (
 CREATE TABLE WIDirectCandidate (
 	id BIGINT  NOT NULL,
 	name VARCHAR(255),
-	partyId BIGINT  NOT NULL,
+	partyId BIGINT,
 	electoralDistrictId SMALLINT  NOT NULL,
 	electionYear VARCHAR(4)  NOT NULL,
 	receivedVotes BIGINT NOT NULL DEFAULT 0,
