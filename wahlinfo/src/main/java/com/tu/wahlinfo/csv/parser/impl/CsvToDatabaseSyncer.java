@@ -1,18 +1,11 @@
 package com.tu.wahlinfo.csv.parser.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.tu.wahlinfo.csv.CsvParserException;
-import com.tu.wahlinfo.csv.entities.impl.CsvDirectCandidate;
-import com.tu.wahlinfo.csv.entities.impl.CsvElection;
-import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrict;
-import com.tu.wahlinfo.csv.entities.impl.CsvFederalState;
-import com.tu.wahlinfo.csv.entities.impl.CsvListCandidate;
-import com.tu.wahlinfo.csv.entities.impl.CsvParty;
 import com.tu.wahlinfo.csv.parser.ICsvParser;
 import com.tu.wahlinfo.csv.parser.ICsvToDatabaseSyncer;
 import com.tu.wahlinfo.model.Persistable;

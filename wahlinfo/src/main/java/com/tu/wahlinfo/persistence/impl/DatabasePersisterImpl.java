@@ -232,7 +232,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		values = removeAllBut(values, "id", "name", "partyId",
 				"electoralDistrictId", "electionYear", "receivedVotes");
 		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
-		checkRequired(values, "partyId", "electoralDistrictId", "electionYear");
+		checkRequired(values, "electoralDistrictId", "electionYear");
 		fillUpDefault(values, "receivedVotes");
 		values = fillUpMissing(values, "id", "name", "partyId",
 				"electoralDistrictId", "electionYear");

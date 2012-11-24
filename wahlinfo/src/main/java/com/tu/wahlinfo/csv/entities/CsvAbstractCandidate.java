@@ -98,10 +98,10 @@ public abstract class CsvAbstractCandidate implements Persistable {
 		Map<String, String> res = new HashMap<String, String>();
 		res.put("name", this.surname.concat(",").concat(firstnames));
 		res.put("electionYear", this.candidatureYear.toCleanString());
-		res.put("partyId",
-				((partyId == null) ? "null" : Long.toString(this.partyId)));
+		if (partyId != null) {
+			res.put("partyId", Long.toString(this.partyId));
+		}
 		res.put("yearOfBirth", Integer.toString(this.yearOfBirth));
 		return res;
 	}
-
 }

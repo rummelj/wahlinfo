@@ -18,7 +18,8 @@ public class StartupManager {
 	@PostConstruct
 	public void init() {
 		databaseSetupTrigger.init();
-		csvToDatabaseSyncerTrigger.init();
+		// Might take longer than 60 seconds. Better use servlet for trigger
+		// csvToDatabaseSyncerTrigger.init();
 	}
 
 }
