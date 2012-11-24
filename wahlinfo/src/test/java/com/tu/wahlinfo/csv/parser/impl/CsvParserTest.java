@@ -63,7 +63,7 @@ public class CsvParserTest {
 	Collection<CsvListCandidate> lcs = parser.parseListCandidates2009();
 
 	for (CsvDirectCandidate dc : dcs) {
-	    String out = dc.getSurname() + "\t" + dc.getYearOfBirth() + "\t" + dc.getPartyId() + "\t" + dc.getElectoralDistrictId() + "\t"
+	    String out = dc.getId() + "\t" + dc.getPartyId() + "\t" + dc.getElectoralDistrictId() + "\t"
 		    + dc.getCandidatureYear();
 	    System.out.println(out);
 	}
@@ -76,7 +76,7 @@ public class CsvParserTest {
 	System.out.println();
 
 	for (CsvListCandidate lc : lcs) {
-	    String out = lc.getSurname() + "\t" + lc.getYearOfBirth() + "\t" + lc.getPartyId() + "\t" + lc.getFederalStateId() + "\t"
+	    String out = lc.getId() + "\t" + lc.getPartyId() + "\t" + lc.getFederalStateId() + "\t"
 		    + lc.getPartyListRank() + "\t" + lc.getCandidatureYear();
 	    System.out.println(out);
 	}
@@ -95,7 +95,7 @@ public class CsvParserTest {
 	    break;
 	}
 	for (CsvGeneratedVote vote : votes) {
-	    String out = vote.getTmpId() + "\t" + vote.getElectoralDistrictId() + "\t" + vote.getDirectVotePartyId() + "\t"
+	    String out = vote.getTmpId() + "\t" + vote.getElectoralDistrictId() + "\t" + vote.getDirectVoteCandidateId() + "\t"
 		    + vote.getListVotePartyId();
 	    System.out.println(out);
 	}

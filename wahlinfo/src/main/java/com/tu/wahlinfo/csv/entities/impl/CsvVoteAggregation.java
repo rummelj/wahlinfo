@@ -11,54 +11,62 @@ import java.util.HashSet;
  */
 public class CsvVoteAggregation {
 
-    private long electoralDistrictId;
-    private Collection<CsvPartialVoteAggregation> partialAggregations = new HashSet<CsvPartialVoteAggregation>();
+	private long electoralDistrictId;
+	private Collection<CsvPartialVoteAggregation> partialAggregations = new HashSet<CsvPartialVoteAggregation>();
 
-    public CsvVoteAggregation(String electoralDistrictId) {
-	this.electoralDistrictId = Long.parseLong(electoralDistrictId);
+	public CsvVoteAggregation(String electoralDistrictId) {
+		this.electoralDistrictId = Long.parseLong(electoralDistrictId);
 
-    }
+	}
 
-    public void addPartialVoteAggregation(Long partyId2005, Long partyId2009, String numDirectVotes2005, String numDirectVotes2009,
-	    String numListVotes2005, String numListVotes2009) {
-	this.partialAggregations.add(new CsvPartialVoteAggregation(partyId2005, partyId2009, numDirectVotes2005, numDirectVotes2009,
-		numListVotes2005, numListVotes2009));
-    }
+	public void addPartialVoteAggregation(Long directCandidateId2005,
+			Long directCandidateId2009, Long partyId2005, Long partyId2009,
+			String numDirectVotes2005, String numDirectVotes2009,
+			String numListVotes2005, String numListVotes2009) {
+		this.partialAggregations.add(new CsvPartialVoteAggregation(
+				directCandidateId2005, directCandidateId2009, partyId2005,
+				partyId2009, numDirectVotes2005, numDirectVotes2009,
+				numListVotes2005, numListVotes2009));
+	}
 
-    public long getElectoralDistrictId() {
-	return electoralDistrictId;
-    }
+	public long getElectoralDistrictId() {
+		return electoralDistrictId;
+	}
 
-    public Collection<CsvPartialVoteAggregation> getPartialAggregations() {
-	return partialAggregations;
-    }
+	public Collection<CsvPartialVoteAggregation> getPartialAggregations() {
+		return partialAggregations;
+	}
 
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + (int) (electoralDistrictId ^ (electoralDistrictId >>> 32));
-	result = prime * result + ((partialAggregations == null) ? 0 : partialAggregations.hashCode());
-	return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (electoralDistrictId ^ (electoralDistrictId >>> 32));
+		result = prime
+				* result
+				+ ((partialAggregations == null) ? 0 : partialAggregations
+						.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	CsvVoteAggregation other = (CsvVoteAggregation) obj;
-	if (electoralDistrictId != other.electoralDistrictId)
-	    return false;
-	if (partialAggregations == null) {
-	    if (other.partialAggregations != null)
-		return false;
-	} else if (!partialAggregations.equals(other.partialAggregations))
-	    return false;
-	return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CsvVoteAggregation other = (CsvVoteAggregation) obj;
+		if (electoralDistrictId != other.electoralDistrictId)
+			return false;
+		if (partialAggregations == null) {
+			if (other.partialAggregations != null)
+				return false;
+		} else if (!partialAggregations.equals(other.partialAggregations))
+			return false;
+		return true;
+	}
 
 }

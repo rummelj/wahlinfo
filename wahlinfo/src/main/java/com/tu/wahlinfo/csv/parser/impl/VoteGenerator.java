@@ -58,7 +58,7 @@ public class VoteGenerator implements IVoteGenerator {
 	    if (numDirVotes == -1 && numListVotes == -1) {
 		break;
 	    } else {
-		votes.add(new CsvGeneratedVote(id++, aggregation.getElectoralDistrictId(), partialAggregations[dirVotesIndex].getPartyId(year),
+		votes.add(new CsvGeneratedVote(id++, aggregation.getElectoralDistrictId(), partialAggregations[dirVotesIndex].getDirectCanidateId(year),
 			partialAggregations[listVotesIndex].getPartyId(year)));
 	    }
 	}

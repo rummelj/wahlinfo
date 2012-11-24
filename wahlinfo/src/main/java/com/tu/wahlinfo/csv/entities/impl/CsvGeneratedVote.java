@@ -7,90 +7,100 @@ import com.tu.wahlinfo.model.Persistable;
 
 public class CsvGeneratedVote implements Persistable {
 
-    private static final String TABLE_NAME = "WIFilledVotingPaper";
-    
-    private long tmpId;
-    private long electoralDistrictId;
-    private long directVotePartyId;
-    private long listVotePartyId;   
+	private static final String TABLE_NAME = "WIFilledVotingPaper";
 
-    /**
-     * 
-     * @param tmpId
-     *            The temp id is necessary to avoid equals()/ hash-collisions of
-     *            matching votes.
-     * @param electoralDistrictId
-     * @param directVoteParty
-     * @param listVoteParty
-     */
-    public CsvGeneratedVote(long tmpId, long electoralDistrictId, long directVotePartyId, long listVotePartyId) {
-	this.tmpId = tmpId;	
-	this.electoralDistrictId = electoralDistrictId;
-	this.directVotePartyId = directVotePartyId;
-	this.listVotePartyId = listVotePartyId;
-    }
+	private long tmpId;
+	private long electoralDistrictId;
+	private Long listVotePartyId;
+	private Long directVoteCandidateId;
 
-    public long getElectoralDistrictId() {
-	return electoralDistrictId;
-    }
+	/**
+	 * 
+	 * @param tmpId
+	 *            The temp id is necessary to avoid equals()/ hash-collisions of
+	 *            matching votes.
+	 * @param electoralDistrictId
+	 * @param directVoteParty
+	 * @param listVoteParty
+	 */
+	public CsvGeneratedVote(long tmpId, long electoralDistrictId,
+			Long directVoteCandidateId, Long listVotePartyId) {
+		this.tmpId = tmpId;
+		this.electoralDistrictId = electoralDistrictId;
+		this.directVoteCandidateId = directVoteCandidateId;
+		this.listVotePartyId = listVotePartyId;
+	}
 
-    public long getDirectVotePartyId() {
-	return directVotePartyId;
-    }
+	public long getElectoralDistrictId() {
+		return electoralDistrictId;
+	}
 
-    public long getListVotePartyId() {
-	return listVotePartyId;
-    }
+	public Long getDirectVoteCandidateId() {
+		return directVoteCandidateId;
+	}
 
-    public long getTmpId() {
-	return tmpId;
-    }
+	public long getListVotePartyId() {
+		return listVotePartyId;
+	}
 
-    
+	public long getTmpId() {
+		return tmpId;
+	}
 
-    @Override
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + (int) (directVotePartyId ^ (directVotePartyId >>> 32));
-	result = prime * result + (int) (electoralDistrictId ^ (electoralDistrictId >>> 32));
-	result = prime * result + (int) (listVotePartyId ^ (listVotePartyId >>> 32));
-	result = prime * result + (int) (tmpId ^ (tmpId >>> 32));
-	return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((directVoteCandidateId == null) ? 0 : directVoteCandidateId
+						.hashCode());
+		result = prime * result
+				+ (int) (electoralDistrictId ^ (electoralDistrictId >>> 32));
+		result = prime * result
+				+ ((listVotePartyId == null) ? 0 : listVotePartyId.hashCode());
+		result = prime * result + (int) (tmpId ^ (tmpId >>> 32));
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	CsvGeneratedVote other = (CsvGeneratedVote) obj;
-	if (directVotePartyId != other.directVotePartyId)
-	    return false;
-	if (electoralDistrictId != other.electoralDistrictId)
-	    return false;
-	if (listVotePartyId != other.listVotePartyId)
-	    return false;
-	if (tmpId != other.tmpId)
-	    return false;
-	return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CsvGeneratedVote other = (CsvGeneratedVote) obj;
+		if (directVoteCandidateId == null) {
+			if (other.directVoteCandidateId != null)
+				return false;
+		} else if (!directVoteCandidateId.equals(other.directVoteCandidateId))
+			return false;
+		if (electoralDistrictId != other.electoralDistrictId)
+			return false;
+		if (listVotePartyId == null) {
+			if (other.listVotePartyId != null)
+				return false;
+		} else if (!listVotePartyId.equals(other.listVotePartyId))
+			return false;
+		if (tmpId != other.tmpId)
+			return false;
+		return true;
+	}
 
-    @Override
-    public Map<String, String> toRelationalStruct() {
-	Map<String, String> res = new HashMap<String, String>();
-	res.put("id", Long.toString(this.tmpId));
-	res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
-	res.put("partyId", Long.toString(this.listVotePartyId));
-	res.put("directVotePartyId", Long.toString(this.directVotePartyId));	
-	return res;
-    }
+	@Override
+	public Map<String, String> toRelationalStruct() {
+		Map<String, String> res = new HashMap<String, String>();
+		res.put("id", Long.toString(this.tmpId));
+		res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
+		res.put("partyId", Long.toString(this.listVotePartyId));
+		res.put("directCandidateId", Long.toString(this.directVoteCandidateId));
+		return res;
+	}
 
-    @Override
-    public String getTargetTableName() {
-	return TABLE_NAME;
-    }
+	@Override
+	public String getTargetTableName() {
+		return TABLE_NAME;
+	}
 }
