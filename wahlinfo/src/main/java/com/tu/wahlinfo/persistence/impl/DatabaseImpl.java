@@ -20,7 +20,7 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 public class DatabaseImpl implements Database {
 
 	static final String POSTGRESQL_QUOTE = "'";
-	static int MAX_BULK_INSERT_SIZE = 500;
+	static int MAX_BULK_INSERT_SIZE = 50000;
 
 	@Inject
 	DatabaseAccessor databaseAccessor;

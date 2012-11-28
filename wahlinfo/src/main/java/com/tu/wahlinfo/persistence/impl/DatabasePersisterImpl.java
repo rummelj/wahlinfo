@@ -170,7 +170,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 			throws DatabaseException {
 		values = removeAllBut(values, "id", "electoralDistrictId", "partyId",
 				"directCandidateId");
-		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "id", null);
 		checkRequired(values, "electoralDistrictId", "partyId",
 				"directCandidateId");
 		return values;
@@ -180,7 +180,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 			throws DatabaseException {
 		values = removeAllBut(values, "id", "name", "profession", "rank",
 				"partyId", "federalStateId", "electionYear");
-		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "id", null);
 		checkRequired(values, "rank", "partyId", "federalStateId",
 				"electionYear");
 		values = fillUpMissing(values, "name", "profession");
@@ -199,7 +199,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 	Map<String, String> convertParty(Map<String, String> values)
 			throws DatabaseException {
 		values = removeAllBut(values, "id", "name", "electionYear");
-		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "id", null);
 		checkRequired(values, "electionYear");
 		values = fillUpMissing(values, "name");
 		return values;
@@ -209,8 +209,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 			throws DatabaseException {
 		values = removeAllBut(values, "federalStateId", "name",
 				"possibleVotes", "validVotes", "invalidVotes");
-		replaceIfNotContained(values, "federalStateId",
-				String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "federalStateId", null);
 		replaceIfNotContained(values, "possibleVotes", "0");
 		values = fillUpDefault(values, "validVotes", "invalidVotes");
 		return values;
@@ -220,8 +219,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 			throws DatabaseException {
 		values = removeAllBut(values, "number", "name", "federalStateId",
 				"possibleVotes", "validVotes", "invalidVotes");
-		replaceIfNotContained(values, "number",
-				String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "number", null);
 		replaceIfNotContained(values, "possibleVotes", "0");
 		values = fillUpDefault(values, "validVotes", "invalidVotes");
 		return values;
@@ -231,7 +229,7 @@ public class DatabasePersisterImpl implements DatabasePersister {
 			throws DatabaseException {
 		values = removeAllBut(values, "id", "name", "partyId",
 				"electoralDistrictId", "electionYear", "receivedVotes");
-		replaceIfNotContained(values, "id", String.valueOf(idGenerator.getId()));
+		replaceIfNotContained(values, "id", null);
 		checkRequired(values, "electoralDistrictId", "electionYear");
 		fillUpDefault(values, "receivedVotes");
 		values = fillUpMissing(values, "id", "name", "partyId",
@@ -239,9 +237,14 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		return values;
 	}
 
-	<T, O> void replaceIfNotContained(Map<T, O> input, T key, O defaultValue) {
+	<T, O> void replaceIfNotContained(Map<T, O> input, T key, O defaultValue)
+			throws DatabaseException {
 		if (!input.containsKey(key)) {
-			input.put(key, defaultValue);
+			if (defaultValue == null) {
+				String.valueOf(idGenerator.getId());
+			} else {
+				input.put(key, defaultValue);
+			}
 		}
 	}
 

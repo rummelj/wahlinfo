@@ -17,13 +17,11 @@ import com.tu.wahlinfo.csv.entities.impl.CsvDirectCandidate;
 import com.tu.wahlinfo.csv.entities.impl.CsvElection;
 import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrict;
 import com.tu.wahlinfo.csv.entities.impl.CsvFederalState;
-import com.tu.wahlinfo.csv.entities.impl.CsvGeneratedVote;
 import com.tu.wahlinfo.csv.entities.impl.CsvListCandidate;
 import com.tu.wahlinfo.csv.entities.impl.CsvParty;
 import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.csv.parser.ICsvParser;
-import com.tu.wahlinfo.csv.parser.IVoteGenerator;
 
 /**
  * 
@@ -62,8 +60,6 @@ public class CsvParser implements ICsvParser {
 	private Map<Long, HashMap<Long, Long>> sortedDirectCandidates2009 = new HashMap<Long, HashMap<Long, Long>>();
 	// Federal states
 	private Map<String, CsvFederalState> federalStates = new HashMap<String, CsvFederalState>();
-	// vote generator
-	private IVoteGenerator voteGenerator = new VoteGenerator();
 	// Party matching
 	private Map<ElectionYear, HashMap<String, Long>> partyIds = new EnumMap<ElectionYear, HashMap<String, Long>>(
 			ElectionYear.class);
@@ -162,11 +158,6 @@ public class CsvParser implements ICsvParser {
 			throw new CsvParserException(MSG_FILE_PATH_ERR.replace(":file",
 					filePath));
 		}
-	}
-
-	public Collection<CsvGeneratedVote> generateVotes(
-			CsvVoteAggregation aggregation, long shadowIdStart) {
-		return this.voteGenerator.generateVotes(aggregation, shadowIdStart);
 	}
 
 	public Collection<CsvVoteAggregation> parseVoteAggregations(int startElId,
@@ -497,7 +488,7 @@ public class CsvParser implements ICsvParser {
 	private void createLeftOverDirectCandidates(ElectionYear year) {
 		long id = 1;
 		for (CsvElectoralDistrict dis : this.electoralDistricts) {
-			long prefixedId = Long.parseLong(year.getPrefix() + "0" + id);
+			long prefixedId = Long.parseLong(year.getPrefix() + "0" + id++);
 			if (year.equals(ElectionYear._2005)) {
 				this.directCandidates2005
 						.add(new CsvDirectCandidate(prefixedId, "Uebrig",
