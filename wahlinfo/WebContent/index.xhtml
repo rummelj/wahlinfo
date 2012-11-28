@@ -13,7 +13,7 @@
 	<h:form>
 		<p:progressBar widgetVar="syncProgress" ajax="true"
 			value="#{syncModel.progress}" labelTemplate="{value}%"
-			styleClass="animated" />
+			styleClass="animated" interval="1000" />
 		<h:commandButton value="Launch Sync" action="#{syncModel.launchSync}"
 			onclick="syncProgress.start()" />
 	</h:form>

@@ -88,42 +88,42 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		Long entriesPersisted = 0L;
 		databasePersister.persist(elections);
 		entriesPersisted += elections.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		databasePersister.persist(federalStates);
 		entriesPersisted += federalStates.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		databasePersister.persist(electoralDistricts);
 		entriesPersisted += electoralDistricts.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		databasePersister.persist(parties);
 		entriesPersisted += parties.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		databasePersister.persist(directCandidates2005);
 		entriesPersisted += directCandidates2005.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		databasePersister.persist(directCandidates2009);
 		entriesPersisted += directCandidates2009.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		databasePersister.persist(listCandidates2005);
 		entriesPersisted += listCandidates2005.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		databasePersister.persist(listCandidates2009);
 		entriesPersisted += listCandidates2009.size();
-		setProgressInPercent((int) (10 + (entriesPersisted * 100)
+		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
 		Collection<CsvVoteAggregation> voteAggregations = csvParser
@@ -134,10 +134,15 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		for (CsvVoteAggregation voteAggregation : voteAggregations) {
 			Collection<CsvGeneratedVote> generatedVotesForVoteAggregation = voteGenerator
 					.generateVotes(voteAggregation, 0);
-			databasePersister.persist(new ArrayList<Persistable>(generatedVotesForVoteAggregation));
-			setProgressInPercent((int) (10 + (districtsProcessed++ * 100)
+			/*
+			 * databasePersister.persist(new ArrayList<Persistable>(
+			 * generatedVotesForVoteAggregation));
+			 */
+			setProgressInPercent((int) (10 + (districtsProcessed++ * 90)
 					/ voteAggregations.size()));
 		}
+
+		setProgressInPercent(100);
 	}
 
 	private void setProgressInPercent(int percentage) {

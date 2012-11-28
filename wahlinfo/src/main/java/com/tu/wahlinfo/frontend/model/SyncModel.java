@@ -31,12 +31,10 @@ public class SyncModel implements Observer {
 
 	@Override
 	public void notify(Observable observable) {
-		if (observable.equals(csvToDatabaseSyncer)) {
-			progress = csvToDatabaseSyncer.getProgressInPercent();
-		}
+		progress = ((ICsvToDatabaseSyncer) observable).getProgressInPercent();
 	}
 
-	public int getProgress(){
-		return progress;
+	public int getProgress() {
+		return csvToDatabaseSyncer.getProgressInPercent();
 	}
 }
