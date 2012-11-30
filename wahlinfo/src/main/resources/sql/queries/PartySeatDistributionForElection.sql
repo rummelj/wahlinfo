@@ -1,45 +1,5 @@
-delete 
-from	WIPartySeatDistribution psd
-where	psd.electionId	= :electionId;
-
-delete
-from 	WIDirectMandateDistribution dmd
-where	dmd.electionId	= :electionId;
-
-delete
-from 	WIListMandateDistribution lmd
-where	lmd.electionId	= :electionId;
-
-drop view if exists WinnerPerDistrict;
-
-create view WinnerPerDistrict as (
-	with MaxVotes as (
-		select	dc.electoralDistrictId, max(dc.receivedVotes) as receivedVotes
-		from	WIDirectCandidate dc
-		where	dc.electionID	= :electionId
-		group by dc.electoralDistrictId
-	)
-	select	distinct on (dc.electoralDistrictId) dc.electoralDistrictId, dc.id as directCandidateId, dc.partyId
-	from	MaxVotes m, WIDirectCandidate dc
-	where	m.electoralDistrictId	= dc.electoralDistrictId	and
-		m.receivedVotes		= dc.receivedVotes		and
-		dc.electionId		= :electionId
-	order by dc.electoralDistrictId, random()
-);
-
-with DirectVoteWinnerWithoutPartyOrIndependent as (
-	select	wpd.directCandidateId
-	from	WinnerPerDistrict wpd
-	where	wpd.partyId is null	or
-		not exists 	(	select	*
-					from	WIListCandidate lc, WIElectoralDistrict ed
-					where	wpd.partyId		= lc.partyId		and
-						wpd.electoralDistrictId	= ed.number		and
-						ed.federalStateId	= lc.federalStateID	and
-						lc.electionId		= :electionId
-				)		
-),
-
+VIEWS
+-- parties with less than 3 votes and less than 5% of all (list) votes
 BarrierClauseParties as (
 	with InsuffDirectMandateParties as (
 		select	wpd.partyId
@@ -47,6 +7,7 @@ BarrierClauseParties as (
 		group by wpd.partyId
 		having	count(*) < 3
 	)	
+	-- WinnerPerDistrict is already filtered by election and PartyIds are unique
 	select	pv.partyId
 	from 	WIPartyVotes pv
 	where	pv.partyId	in	(	select *
@@ -60,37 +21,35 @@ BarrierClauseParties as (
 						)
 ),
 
+-- 598 - (Winners without party) - (Winners of barrier clause party)
 AvailableSeats as (
 	select 	598 - count(*)
+		-- filtered for election
 	from	WinnerPerDistrict wpd
-	where	wpd.partyId		not in	(	select 	*
-							from BarrierClauseParties
-						)	and
-		wpd.directCandidateId	not in	(	select	*
-							from	DirectVoteWinnerWithoutPartyOrIndependent
-						)
+	where	wpd.partyId		in	(	select 	*
+								-- filtered for election
+							from 	BarrierClauseParties
+						)	or		
+		wpd.partyId		is null
+		
 ),
 
-QualifiedVotesPerParty as (
-	select	fvp.partyId, count(fvp.id) as votes
-	from	WIFilledVotingPaper fvp, WIParty p
-	where	fvp.partyId	= p.id	and
-		p.electionId	= :electionId	and
-		fvp.partyId		not in	(	select	*
-							from	BarrierClauseParties
-						)
-					and
-		fvp.directCandidateId	not in	(	select	*
-							from	DirectVoteWinnerWithoutPartyOrIndependent
-						)
-	group by fvp.partyId
-
-),
-
+-- the algorithm produces as many rank entries per iteration as there are qualified parties
+-- therefore ceil (numSeats / numQParties) iterations (I) are required
+-- in SQL these iterations are realized by calculating the cross product with the first I rows from the WIDivisor table
+-- after that take and group first numSeats entries in order to get the seat distribution
 Ranking as (
-	select  qvp.partyId, (qvp.votes::float / d.value) as rvalue
-	from 	QualifiedVotesPerParty qvp, WIDivisor d
-	where	d.id	<= ceil (598::float / ( select count(*) from QualifiedVotesPerParty ))
+	select  pv.partyId, (pv.receivedVotes::float / d.value) as rvalue
+	from 	WIPartyVotes pv, WIParty p, WIDivisor d
+	where	pv.partyId	= p.id		and
+		p.electionId	= :electionId	and
+		d.id	<= ceil (598::float / ( select 	count(*) 
+						from 	WIPartyVotes pv, WIParty p
+						where 	pv.partyId	= p.id		and
+							p.electionId	= :electionId	and
+							pv.partyId	not in ( select * from BarrierClauseParties)
+						)
+				)
 	order by rvalue desc
 	limit	(select * from AvailableSeats)
 )
