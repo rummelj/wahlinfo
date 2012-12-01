@@ -171,8 +171,8 @@ public class DatabasePersisterImpl implements DatabasePersister {
 		values = removeAllBut(values, "id", "electoralDistrictId", "partyId",
 				"directCandidateId");
 		replaceIfNotContained(values, "id", null);
-		checkRequired(values, "electoralDistrictId", "partyId",
-				"directCandidateId");
+		checkRequired(values, "electoralDistrictId");
+		values = fillUpMissing(values, "partyId", "directCandidateId");
 		return values;
 	}
 

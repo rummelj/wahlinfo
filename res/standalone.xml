@@ -132,13 +132,13 @@
                 <stateless>
                     <bean-instance-pool-ref pool-name="slsb-strict-max-pool"/>
                 </stateless>
-                <stateful default-access-timeout="5000" cache-ref="simple"/>
-                <singleton default-access-timeout="5000"/>
+                <stateful default-access-timeout="60000" cache-ref="simple"/>
+                <singleton default-access-timeout="60000"/>
             </session-bean>
             <pools>
                 <bean-instance-pools>
-                    <strict-max-pool name="slsb-strict-max-pool" max-pool-size="20" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
-                    <strict-max-pool name="mdb-strict-max-pool" max-pool-size="20" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
+                    <strict-max-pool name="slsb-strict-max-pool" max-pool-size="20" instance-acquisition-timeout="60" instance-acquisition-timeout-unit="MINUTES"/>
+                    <strict-max-pool name="mdb-strict-max-pool" max-pool-size="20" instance-acquisition-timeout="60" instance-acquisition-timeout-unit="MINUTES"/>
                 </bean-instance-pools>
             </pools>
             <caches>
@@ -268,7 +268,7 @@
                 </process-id>
             </core-environment>
             <recovery-environment socket-binding="txn-recovery-environment" status-socket-binding="txn-status-manager"/>
-            <coordinator-environment default-timeout="300"/>
+            <coordinator-environment default-timeout="3600"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:web:1.1" default-virtual-server="default-host" native="false">
             <connector name="http" protocol="HTTP/1.1" scheme="http" socket-binding="http"/>

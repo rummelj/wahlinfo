@@ -91,9 +91,9 @@ CREATE TABLE WIListCandidate (
 
 CREATE TABLE WIFilledVotingPaper (
 	id BIGINT  NOT NULL,
-	electoralDistrictId SMALLINT  NOT NULL,	
-	partyId BIGINT NOT NULL,
-	directCandidateId BIGINT NOT NULL,	
+	electoralDistrictId SMALLINT NOT NULL,	
+	partyId BIGINT,
+	directCandidateId BIGINT,	
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number),	
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
 	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),	

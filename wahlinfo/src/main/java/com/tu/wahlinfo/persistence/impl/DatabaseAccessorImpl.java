@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,6 +18,11 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 
 	@PersistenceContext(unitName = "wahlinfo")
 	EntityManager entityManager;
+
+	@Asynchronous
+	public void executeStatementAsync(String sql) throws DatabaseException {
+		executeStatement(sql);
+	}
 
 	@Override
 	public void executeStatement(String sql) throws DatabaseException {

@@ -16,4 +16,11 @@ public interface IdGenerator {
 	 */
 	long getId() throws DatabaseException;
 
+	/**
+	 * Increases the id count by the given number.
+	 * 
+	 * @param byNumber
+	 * @throws DatabaseException
+	 */
+	void increaseId(long byNumber) throws DatabaseException;
 }

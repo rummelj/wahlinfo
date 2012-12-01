@@ -133,11 +133,10 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		int districtsProcessed = 0;
 		for (CsvVoteAggregation voteAggregation : voteAggregations) {
 			Collection<CsvGeneratedVote> generatedVotesForVoteAggregation = voteGenerator
-					.generateVotes(voteAggregation, 0);
-			/*
-			 * databasePersister.persist(new ArrayList<Persistable>(
-			 * generatedVotesForVoteAggregation));
-			 */
+					.generateVotes(voteAggregation, idGenerator.getId());
+			idGenerator.increaseId(generatedVotesForVoteAggregation.size() + 1);
+			databasePersister.persist(new ArrayList<Persistable>(
+					generatedVotesForVoteAggregation));
 			setProgressInPercent((int) (10 + (districtsProcessed++ * 90)
 					/ voteAggregations.size()));
 		}

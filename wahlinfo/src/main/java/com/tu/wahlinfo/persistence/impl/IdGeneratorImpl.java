@@ -34,15 +34,32 @@ public class IdGeneratorImpl implements IdGenerator {
 	 */
 	@Override
 	public long getId() throws DatabaseException {
+		Long currentValue = getCurrentId();
+		Long nextValue = currentValue + 1;
+		setId(currentValue, nextValue);
+		return nextValue;
+	}
+
+	private void setId(Long currentValue, Long nextValue)
+			throws DatabaseException {
+		databaseAccessor
+				.executeStatement("UPDATE hibernate_sequence SET next_val="
+						+ nextValue + " WHERE next_val=" + currentValue + ";");
+	}
+
+	private Long getCurrentId() throws DatabaseException {
 		Map<String, List<String>> hibernate_sequence = databaseAccessor
 				.executeQuery("SELECT * FROM hibernate_sequence", "next_val");
 		Long currentValue = Long.valueOf(hibernate_sequence.get("next_val")
 				.get(0));
-		Long nextValue = currentValue + 1;
-		databaseAccessor
-				.executeStatement("UPDATE hibernate_sequence SET next_val="
-						+ nextValue + " WHERE next_val=" + currentValue + ";");
-		return nextValue;
+		return currentValue;
+	}
+
+	@Override
+	public void increaseId(long byNumber) throws DatabaseException {
+		Long currentValue = getCurrentId();
+		Long nextValue = currentValue + byNumber;
+		setId(currentValue, nextValue);
 	}
 
 }

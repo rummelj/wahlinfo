@@ -23,6 +23,18 @@ public interface DatabaseAccessor {
 	void executeStatement(String sql) throws DatabaseException;
 
 	/**
+	 * Executes sql as is without waiting for the database to process the query.
+	 * This method does not sanitise any parameters, so you have to do that
+	 * yourself.
+	 * 
+	 * @param sql
+	 *            Sql to be executed on the database.
+	 * @throws DatabaseException
+	 *             If an error occurs when accessing the database.
+	 */
+	void executeStatementAsync(String sql) throws DatabaseException;
+
+	/**
 	 * Executes a query on the database.
 	 * 
 	 * @param query

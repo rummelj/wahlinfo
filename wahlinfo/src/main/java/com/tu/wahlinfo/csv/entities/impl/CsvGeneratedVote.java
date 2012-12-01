@@ -94,8 +94,15 @@ public class CsvGeneratedVote implements Persistable {
 		Map<String, String> res = new HashMap<String, String>();
 		res.put("id", Long.toString(this.tmpId));
 		res.put("electoralDistrictId", Long.toString(this.electoralDistrictId));
-		res.put("partyId", Long.toString(this.listVotePartyId));
-		res.put("directCandidateId", Long.toString(this.directVoteCandidateId));
+
+		if (this.listVotePartyId != null) {
+			res.put("partyId", Long.toString(this.listVotePartyId));
+		}
+
+		if (this.directVoteCandidateId != null) {
+			res.put("directCandidateId",
+					Long.toString(this.directVoteCandidateId));
+		}
 		return res;
 	}
 
