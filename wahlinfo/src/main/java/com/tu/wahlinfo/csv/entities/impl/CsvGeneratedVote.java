@@ -39,7 +39,7 @@ public class CsvGeneratedVote implements Persistable {
 		return directVoteCandidateId;
 	}
 
-	public long getListVotePartyId() {
+	public Long getListVotePartyId() {
 		return listVotePartyId;
 	}
 
