@@ -1,4 +1,5 @@
-﻿<?xml version='1.0' encoding='UTF-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
+
 <server xmlns="urn:jboss:domain:1.2">
 
     <extensions>
@@ -92,35 +93,33 @@
         <subsystem xmlns="urn:jboss:domain:configadmin:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:1.0">
             <datasources>
-				<datasource jndi-name="java:jboss/postgresDS" pool-name="postgresDS" enabled="true" jta="false" use-java-context="true" use-ccm="false">
-					<connection-url>jdbc:postgresql://localhost:5432/wahlinfo</connection-url>
-					<driver-class>org.postgresql.Driver</driver-class>
-					<driver>postgresql</driver>
-					<pool>
-						<min-pool-size>2</min-pool-size>
-						<max-pool-size>20</max-pool-size>
-					</pool>
-					<security>
-						<user-name>wahlinfo</user-name>
-						<password>wahlinfo</password>
-					</security>
-					<validation>
-						<validate-on-match>false</validate-on-match>
-						<background-validation>false</background-validation>
-						<background-validation-millis>1</background-validation-millis>
-					</validation>
-					<statement>
-						<prepared-statement-cache-size>0</prepared-statement-cache-size>
-						<share-prepared-statements>false</share-prepared-statements>
-					</statement>
-				</datasource>
-				<drivers>
-					<driver name="postgresql" module="org.postgresql">
-						<xa-datasource-class>
-							org.postgresql.xa.PGXADataSource
-						</xa-datasource-class>
-					</driver>
-				</drivers>
+                <datasource jta="false" jndi-name="java:jboss/postgresDS" pool-name="postgresDS" enabled="true" use-java-context="true" use-ccm="false">
+                    <connection-url>jdbc:postgresql://localhost:5432/wahlinfo</connection-url>
+                    <driver-class>org.postgresql.Driver</driver-class>
+                    <driver>postgresql</driver>
+                    <pool>
+                        <min-pool-size>2</min-pool-size>
+                        <max-pool-size>20</max-pool-size>
+                    </pool>
+                    <security>
+                        <user-name>wahlinfo</user-name>
+                        <password>wahlinfo</password>
+                    </security>
+                    <validation>
+                        <validate-on-match>false</validate-on-match>
+                        <background-validation>false</background-validation>
+                        <background-validation-millis>1</background-validation-millis>
+                    </validation>
+                    <statement>
+                        <prepared-statement-cache-size>0</prepared-statement-cache-size>
+                        <share-prepared-statements>false</share-prepared-statements>
+                    </statement>
+                </datasource>
+                <drivers>
+                    <driver name="postgresql" module="org.postgresql">
+                        <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+                    </driver>
+                </drivers>
             </datasources>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:1.1">
@@ -132,8 +131,8 @@
                 <stateless>
                     <bean-instance-pool-ref pool-name="slsb-strict-max-pool"/>
                 </stateless>
-                <stateful default-access-timeout="60000" cache-ref="simple"/>
-                <singleton default-access-timeout="60000"/>
+                <stateful default-access-timeout="5000" cache-ref="simple"/>
+                <singleton default-access-timeout="5000"/>
             </session-bean>
             <pools>
                 <bean-instance-pools>
