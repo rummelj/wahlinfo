@@ -1,3 +1,3 @@
 delete 
 from	WIPartySeatDistribution psd
-where	psd.electionId	= :electionId;
+where	psd.electionYear	= :electionYear;

@@ -1,7 +1,7 @@
 ﻿delete
 from	WIListMandateDistribution lmd
-where	lmd.electionId 	= :electionId;
+where	lmd.electionYear 	= :electionYear;
 
 delete
 from 	WIDirectMandateDistribution dmd
-where 	dmd.electionId	= :electionId;
+where 	dmd.electionYear	= :electionYear;

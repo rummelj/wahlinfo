@@ -2,7 +2,7 @@
 with MaxSeats as (
 	select	max(psd.seats) as seats
 	from	WIPartySeatDistribution psd
-	where	psd.electionId	= :election
+	where	psd.electionYear	= :election
 ),
 
 -- calculate min number of states a party having acquired seats has received votes in
@@ -11,7 +11,7 @@ MinOccurences as (
 	from	(	select	psd.party, count(*) as num
 			from	WIPartySeatDistribution psd, WIPartyVotes pv
 			where	psd.partyId	= pv.id	and
-				psd.electionId	= :electionId
+				psd.electionYear	= :electionYear
 			group by psd.partyId
 		) as tmp
 ),
@@ -58,7 +58,7 @@ SuccessfulDoubleCandidates as (
 
 SuccessfulDoubleCandidatesPerPartyAndState as (
 	select	lc.partyId, lc.federalStateId, count(*) as num
-		-- wpd is already filtered by electionId and candidateIds are unique
+		-- wpd is already filtered by electionYear and candidateIds are unique
 	from	WinnerPerDistrict wpd, WICandidateMatching cm, WIListCandidate lc
 	where	wpd.directCandidateId	= cm.directCandidateId	and
 		lc.id			= cm.listCandidateId
@@ -67,8 +67,8 @@ SuccessfulDoubleCandidatesPerPartyAndState as (
 
 -- add list candidates for each party and federal state
 -- exclude double candidates and include following candidates (e.g. 5 and 2 double candidates -> rank <= 7)
-insert 	into WIListMandateDistribution(listCandidateId, electionId)
-select	lc.id, :electionId
+insert 	into WIListMandateDistribution(listCandidateId, electionYear)
+select	lc.id, :electionYear
 from	SeatsPerPartyAndFederalState  spf, WIListCandidate lc, SuccessfulDoubleCandidatesPerPartyAndState dcps
 where	spf.partyId		= lc.partyId							and
 	spf.federalStateId	= lc.federalStateId						and
@@ -78,7 +78,7 @@ where	spf.partyId		= lc.partyId							and
 	lc.rank			<= (spf.seats + dcps.num)
 ;
 
-insert	into WIDirectMandateDistribution(directCandidateId, electionId)
-select  wpd.directCandidateId, :electionId
+insert	into WIDirectMandateDistribution(directCandidateId, electionYear)
+select  wpd.directCandidateId, :electionYear
 from	WinnerPerDistrict wpd
 ;
