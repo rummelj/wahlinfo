@@ -1,5 +1,6 @@
 package com.tu.wahlinfo.csv.parser.impl;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -63,12 +64,17 @@ public class CsvParser implements ICsvParser {
 	// Party matching
 	private Map<ElectionYear, HashMap<String, Long>> partyIds = new EnumMap<ElectionYear, HashMap<String, Long>>(
 			ElectionYear.class);
-	private Map<String, String> partyNameReplacements = new HashMap<String, String>();
+	private Map<String, String> partyNameReplacements = new HashMap<String, String>();	
 
 	public CsvParser() {
 		this.initPartyNameReplacements();
 		this.partyIds.put(ElectionYear._2005, new HashMap<String, Long>());
 		this.partyIds.put(ElectionYear._2009, new HashMap<String, Long>());
+	}	
+	
+	@Override
+	public File[] parseVotesToFiles() throws CsvParserException {
+		return new VoteFileGeneratorImpl(this).createVoteFiles();		
 	}
 
 	/**
@@ -159,7 +165,7 @@ public class CsvParser implements ICsvParser {
 					filePath));
 		}
 	}
-
+	
 	public Collection<CsvVoteAggregation> parseVoteAggregations(int startElId,
 			int endELId) throws CsvParserException {
 		Collection<CsvVoteAggregation> voteAggregations = new HashSet<CsvVoteAggregation>();
@@ -378,9 +384,9 @@ public class CsvParser implements ICsvParser {
 					this.directCandidates2005.add(new CsvDirectCandidate(
 							prefixedId, names[0], names[1], reader.get(2), this
 									.getPartyId(ElectionYear._2005, partyName),
-							ElectionYear._2005, reader.get(8)));
-					// list candidate has a rank
+							ElectionYear._2005, reader.get(8)));				
 				}
+				// list candidate has a rank
 				if (!reader.get(10).isEmpty()) {
 					long federalStateId = this.federalStates.get(reader.get(9))
 							.getFederalStateId();
@@ -457,7 +463,7 @@ public class CsvParser implements ICsvParser {
 							ElectionYear._2009, reader.get(4)));
 
 				}
-				//list candidate has rank
+				// list candidate has rank
 				if (!reader.get(6).isEmpty()) {
 					long federalStateId = this.federalStates.get(reader.get(5))
 							.getFederalStateId();
@@ -514,5 +520,6 @@ public class CsvParser implements ICsvParser {
 		elections.add(new CsvElection(ElectionYear._2005));
 		elections.add(new CsvElection(ElectionYear._2009));
 		return elections;
-	}
+	}	
+
 }

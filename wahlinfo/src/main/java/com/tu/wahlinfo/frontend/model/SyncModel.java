@@ -1,5 +1,7 @@
 package com.tu.wahlinfo.frontend.model;
 
+import java.io.File;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
@@ -26,7 +28,10 @@ public class SyncModel implements Observer {
 	}
 
 	public void launchSync() throws CsvParserException, DatabaseException {
-		csvToDatabaseSyncer.sync();
+		File[] voteFiles = csvToDatabaseSyncer.sync();
+		for (int k = 0; k < voteFiles.length; k++) {
+			csvToDatabaseSyncer.sync2(voteFiles[k], k);
+		}
 	}
 
 	@Override

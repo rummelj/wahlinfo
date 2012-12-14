@@ -90,7 +90,7 @@ CREATE TABLE WIListCandidate (
 );
 
 CREATE TABLE WIFilledVotingPaper (
-	id BIGINT  NOT NULL,
+	id BIGSERIAL  NOT NULL,
 	electoralDistrictId SMALLINT NOT NULL,	
 	partyId BIGINT,
 	directCandidateId BIGINT,	

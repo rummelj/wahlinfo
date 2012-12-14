@@ -1,26 +1,21 @@
 package com.tu.wahlinfo.csv.parser.impl;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tu.common.Observer;
 import com.tu.wahlinfo.csv.CsvParserException;
-import com.tu.wahlinfo.csv.entities.impl.CsvGeneratedVote;
-import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
 import com.tu.wahlinfo.csv.parser.ICsvParser;
 import com.tu.wahlinfo.csv.parser.ICsvToDatabaseSyncer;
-import com.tu.wahlinfo.csv.parser.IVoteGenerator;
 import com.tu.wahlinfo.model.Persistable;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -29,12 +24,11 @@ import com.tu.wahlinfo.persistence.IdGenerator;
 
 @Stateless
 public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(CsvToDatabaseSyncer.class);
 
 	@Inject
 	ICsvParser csvParser;
-
-	@Inject
-	IVoteGenerator voteGenerator;
 
 	@Inject
 	IdGenerator idGenerator;
@@ -55,7 +49,7 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 	}
 
 	@Override
-	public void sync() throws CsvParserException, DatabaseException {
+	public File[] sync() throws CsvParserException, DatabaseException {
 		setProgressInPercent(0);
 		ArrayList<Persistable> elections = new ArrayList<Persistable>(
 				csvParser.parseElections());
@@ -135,83 +129,28 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		setProgressInPercent((int) (10 + (entriesPersisted * 90)
 				/ totalEntriesToPersist));
 
-		Collection<CsvVoteAggregation> voteAggregations = csvParser
-				.parseVoteAggregations(Integer.MIN_VALUE, Integer.MAX_VALUE);
-		setProgressInPercent(8);
+		return csvParser.parseVotesToFiles();
+	}
 
-		File f = createNewTemporaryVotesFile();
-		int districtsProcessed = 0;
-		for (CsvVoteAggregation voteAggregation : voteAggregations) {
-			Collection<CsvGeneratedVote> generatedVotesForVoteAggregation = voteGenerator
-					.generateVotes(voteAggregation, idGenerator.getId());
-			idGenerator.increaseId(generatedVotesForVoteAggregation.size() + 1);
-			writeToTemporaryVotesFile(f, generatedVotesForVoteAggregation);
-			setProgressInPercent((int) (10 + (districtsProcessed++ * 90)
-					/ voteAggregations.size()));
-		}
+	@Override
+	public void sync2(File file, int k) throws CsvParserException,
+			DatabaseException {		
+		System.gc();
+		setProgressInPercent(15);
+		
 
-		copyFileToDatabase(f);
-		deleteTemporaryVotesFile(f);
-		setProgressInPercent(100);
+		LOG.debug("PARSING FILE " + k);
+		copyFileToDatabase(file);
+		file.deleteOnExit();
+		setProgressInPercent(k * 20 - 1);
+
 	}
 
 	private void copyFileToDatabase(File f) throws DatabaseException {
 		String filePath = f.getAbsolutePath();
 		databaseAccessor
-				.executeStatement("COPY WIFilledVotingPaper (directcandidateid,electoraldistrictid,partyid,id) FROM '"
+				.executeStatement("COPY WIFilledVotingPaper (electoraldistrictid, directcandidateid, partyid) FROM '"
 						+ filePath + "' WITH (FORMAT CSV, DELIMITER ';')");
-	}
-
-	private void writeToTemporaryVotesFile(File f,
-			Collection<CsvGeneratedVote> votes) {
-		OutputStreamWriter os = null;
-		try {
-			os = new OutputStreamWriter(new FileOutputStream(f, true));
-			for (CsvGeneratedVote vote : votes) {
-				os.write((vote.getDirectVoteCandidateId() != null ? vote
-						.getDirectVoteCandidateId() : "")
-						+ ";"
-						+ vote.getElectoralDistrictId()
-						+ ";"
-						+ (vote.getListVotePartyId() != null ? vote
-								.getListVotePartyId() : "")
-						+ ";"
-						+ vote.getTmpId()
-						+ System.getProperty("line.separator"));
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if (os != null) {
-				try {
-					os.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	private void deleteTemporaryVotesFile(File f) {
-		if (f.exists()) {
-			f.delete();
-		}
-	}
-
-	private File createNewTemporaryVotesFile() {
-		File f;
-		f = new File("wahlinfo" + UUID.randomUUID().toString() + ".csv");
-		if (!f.exists()) {
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return f;
 	}
 
 	private void setProgressInPercent(int percentage) {

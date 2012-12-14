@@ -1,5 +1,6 @@
 package com.tu.wahlinfo.csv.parser;
 
+import java.io.File;
 import java.util.Collection;
 
 import com.tu.wahlinfo.csv.CsvParserException;
@@ -18,6 +19,15 @@ import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
  * @author cg
  */
 public interface ICsvParser {
+
+	/**
+	 * Parses all votes to several files prefixed by the constant of the class
+	 * "AbstractVoteFileGenerator".
+	 * 
+	 * @throws CsvParserException
+	 *             In case an exception occurred while accessing the csv files.
+	 */
+	public File[] parseVotesToFiles() throws CsvParserException;
 
 	/**
 	 * Parses all available parties from the internally available candidate
