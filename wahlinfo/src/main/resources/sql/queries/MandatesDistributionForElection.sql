@@ -1,82 +1,122 @@
-﻿VIEWS
-with MaxSeats as (
-	select	max(psd.seats) as seats
-	from	WIPartySeatDistribution psd
-	where	psd.electionYear	= :election
+﻿with WinnerPerDistrict as (
+	with MaxVotes as (
+		select	dc.electoralDistrictId, max(dc.receivedVotes) as receivedVotes
+		from	WIDirectCandidate dc
+		where	dc.electionYear	= :electionYear
+		group by dc.electoralDistrictId
+	)
+	select	distinct on (dc.electoralDistrictId) dc.electoralDistrictId, dc.id as directCandidateId, dc.partyId
+	from	MaxVotes m, WIDirectCandidate dc
+	where	m.electoralDistrictId	= dc.electoralDistrictId	and
+		m.receivedVotes		= dc.receivedVotes		and
+		dc.electionYear		= :electionYear
+	order by dc.electoralDistrictId, random()
 ),
 
--- calculate min number of states a party having acquired seats has received votes in
-MinOccurences as (
-	select min(tmp.num) as occs
-	from	(	select	psd.party, count(*) as num
-			from	WIPartySeatDistribution psd, WIPartyVotes pv
-			where	psd.partyId	= pv.id	and
-				psd.electionYear	= :electionYear
-			group by psd.partyId
-		) as tmp
+MaxSeats as (
+	select	max(psd.seats) as seats
+	from	WIPartySeatDistribution psd
+	where	psd.electionYear	= :electionYear
 ),
 
 -- the algorithm produces as many entries per iteration as there states a party has received votes in
--- it terminates as soons as more or equals as many entires are produced as the party has seats
--- therefore the worst case runtime is ceil(maxSeats / minOccurences) (e.g. 20 seats and 1 occ -> 20 iterations)
+-- in the worst case, all mandates of the party having the most ones are assigned to a single state 
+-- therefore (maxSeats) many iterations are required 
 IterationDivisors as (
 	select	d.value
 	from	WIDivisor d
-	wher	d.id <= ceil	(	select	ms.seats::float / mo.occs
-					from 	MaxSeats ms, MinOccurences mo
-				)
+	where	d.id <= 	(	select	seats from MaxSeats)
 ),
 
 -- iterations are realized as a "controlled" cross product
 RankValues as (
-	select	psd.partyId, pv.federalStateId, (pv.receivedVotes:float / d.value) as rankValue
+	select	psd.partyId, pv.federalStateId, (pv.receivedVotes::float / d.value) as rankValue
 	from	WIPartySeatDistribution psd, WIPartyVotes pv, IterationDivisors d
-	where	psd.partyId	= pvid
+	where	psd.partyId	= pv.partyId
+		
 ),
 
--- for each party, select only as many rank values as there seats in order for that party (-> subquery)
-SeatsPerPartyAndFederalState as (
-	select	rv.partyId, pv.federalStateId, count(*) as seats
+-- calculate numerical ranks in order to be able to extract only the top required ranks per party (does not work with limit)
+RankedRankValues as (
+	select	rv.partyId, rv.federalStateId, rv.rankValue, rank() OVER (PARTITION BY rv.partyId ORDER BY rv.rankValue DESC)
 	from	RankValues rv
-	where	rv.rankValue	in	(	select
-						from	RankValues rv1
-						where	rv.partyId	= rv1.partyId
-						order by rv1.rankValue desc
-						limit	(	select
-								from	WIPartySeatDistribution psd
-								where	rv1.partyId	= psd.partyId
-							)
-					)
-	group by rv.partyId, rv.federalStateId
 ),
 
-SuccessfulDoubleCandidates as (
-	select	cm.listCandidateId
-	from	WinnerPerDistrict wpd, WICandidateMatching cm
-	where	wpd.directCandidateId	= cm.directCandidateId	
+-- per party only use top n entries as read from WIPartySeatDistribution and aggregate them per party and state
+-- the number of seats 
+NominalSeatsPerPartyAndState as (
+	select	rrv.partyId, rrv.federalStateId, count(*) as nomStateSeats
+	from	RankedRankValues rrv
+	where 	rrv.rank	<=	(	select	psd.seats
+						from 	WIPartySeatDistribution psd
+						where	rrv.partyId		= psd.partyId	and
+							psd.electionYear	= :electionYear
+					)	
+	group by rrv.partyId, rrv.federalStateId
+	order by rrv.partyId
 ),
 
-SuccessfulDoubleCandidatesPerPartyAndState as (
-	select	lc.partyId, lc.federalStateId, count(*) as num
-		-- wpd is already filtered by electionYear and candidateIds are unique
-	from	WinnerPerDistrict wpd, WICandidateMatching cm, WIListCandidate lc
-	where	wpd.directCandidateId	= cm.directCandidateId	and
-		lc.id			= cm.listCandidateId
-	group by lc.partyId, lc.federalStateId
-)
+-- direct mandates per party and state
+DirectMandatesPerPartyAndState as (
+	select	wpd.partyId, ed.federalStateId, count(*) as dirMandates
+	from	WinnerPerDistrict wpd, WIElectoralDistrict ed
+	where	wpd.electoralDistrictId	= ed.number
+	group by wpd.partyId, ed.federalStateId
+),
+
+-- seats per party and state accounted with direct mandates
+RealSeatsPerPartyAndState as (
+	select	nspps.partyId, nspps.federalStateId,	(	nspps.nomStateSeats - 
+								case when (dmpps.dirMandates is null) then 0 else dmpps.dirMandates end
+							) as realStateSeats
+	from	NominalSeatsPerPartyAndState nspps left outer join DirectMandatesPerPartyAndState dmpps on
+		dmpps.partyId		= nspps.partyId and
+		dmpps.federalStateId	= nspps.federalStateId
+),
+
+-- select only list candidates who do not appear as respective successful direct candidate
+QualifiedListCandidates as (
+	select	lc.id, lc.partyId, lc.federalStateId, lc.rank
+	from	WIListCandidate lc left outer join WinnerPerDistrict wpd on lc.id = wpd.directCandidateId
+	where	wpd.directCandidateId	is null	and
+		lc.electionYear		= :electionYear
+),
+
+-- as there are now only valid candidates, we can change their rank in order to comply which the number of candidates who are needed per party and state
+RankAdaptedListCandidates as (
+	select	qlc.id, qlc.partyId, qlc.federalStateId, rank() OVER (PARTITION BY qlc.partyId, qlc.federalStateId ORDER BY qlc.rank asc)
+	from	QualifiedListCandidates qlc
+),
 
 -- add list candidates for each party and federal state
 -- exclude double candidates and include following candidates (e.g. 5 and 2 double candidates -> rank <= 7)
+ListMandates as (
+	select	ralc.id, :electionYear as electionYear
+	from	RankAdaptedListCandidates ralc, RealSeatsPerPartyAndState rspps		
+	where	ralc.partyId		= rspps.partyId						and		
+		ralc.federalStateId	= rspps.federalStateId					and										
+		ralc.rank		<=	rspps.realStateSeats	
+)
+
 insert 	into WIListMandateDistribution(listCandidateId, electionYear)
-select	lc.id, :electionYear
-from	SeatsPerPartyAndFederalState  spf, WIListCandidate lc, SuccessfulDoubleCandidatesPerPartyAndState dcps
-where	spf.partyId		= lc.partyId							and
-	spf.federalStateId	= lc.federalStateId						and
-	lc.partyId		= dcps.partyId							and
-	lc.federalSateId	= dcps.federalStateId						and
-	lc.id			not in	(	select * from SuccessfulDoubleCandidates )	and
-	lc.rank			<= (spf.seats + dcps.num)
+	select	lm.id, lm.electionYear
+	from	ListMandates lm
 ;
+
+with WinnerPerDistrict as (
+	with MaxVotes as (
+		select	dc.electoralDistrictId, max(dc.receivedVotes) as receivedVotes
+		from	WIDirectCandidate dc
+		where	dc.electionYear	= :electionYear
+		group by dc.electoralDistrictId
+	)
+	select	distinct on (dc.electoralDistrictId) dc.electoralDistrictId, dc.id as directCandidateId, dc.partyId
+	from	MaxVotes m, WIDirectCandidate dc
+	where	m.electoralDistrictId	= dc.electoralDistrictId	and
+		m.receivedVotes		= dc.receivedVotes		and
+		dc.electionYear		= :electionYear
+	order by dc.electoralDistrictId, random()
+)
 
 insert	into WIDirectMandateDistribution(directCandidateId, electionYear)
 select  wpd.directCandidateId, :electionYear
