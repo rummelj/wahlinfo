@@ -25,7 +25,7 @@ import com.tu.wahlinfo.persistence.IdGenerator;
 @Stateless
 public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(CsvToDatabaseSyncer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CsvToDatabaseSyncer.class);	
 
 	@Inject
 	ICsvParser csvParser;
@@ -144,7 +144,7 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		file.deleteOnExit();
 		setProgressInPercent(k * 20 - 1);
 
-	}
+	}			
 
 	private void copyFileToDatabase(File f) throws DatabaseException {
 		String filePath = f.getAbsolutePath();

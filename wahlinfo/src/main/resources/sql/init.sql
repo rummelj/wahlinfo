@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS WIElectoralDistrict CASCADE;
 DROP TABLE IF EXISTS WIElection CASCADE;
 DROP TABLE IF EXISTS WIDivisor CASCADE;
 DROP TABLE IF EXISTS WIPartySeatDistribution CASCADE;
+DROP TABLE IF EXISTS WIStatePartySeatDistribution  CASCADE;
 DROP TABLE IF EXISTS WIDirectMandateDistribution  CASCADE;
 DROP TABLE IF EXISTS WIListMandateDistribution  CASCADE;
 
@@ -113,6 +114,15 @@ CREATE TABLE WIPartySeatDistribution (
 	FOREIGN KEY (partyId) REFERENCES WIParty(id),
 	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
 	PRIMARY KEY (partyId,electionYear)
+);
+
+CREATE TABLE WIStatePartySeatDistribution (
+	partyId BIGINT,
+	federalStateId BIGINT,
+	seats SMALLINT NOT NULL,
+	electionYear VARCHAR(4),
+	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
+	PRIMARY KEY (partyId, federalStateId, electionYear)
 );
 
 CREATE TABLE WIDirectMandateDistribution (

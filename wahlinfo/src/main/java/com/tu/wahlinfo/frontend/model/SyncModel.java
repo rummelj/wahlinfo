@@ -42,4 +42,5 @@ public class SyncModel implements Observer {
 	public int getProgress() {
 		return csvToDatabaseSyncer.getProgressInPercent();
 	}
+		
 }

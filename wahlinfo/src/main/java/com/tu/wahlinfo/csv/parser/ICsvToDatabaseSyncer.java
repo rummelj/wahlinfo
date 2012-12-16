@@ -1,6 +1,7 @@
 package com.tu.wahlinfo.csv.parser;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.tu.common.Observable;
 import com.tu.wahlinfo.csv.CsvParserException;
@@ -26,7 +27,6 @@ public interface ICsvToDatabaseSyncer extends Observable {
 	 * @throws CsvParserException
 	 * @throws DatabaseException
 	 */
-	void sync2(File file, int k) throws CsvParserException, DatabaseException;
-	
+	void sync2(File file, int k) throws CsvParserException, DatabaseException;	
 	
 }

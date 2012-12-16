@@ -1,4 +1,4 @@
-﻿DELETE FROM	WIPartyVotes;
+TRUNCATE WIPartyVotes; 
 
 INSERT INTO	WIPartyVotes (federalStateId, partyId, receivedVotes)
 

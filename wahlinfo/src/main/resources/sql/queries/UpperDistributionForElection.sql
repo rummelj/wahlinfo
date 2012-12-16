@@ -1,4 +1,8 @@
-﻿with WinnerPerDistrict as (
+delete
+from	WIPartySeatDistribution psd
+where	psd.electionYear	= :electionYear;
+
+with WinnerPerDistrict as (
 	with MaxVotes as (
 		select	dc.electoralDistrictId, max(dc.receivedVotes) as receivedVotes
 		from	WIDirectCandidate dc
@@ -22,7 +26,7 @@ BarrierClauseParties as (
 			p.id		not in	(	select	wpd.partyId
 							from	WinnerPerDistrict wpd			
 							group by wpd.partyId
-							having	count(*) < 3	
+							having	count(*) >= 3	
 						)
 	)		
 	-- WinnerPerDistrict is already filtered by election and PartyIds are unique
@@ -69,7 +73,7 @@ QualifiedPartiesAndVotes as (
 -- in SQL these iterations are realized by calculating the cross product with the first I rows from the WIDivisor table
 -- after that group first the (numSeats) many entries in order to get the seat distribution
 Ranking as (
-	select  qpv.partyId, (qpv.receivedVotes::float / d.value) as rvalue
+	select  qpv.partyId, (cast(qpv.receivedVotes as float) / d.value) as rvalue
 	from 	QualifiedPartiesAndVotes qpv, WIDivisor d
 	where 	d.id <= (select * from AvailableSeats)
 	order by rvalue desc

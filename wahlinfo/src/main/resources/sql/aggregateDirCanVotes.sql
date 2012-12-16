@@ -1,4 +1,4 @@
-﻿WITH VotesPerCandidate as (
+WITH VotesPerCandidate as (
 	SELECT	fvp.directCandidateId, count(*) as receivedVotes
 	FROM	WIFilledVotingPaper fvp
 	GROUP BY fvp.directCandidateId

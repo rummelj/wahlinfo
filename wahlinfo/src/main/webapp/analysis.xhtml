@@ -7,15 +7,14 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title>Wahlinfo Home</title>
+	<title>Wahlinfo Analysis</title>
 </h:head>
 <h:body>
+	<p>Analysis goes here</p>
+	<br />
 	<h:form>
-		<p:progressBar widgetVar="syncProgress" ajax="true"
-			value="#{syncModel.progress}" labelTemplate="{value}%"
-			styleClass="animated" interval="1000" />
-		<h:commandButton value="Launch Sync" action="#{syncModel.launchSync}"
-			onclick="syncProgress.start()" />		
+		<h:commandButton action="#{analysisModel.updateVoteBase}"
+			value="Update vote base (incl. Bundestag)" />		
 	</h:form>
 </h:body>
 </html>

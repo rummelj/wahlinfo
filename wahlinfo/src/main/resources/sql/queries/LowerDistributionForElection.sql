@@ -1,4 +1,16 @@
-﻿with WinnerPerDistrict as (
+delete 
+from	WIStatePartySeatDistribution spsd
+where	spsd.electionYear	= :electionYear;
+
+delete
+from	WIListMandateDistribution lmd
+where	lmd.electionYear	= :electionYear;
+
+delete	
+from	WIDirectMandateDistribution dmd
+where	dmd.electionYear	= :electionYear;
+
+create or replace view WinnerPerDistrict as (
 	with MaxVotes as (
 		select	dc.electoralDistrictId, max(dc.receivedVotes) as receivedVotes
 		from	WIDirectCandidate dc
@@ -11,9 +23,9 @@
 		m.receivedVotes		= dc.receivedVotes		and
 		dc.electionYear		= :electionYear
 	order by dc.electoralDistrictId, random()
-),
+);
 
-MaxSeats as (
+with MaxSeats as (
 	select	max(psd.seats) as seats
 	from	WIPartySeatDistribution psd
 	where	psd.electionYear	= :electionYear
@@ -30,7 +42,7 @@ IterationDivisors as (
 
 -- iterations are realized as a "controlled" cross product
 RankValues as (
-	select	psd.partyId, pv.federalStateId, (pv.receivedVotes::float / d.value) as rankValue
+	select	psd.partyId, pv.federalStateId, (cast(pv.receivedVotes as float) / d.value) as rankValue
 	from	WIPartySeatDistribution psd, WIPartyVotes pv, IterationDivisors d
 	where	psd.partyId	= pv.partyId
 		
@@ -54,10 +66,15 @@ NominalSeatsPerPartyAndState as (
 					)	
 	group by rrv.partyId, rrv.federalStateId
 	order by rrv.partyId
-),
+)
+
+insert into WIStatePartySeatDistribution (partyId, federalStateId, seats, electionYear)
+select	nspps.*, :electionYear
+from	NominalSeatsPerPartyAndState nspps
+;
 
 -- direct mandates per party and state
-DirectMandatesPerPartyAndState as (
+with DirectMandatesPerPartyAndState as (
 	select	wpd.partyId, ed.federalStateId, count(*) as dirMandates
 	from	WinnerPerDistrict wpd, WIElectoralDistrict ed
 	where	wpd.electoralDistrictId	= ed.number
@@ -66,12 +83,13 @@ DirectMandatesPerPartyAndState as (
 
 -- seats per party and state accounted with direct mandates
 RealSeatsPerPartyAndState as (
-	select	nspps.partyId, nspps.federalStateId,	(	nspps.nomStateSeats - 
+	select	spsd.partyId, spsd.federalStateId,	(	spsd.seats - 
 								case when (dmpps.dirMandates is null) then 0 else dmpps.dirMandates end
 							) as realStateSeats
-	from	NominalSeatsPerPartyAndState nspps left outer join DirectMandatesPerPartyAndState dmpps on
-		dmpps.partyId		= nspps.partyId and
-		dmpps.federalStateId	= nspps.federalStateId
+	from	WIStatePartySeatDistribution spsd left outer join DirectMandatesPerPartyAndState dmpps on
+		spsd.partyId 		= dmpps.partyId		and
+		spsd.federalStateId	= dmpps.federalStateId	and
+		spsd.electionYear	= :electionYear
 ),
 
 -- select only list candidates who do not appear as respective successful direct candidate
@@ -102,21 +120,6 @@ insert 	into WIListMandateDistribution(listCandidateId, electionYear)
 	select	lm.id, lm.electionYear
 	from	ListMandates lm
 ;
-
-with WinnerPerDistrict as (
-	with MaxVotes as (
-		select	dc.electoralDistrictId, max(dc.receivedVotes) as receivedVotes
-		from	WIDirectCandidate dc
-		where	dc.electionYear	= :electionYear
-		group by dc.electoralDistrictId
-	)
-	select	distinct on (dc.electoralDistrictId) dc.electoralDistrictId, dc.id as directCandidateId, dc.partyId
-	from	MaxVotes m, WIDirectCandidate dc
-	where	m.electoralDistrictId	= dc.electoralDistrictId	and
-		m.receivedVotes		= dc.receivedVotes		and
-		dc.electionYear		= :electionYear
-	order by dc.electoralDistrictId, random()
-)
 
 insert	into WIDirectMandateDistribution(directCandidateId, electionYear)
 select  wpd.directCandidateId, :electionYear
