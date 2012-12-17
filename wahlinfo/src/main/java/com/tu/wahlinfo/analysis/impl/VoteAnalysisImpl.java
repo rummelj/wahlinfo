@@ -1,9 +1,7 @@
 package com.tu.wahlinfo.analysis.impl;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -11,6 +9,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tu.util.FileScanner;
 import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
@@ -23,13 +22,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	private static final String FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
 			+ "aggregateDirCanVotes.sql";
 	private static final String FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
-			+ "aggregatePartyVotes.sql";
-	private static final String FILE_PATH_QUERIES_BASE = FILE_PATH_SQL_BASE
-			+ "queries/";
-	private static final String FILE_PATH_PARTY_UPPER_DISTRIBUTION = FILE_PATH_QUERIES_BASE
-			+ "UpperDistributionForElection.sql";
-	private static final String FILE_PATH_LOWER_DISTRIBUTION = FILE_PATH_QUERIES_BASE
-			+ "LowerDistributionForElection.sql";
+			+ "aggregatePartyVotes.sql";	
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VoteAnalysisImpl.class);
 
@@ -38,32 +31,18 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 
 	@Override
 	public void updateVoteBase() throws DatabaseException, IOException {
-
+		LOG.info("Starting vote base update");
 		LOG.debug("Updating party votes");
-		databaseAccessor.executeStatement(this
-				.readSqlFile(FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT));
+		databaseAccessor.executeStatement(FileScanner
+				.scanFile(FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT));
 		LOG.debug("Done");
 
 		LOG.debug("Updating direct candidate votes");
-		databaseAccessor.executeStatement(this
-				.readSqlFile(FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT));
-		LOG.debug("Done");
-
-		LOG.debug("Updating upper distribution");
-		String udScript = this.readSqlFile(FILE_PATH_PARTY_UPPER_DISTRIBUTION);
-		databaseAccessor.executeStatement(udScript.replace(":electionYear",
-				"'2005'"));
-		databaseAccessor.executeStatement(udScript.replace(":electionYear",
-				"'2009'"));
-		LOG.debug("Done");
-
-		LOG.debug("Updating lower distribution");
-		String ldScript = this.readSqlFile(FILE_PATH_LOWER_DISTRIBUTION);
-		databaseAccessor.executeStatement(ldScript.replace(":electionYear",
-				"'2005'"));
-		databaseAccessor.executeStatement(ldScript.replace(":electionYear",
-				"'2009'"));
-		LOG.debug("Done");
+		databaseAccessor.executeStatement(FileScanner
+				.scanFile(FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT));
+		LOG.debug("Done. Performing database cleanup.");
+		this.databaseAccessor.vacuumAndAnalyze("WIPartyVotes","WIDirectCandidate");
+		LOG.info("Vote update finished");		
 	}
 
 	@Override
@@ -95,16 +74,6 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 			String partyName) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	private String readSqlFile(String path) throws IOException {
-		InputStreamReader reader = new InputStreamReader(this.getClass()
-				.getResourceAsStream(path));
-		Scanner scanner = new Scanner(reader).useDelimiter("\\Z");
-		String res = scanner.next();
-		scanner.close();
-		reader.close();
-		return res;
 	}
 
 }

@@ -10,6 +10,12 @@ import java.util.Map;
  * 
  */
 public interface DatabaseAccessor {
+	
+	/**
+	 * Performs a db vacuum and analyze operation
+	 * @param tableNames In no tables are provided the whole database is processed.
+	 */
+	void vacuumAndAnalyze(String... tableNames) throws DatabaseException;
 
 	/**
 	 * Executes sql as is. This method does not sanitise any parameters, so you

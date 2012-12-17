@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tu.util.FileScanner;
 import com.tu.wahlinfo.model.Persistable;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -26,12 +27,15 @@ import com.tu.wahlinfo.persistence.DatabaseSetup;
 public class DatabaseSetupImpl implements DatabaseSetup {
 
 	private static final String DIVISOR_VALUES_CSV = "/csv/DivisorValues.csv";
+	private static final String SQL_UPPER_DISTRIBUTION_VIEW = "/sql/UpperDistributionViewForElection.sql";
+	private static final String SQL_LOWER_DISTRIBUTION_VIEW = "/sql/LowerDistributionViewForElection.sql";
+	private static final String SQL_ELECTED_CANDIDATES_VIEWS = "/sql/ElectedCandidatesViewsForElection.sql";
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DatabaseSetupImpl.class);
 
 	private static final String INIT_SCRIPT_PATH = "/sql/init.sql";
-	private static final boolean SETUP_ENABLED = false;
+	private static final boolean SETUP_ENABLED = true;
 
 	@Inject
 	DatabaseAccessor databaseAccessor;
@@ -47,7 +51,7 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 	@Override
 	public void setup() throws DatabaseException {
 		if (SETUP_ENABLED) {
-			LOG.debug("Executing database setup");
+			LOG.info("Executing database setup");
 			BufferedReader bufferedReader = null;
 			try {
 				bufferedReader = new BufferedReader(new InputStreamReader(
@@ -78,6 +82,8 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 			}
 
 			insertDivisorValues();
+			createViews();
+			LOG.info("Setup complete");
 		} else {
 			LOG.info("Didn't execute database setup because it is disabled");
 		}
@@ -111,4 +117,36 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 			LOG.error("Error writing divisor entry");
 		}
 	}
+
+	private void createViews() {
+		try {			
+			String upperDistributionView = FileScanner
+					.scanFile(SQL_UPPER_DISTRIBUTION_VIEW);
+			String lowerDistributionView = FileScanner
+					.scanFile(SQL_LOWER_DISTRIBUTION_VIEW);
+			String electedCandidatesViews = FileScanner
+					.scanFile(SQL_ELECTED_CANDIDATES_VIEWS);
+			LOG.debug("Creating upper distribution views");
+			this.databaseAccessor.executeStatement(upperDistributionView
+					.replace(":electionYear", "2005"));
+			this.databaseAccessor.executeStatement(upperDistributionView
+					.replace(":electionYear", "2009"));
+			LOG.debug("Creating lower distribution views");
+			this.databaseAccessor.executeStatement(lowerDistributionView
+					.replace(":electionYear", "2005"));
+			this.databaseAccessor.executeStatement(lowerDistributionView
+					.replace(":electionYear", "2009"));
+			LOG.debug("Creating elected candidates views");
+			this.databaseAccessor.executeStatement(electedCandidatesViews
+					.replace(":electionYear", "2005"));
+			this.databaseAccessor.executeStatement(electedCandidatesViews
+					.replace(":electionYear", "2009"));
+			LOG.info("View setup completed.");
+		} catch (IOException ex) {
+			LOG.error("Could not read at least one view sql file");
+		} catch (DatabaseException ex) {
+			LOG.error("Error executing sql view files");
+		}
+	}
+
 }

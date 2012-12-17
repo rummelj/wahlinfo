@@ -8,3 +8,5 @@ WHERE	fvp.electoralDistrictId	= ed.number	AND
 	fvp.partyId		is not null
 GROUP BY ed.federalStateId, fvp.partyId
 ;
+
+ANALYZE WIPartyVotes;

@@ -7,15 +7,35 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-	<title>Wahlinfo Home</title>
+	<title>Wahlinformationssystem</title>
+	<h:outputStylesheet library="css" name="layout.css" />
 </h:head>
 <h:body>
-	<h:form>
-		<p:progressBar widgetVar="syncProgress" ajax="true"
-			value="#{syncModel.progress}" labelTemplate="{value}%"
-			styleClass="animated" interval="1000" />
-		<h:commandButton value="Launch Sync" action="#{syncModel.launchSync}"
-			onclick="syncProgress.start()" />		
-	</h:form>
+	<div id="content">
+		<h:form>
+			<p:menubar>
+				<p:submenu label="Analysen">
+					<p:menuitem value="Analyse 1"></p:menuitem>
+					<p:menuitem value="Analyse 2"></p:menuitem>
+					<p:menuitem value="Analyse 3"></p:menuitem>
+					<p:menuitem value="Analyse 4"></p:menuitem>
+				</p:submenu>
+			</p:menubar>
+		</h:form>
+		<p:dialog widgetVar="terminal" styleClass="terminal" width="600"
+			height="400" header="Admin-Konsole" showEffect="fade"
+			hideEffect="fade">
+			<h:form>
+				<p:terminal commandHandler="#{terminalController.handleCommand}"
+					width="100%" height="100%"
+					welcomeMessage="Hallo zur Wahlinformationsverwaltung. Was möchten Sie tun?"
+					prompt="wahlinfo $ " />
+			</h:form>
+		</p:dialog>
+		<p:dock>
+			<p:menuitem label="Terminal" icon="resources/images/terminal.png"
+				url="#" onclick="terminal.show();term.focus();" />
+		</p:dock>
+	</div>
 </h:body>
 </html>

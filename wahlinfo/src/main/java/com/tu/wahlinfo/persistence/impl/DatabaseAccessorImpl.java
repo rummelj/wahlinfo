@@ -19,6 +19,8 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 @Stateless
 public class DatabaseAccessorImpl implements DatabaseAccessor {
 
+	private static final String VACUUM_QUERY = "VACUUM ";
+	private static final String ANALYZE_QUERY = "ANALYZE ";
 	private static Logger LOG = LoggerFactory
 			.getLogger(DatabaseAccessorImpl.class);
 
@@ -42,6 +44,20 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 				throw new DatabaseException("Could not execute " + sql, e);
 			}
 		}
+	}
+
+	@Override
+	public void vacuumAndAnalyze(String... tableNames) throws DatabaseException {
+		if (tableNames.length == 0) {
+			this.executeStatement(VACUUM_QUERY);
+			this.executeStatement(ANALYZE_QUERY);
+		} else {
+			for (String table : tableNames) {
+				this.executeStatement(VACUUM_QUERY + table);
+				this.executeStatement(ANALYZE_QUERY + table);
+			}
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")

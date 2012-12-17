@@ -1,6 +1,7 @@
 package com.tu.wahlinfo.csv.parser.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Observer;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tu.util.FileScanner;
 import com.tu.wahlinfo.csv.CsvParserException;
 import com.tu.wahlinfo.csv.parser.ICsvParser;
 import com.tu.wahlinfo.csv.parser.ICsvToDatabaseSyncer;
@@ -25,6 +27,7 @@ import com.tu.wahlinfo.persistence.IdGenerator;
 @Stateless
 public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 
+	private static final String VOTE_IMPORT_SCRIPT_PATH = "/sql/ImportVotes.sql";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(CsvToDatabaseSyncer.class);
 
@@ -51,6 +54,7 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 
 	@Override
 	public File[] sync() throws CsvParserException, DatabaseException {
+		LOG.info("Import phase 1");
 		ArrayList<Persistable> elections = new ArrayList<Persistable>(
 				csvParser.parseElections());
 		ArrayList<Persistable> federalStates = new ArrayList<Persistable>(
@@ -75,24 +79,29 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		databasePersister.persist(directCandidates2009);
 		databasePersister.persist(listCandidates2005);
 		databasePersister.persist(listCandidates2009);
+		this.databaseAccessor.vacuumAndAnalyze();
+		LOG.info("Import phase 1 complete");
 		return csvParser.parseVotesToFiles();
 	}
 
 	@Override
-	public void sync2(File file, int k) throws CsvParserException,
-			DatabaseException {
+	public void sync2(File[] files) throws CsvParserException,
+			DatabaseException, IOException {
+		// 5 files
 		System.gc();
-		LOG.debug("PARSING FILE " + k);
-		copyFileToDatabase(file);
-		file.deleteOnExit();
-
-	}
-
-	private void copyFileToDatabase(File f) throws DatabaseException {
-		String filePath = f.getAbsolutePath();
-		databaseAccessor
-				.executeStatement("COPY WIFilledVotingPaper (electoraldistrictid, directcandidateid, partyid) FROM '"
-						+ filePath + "' WITH (FORMAT CSV, DELIMITER ';')");
+		LOG.info("Import phase 2");
+		String query = FileScanner.scanFile(VOTE_IMPORT_SCRIPT_PATH);
+		for (int k = 0; k < 5; k++) {
+			query = query.replace(":filePath" + k, files[k].getAbsolutePath());
+		}
+		databaseAccessor.executeStatement(query);
+		LOG.info("Import complete. Performing db clean up");
+		databaseAccessor.vacuumAndAnalyze("WIFilledVotingPaper");
+		LOG.info("Done. Scheduling file deletion");
+		for (File file : files) {
+			file.delete();
+		}
+		LOG.info("Done. Vote sync is complete");
 	}
 
 }

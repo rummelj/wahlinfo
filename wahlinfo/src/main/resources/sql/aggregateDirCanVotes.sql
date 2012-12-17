@@ -8,4 +8,6 @@ SET	receivedVotes = vpc.receivedVotes
 FROM	VotesPerCandidate vpc	
 INNER JOIN  WIDirectCandidate dc1
 ON	dc1.id 	= vpc.directCandidateId
-WHERE	dc.id	= dc1.id
+WHERE	dc.id	= dc1.id;
+
+ANALYZE WIDirectCandidate;

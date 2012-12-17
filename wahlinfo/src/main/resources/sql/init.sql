@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS WIFederalState CASCADE;
 DROP TABLE IF EXISTS WIElectoralDistrict CASCADE;
 DROP TABLE IF EXISTS WIElection CASCADE;
 DROP TABLE IF EXISTS WIDivisor CASCADE;
+-- no longer used in further releases
 DROP TABLE IF EXISTS WIPartySeatDistribution CASCADE;
 DROP TABLE IF EXISTS WIStatePartySeatDistribution  CASCADE;
 DROP TABLE IF EXISTS WIDirectMandateDistribution  CASCADE;
@@ -105,38 +106,4 @@ CREATE TABLE WIDivisor (
 	id BIGINT,
 	value SMALLINT NOT NULL,
 	PRIMARY KEY (id)
-);
-
-CREATE TABLE WIPartySeatDistribution (
-	partyId BIGINT,
-	seats SMALLINT NOT NULL,
-	electionYear VARCHAR(4),
-	FOREIGN KEY (partyId) REFERENCES WIParty(id),
-	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
-	PRIMARY KEY (partyId,electionYear)
-);
-
-CREATE TABLE WIStatePartySeatDistribution (
-	partyId BIGINT,
-	federalStateId BIGINT,
-	seats SMALLINT NOT NULL,
-	electionYear VARCHAR(4),
-	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
-	PRIMARY KEY (partyId, federalStateId, electionYear)
-);
-
-CREATE TABLE WIDirectMandateDistribution (
-	directCandidateId BIGINT,
-	electionYear VARCHAR(4),
-	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
-	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),
-	PRIMARY KEY (directCandidateId, electionYear)	
-);
-
-CREATE TABLE WIListMandateDistribution (
-	listCandidateId BIGINT,
-	electionYear VARCHAR(4),
-	FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
-	FOREIGN KEY (listCandidateId) REFERENCES WIListCandidate (id),
-	PRIMARY KEY (listCandidateId, electionYear)
 );

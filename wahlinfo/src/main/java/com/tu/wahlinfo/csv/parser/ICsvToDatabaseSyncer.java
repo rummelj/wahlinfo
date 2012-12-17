@@ -1,6 +1,7 @@
 package com.tu.wahlinfo.csv.parser;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.tu.wahlinfo.csv.CsvParserException;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -16,11 +17,13 @@ public interface ICsvToDatabaseSyncer {
 	File[] sync() throws CsvParserException, DatabaseException;
 
 	/**
-	 * Write votes from files to db
+	 * Write votes from files to db. Expects exactly 5 files (bad impl i
+	 * know...)
 	 * 
 	 * @throws CsvParserException
 	 * @throws DatabaseException
 	 */
-	void sync2(File file, int k) throws CsvParserException, DatabaseException;
+	void sync2(File[] files) throws CsvParserException, DatabaseException,
+			IOException;
 
 }
