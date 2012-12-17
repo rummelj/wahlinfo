@@ -3,10 +3,6 @@ package com.tu.wahlinfo.analysis;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.bind.DataBindingException;
-
-import org.mockito.internal.stubbing.answers.ThrowsException;
-
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
