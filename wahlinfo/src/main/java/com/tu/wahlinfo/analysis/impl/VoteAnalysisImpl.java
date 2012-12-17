@@ -51,7 +51,8 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 
 		LOG.debug("Updating upper distribution");
 		String udScript = this.readSqlFile(FILE_PATH_PARTY_UPPER_DISTRIBUTION);
-		databaseAccessor.executeStatement(udScript);
+		databaseAccessor.executeStatement(udScript.replace(":electionYear",
+				"'2005'"));
 		databaseAccessor.executeStatement(udScript.replace(":electionYear",
 				"'2009'"));
 		LOG.debug("Done");
