@@ -1,0 +1,9 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	background-color: white;
+	background-image: url("bundesadler.gif.xhtml?ln=images");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+}
