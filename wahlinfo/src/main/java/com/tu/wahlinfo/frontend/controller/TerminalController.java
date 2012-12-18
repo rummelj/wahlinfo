@@ -26,19 +26,20 @@ public class TerminalController {
 		if (command.equals("launchSync"))
 			try {
 				launchSync();
+				return "Sync complete";
 			} catch (CsvParserException | DatabaseException e) {
 				return e.getMessage();
 			}
 		else if (command.equals("updateStatistics"))
 			try {
 				updateVoteBase();
+				return "Update statistics complete";
 			} catch (DatabaseException | IOException e) {
 				return e.getMessage();
 			}
 		else
 			return String.format("Erlaubte Kommandos sind '%s' und '%s'.",
 					"launchSync", "updateStatistics");
-		return "";
 	}
 
 	public void launchSync() throws CsvParserException, DatabaseException {

@@ -2,8 +2,12 @@ package com.tu.wahlinfo.analysis;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
+import com.tu.wahlinfo.frontend.model.DirectCandidate;
+import com.tu.wahlinfo.frontend.model.FederalState;
+import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
 public interface IVoteAnalysis {
@@ -25,8 +29,8 @@ public interface IVoteAnalysis {
 	 * @param electionYear
 	 * @return
 	 */
-	List getDirMandates(ElectionYear electionYear) throws DatabaseException,
-			IOException;
+	List<DirectCandidate> getDirMandates(ElectionYear electionYear)
+			throws DatabaseException, IOException;
 
 	/**
 	 * Read from table WIListMandateDistribution
@@ -46,7 +50,7 @@ public interface IVoteAnalysis {
 	 * @throws DatabaseException
 	 * @throws IOException
 	 */
-	List getOverhangMandates(ElectionYear electionYear)
+	Map<Party, Integer> getOverhangMandates(ElectionYear electionYear)
 			throws DatabaseException, IOException;
 
 	/**
@@ -55,7 +59,7 @@ public interface IVoteAnalysis {
 	 * @param electionYear
 	 * @return
 	 */
-	List getSeatDistribution(ElectionYear electionYear)
+	Map<Party, Integer> getSeatDistribution(ElectionYear electionYear)
 			throws DatabaseException, IOException;
 
 	/**
@@ -64,6 +68,7 @@ public interface IVoteAnalysis {
 	 * @param electionYear
 	 * @return
 	 */
-	List getStateSeatDistribution(ElectionYear electionYear, String partyName)
+	Map<FederalState, Integer> getStateSeatDistribution(
+			ElectionYear electionYear, String partyName)
 			throws DatabaseException, IOException;
 }
