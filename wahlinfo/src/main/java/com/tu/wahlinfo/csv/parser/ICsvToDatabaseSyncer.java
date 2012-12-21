@@ -23,7 +23,6 @@ public interface ICsvToDatabaseSyncer {
 	 * @throws CsvParserException
 	 * @throws DatabaseException
 	 */
-	void sync2(File[] files) throws CsvParserException, DatabaseException,
-			IOException;
+	void sync2(File[] files) throws CsvParserException, DatabaseException;
 
 }

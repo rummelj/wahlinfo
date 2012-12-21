@@ -86,22 +86,28 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 
 	@Override
 	public void sync2(File[] files) throws CsvParserException,
-			DatabaseException, IOException {
+			DatabaseException{
 		// 5 files
-		System.gc();
-		LOG.info("Import phase 2");
-		String query = FileScanner.scanFile(VOTE_IMPORT_SCRIPT_PATH);
-		for (int k = 0; k < 5; k++) {
-			query = query.replace(":filePath" + k, files[k].getAbsolutePath());
+		try {
+			System.gc();
+			LOG.info("Import phase 2");
+			String query = FileScanner.scanFile(VOTE_IMPORT_SCRIPT_PATH);
+			for (int k = 0; k < 5; k++) {
+				query = query.replace(":filePath" + k,
+						files[k].getAbsolutePath());
+			}
+			databaseAccessor.executeStatement(query);
+			LOG.info("Import complete. Performing db clean up");
+			databaseAccessor.vacuumAndAnalyze("WIFilledVotingPaper");
+			LOG.info("Done. Scheduling file deletion");
+			for (File file : files) {
+				file.delete();
+			}
+			LOG.info("Done. Vote sync is complete");
+
+		} catch (IOException ex) {
+			throw new DatabaseException("Unable to access sql vote import file");
 		}
-		databaseAccessor.executeStatement(query);
-		LOG.info("Import complete. Performing db clean up");
-		databaseAccessor.vacuumAndAnalyze("WIFilledVotingPaper");
-		LOG.info("Done. Scheduling file deletion");
-		for (File file : files) {
-			file.delete();
-		}
-		LOG.info("Done. Vote sync is complete");
 	}
 
 }

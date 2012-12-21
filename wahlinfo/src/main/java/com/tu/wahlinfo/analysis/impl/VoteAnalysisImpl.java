@@ -22,7 +22,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	private static final String FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
 			+ "aggregateDirCanVotes.sql";
 	private static final String FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
-			+ "aggregatePartyVotes.sql";	
+			+ "aggregatePartyVotes.sql";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VoteAnalysisImpl.class);
 
@@ -30,19 +30,25 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	DatabaseAccessor databaseAccessor;
 
 	@Override
-	public void updateVoteBase() throws DatabaseException, IOException {
-		LOG.info("Starting vote base update");
-		LOG.debug("Updating party votes");
-		databaseAccessor.executeStatement(FileScanner
-				.scanFile(FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT));
-		LOG.debug("Done");
+	public void updateVoteBase() throws DatabaseException {
+		try {
+			LOG.info("Starting vote base update");
+			LOG.debug("Updating party votes");
+			databaseAccessor.executeStatement(FileScanner
+					.scanFile(FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT));
+			LOG.debug("Done");
 
-		LOG.debug("Updating direct candidate votes");
-		databaseAccessor.executeStatement(FileScanner
-				.scanFile(FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT));
-		LOG.debug("Done. Performing database cleanup.");
-		this.databaseAccessor.vacuumAndAnalyze("WIPartyVotes","WIDirectCandidate");
-		LOG.info("Vote update finished");		
+			LOG.debug("Updating direct candidate votes");
+			databaseAccessor.executeStatement(FileScanner
+					.scanFile(FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT));
+			LOG.debug("Done. Performing database cleanup.");
+			this.databaseAccessor.vacuumAndAnalyze("WIPartyVotes",
+					"WIDirectCandidate");
+			LOG.info("Vote update finished");
+		} catch (IOException ex) {
+			throw new DatabaseException(
+					"Unable to access files required for vote base update");
+		}
 	}
 
 	@Override

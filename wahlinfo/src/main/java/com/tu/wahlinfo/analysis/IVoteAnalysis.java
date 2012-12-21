@@ -13,11 +13,11 @@ public interface IVoteAnalysis {
 	 * Re-calculates all seats per party as well as all mandates
 	 * 
 	 * @throws DatabaseException
-	 * @throws IOException
 	 *             In case there is a problem while accessing the respective,
-	 *             prepared sql files.
+	 *             prepared sql files or executing them.
+	 * 
 	 */
-	void updateVoteBase() throws DatabaseException, IOException;
+	void updateVoteBase() throws DatabaseException;
 
 	/**
 	 * Read from table WIDirectMandateDistribution

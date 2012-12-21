@@ -43,9 +43,8 @@ public class TerminalController {
 
 	public void launchSync() throws CsvParserException, DatabaseException {
 		File[] voteFiles = csvToDatabaseSyncer.sync();
-		for (int k = 0; k < voteFiles.length; k++) {
-			csvToDatabaseSyncer.sync2(voteFiles[k], k);
-		}
+		csvToDatabaseSyncer.sync2(voteFiles);
+		voteAnalysis.updateVoteBase();
 	}
 
 	public void updateVoteBase() throws DatabaseException, IOException {
