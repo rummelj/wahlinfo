@@ -2,6 +2,7 @@ package com.tu.wahlinfo.analysis.impl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import com.tu.util.FileScanner;
 import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
+import com.tu.wahlinfo.frontend.model.FederalState;
+import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
@@ -64,19 +67,19 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	}
 
 	@Override
-	public List getOverhangMandates(ElectionYear electionYear) {
+	public Map<Party, Integer> getOverhangMandates(ElectionYear electionYear) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List getSeatDistribution(ElectionYear electionYear) {
+	public Map<Party, Integer> getSeatDistribution(ElectionYear electionYear) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List getStateSeatDistribution(ElectionYear electionYear,
+	public Map<FederalState, Integer> getStateSeatDistribution(ElectionYear electionYear,
 			String partyName) {
 		// TODO Auto-generated method stub
 		return null;
