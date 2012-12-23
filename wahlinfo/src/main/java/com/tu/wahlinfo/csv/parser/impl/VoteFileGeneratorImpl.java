@@ -19,7 +19,8 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 
 	private static final String CSV_FILE_DELIMITER = ";";
 	private static final String OUTPUT_FILE_TYPE = ".csv";
-        private static final Logger LOG = LoggerFactory.getLogger(VoteFileGeneratorImpl.class);
+	private static final Logger LOG = LoggerFactory
+			.getLogger(VoteFileGeneratorImpl.class);
 
 	public VoteFileGeneratorImpl(ICsvParser parser) {
 		super(parser);
@@ -30,7 +31,7 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 	public File[] createVoteFiles() throws CsvParserException {
 		File[] res = new File[5];
 		try {
-                    
+
 			res[0] = createOutputFile(1);
 			res[1] = createOutputFile(2);
 			res[2] = createOutputFile(3);
@@ -41,14 +42,14 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 			writeToFile(120, 179, res[2]);
 			writeToFile(180, 239, res[3]);
 			writeToFile(240, 300, res[4]);
-                        
-                        
+
 			return res;
 		} catch (Exception ex) {
 			throw new CsvParserException("fail", ex);
 		}
 
 	}
+
 	void writeToFile(int startRowNumber, int endRowNumber, File outputFile)
 			throws IOException, CsvParserException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
@@ -109,10 +110,10 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 	}
 
 	String constructCsvLine(Long... cells) {
-		StringBuilder builder = new StringBuilder();		
-		for (int k=0;k<cells.length;k++) {
+		StringBuilder builder = new StringBuilder();
+		for (int k = 0; k < cells.length; k++) {
 			builder.append((cells[k] == null) ? "" : cells[k]);
-			if(k<cells.length-1){
+			if (k < cells.length - 1) {
 				builder.append(CSV_FILE_DELIMITER);
 			}
 		}
@@ -120,8 +121,7 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 	}
 
 	File createOutputFile(int number) throws IOException {
-                
-		File file = File.createTempFile(OUTPUT_FILE_PREFIX + number,OUTPUT_FILE_TYPE);
+		File file = new File(OUTPUT_FILE_PREFIX + number + OUTPUT_FILE_TYPE);
 		LOG.info("Created file: " + file.getAbsolutePath());
 		return file;
 	}
