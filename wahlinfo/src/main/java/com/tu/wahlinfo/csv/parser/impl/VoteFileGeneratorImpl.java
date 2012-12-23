@@ -12,11 +12,14 @@ import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.csv.parser.AbstractVoteFileGenerator;
 import com.tu.wahlinfo.csv.parser.ICsvParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 
 	private static final String CSV_FILE_DELIMITER = ";";
 	private static final String OUTPUT_FILE_TYPE = ".csv";
+        private static final Logger LOG = LoggerFactory.getLogger(VoteFileGeneratorImpl.class);
 
 	public VoteFileGeneratorImpl(ICsvParser parser) {
 		super(parser);
@@ -27,6 +30,7 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 	public File[] createVoteFiles() throws CsvParserException {
 		File[] res = new File[5];
 		try {
+                    
 			res[0] = createOutputFile(1);
 			res[1] = createOutputFile(2);
 			res[2] = createOutputFile(3);
@@ -37,6 +41,8 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 			writeToFile(120, 179, res[2]);
 			writeToFile(180, 239, res[3]);
 			writeToFile(240, 300, res[4]);
+                        
+                        
 			return res;
 		} catch (Exception ex) {
 			throw new CsvParserException("fail", ex);
@@ -114,8 +120,9 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 	}
 
 	File createOutputFile(int number) throws IOException {
-		File file = new File(OUTPUT_FILE_PREFIX + number + OUTPUT_FILE_TYPE);
-		System.out.println("Created file: " + file.getAbsolutePath());
+                
+		File file = File.createTempFile(OUTPUT_FILE_PREFIX + number,OUTPUT_FILE_TYPE);
+		LOG.info("Created file: " + file.getAbsolutePath());
 		return file;
 	}
 

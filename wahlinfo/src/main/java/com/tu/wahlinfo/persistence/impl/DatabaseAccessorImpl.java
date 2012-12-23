@@ -48,6 +48,9 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 
 	@Override
 	public void vacuumAndAnalyze(String... tableNames) throws DatabaseException {
+                if(true){
+                    return;
+                }
 		if (tableNames.length == 0) {
 			this.executeStatement(VACUUM_QUERY);
 			this.executeStatement(ANALYZE_QUERY);

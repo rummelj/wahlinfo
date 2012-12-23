@@ -1,13 +1,11 @@
 BEGIN;
 
 ALTER TABLE WIFilledVotingPaper
-DROP CONSTRAINT IF EXISTS wifilledvotingpaper_pkey;
+DROP CONSTRAINT IF EXISTS wifilledvotingpaper_electoraldistrictid_fkey;
 ALTER TABLE WIFilledVotingPaper
-DROP CONSTRAINT IF EXISTS wifilledvotingpaper_electoraldistrictid_fk;
+DROP CONSTRAINT IF EXISTS wifilledvotingpaper_directcandidateid_fkey;
 ALTER TABLE WIFilledVotingPaper
-DROP CONSTRAINT IF EXISTS wifilledvotingpaper_directiandidateid_fk;
-ALTER TABLE WIFilledVotingPaper
-DROP CONSTRAINT IF EXISTS wifilledvotingpaper_partyid_fk;
+DROP CONSTRAINT IF EXISTS wifilledvotingpaper_partyid_fkey;
 
 COPY	WIFilledVotingPaper (electoraldistrictid, directcandidateid, partyid) 
 FROM	':filePath0'
@@ -30,12 +28,10 @@ FROM	':filePath4'
 WITH 	(FORMAT CSV, DELIMITER ';');
 
 ALTER TABLE WIFilledVotingPaper
-ADD CONSTRAINT wifilledvotingpaper_partyid_fk FOREIGN KEY (partyId) REFERENCES WIParty(id);
+ADD CONSTRAINT wifilledvotingpaper_electoraldistrictid_fkey FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict(number);
 ALTER TABLE WIFilledVotingPaper
-ADD CONSTRAINT wifilledvotingpaper_directcandidateid_fk FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidateId(id);
+ADD CONSTRAINT wifilledvotingpaper_directcandidateid_fkey FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate(id);
 ALTER TABLE WIFilledVotingPaper
-ADD CONSTRAINT wifilledvotingpaper_listcandidateid_fk FOREIGN KEY (listCandidateId) REFERENCES WIListCandidate(id);
-ALTER TABLE WIFilledVotingPaper
-ADD CONSTRAINT wifilledvotingpaper_pkey PRIMARY KEY (id);
+ADD CONSTRAINT wifilledvotingpaper_partyid_fkey FOREIGN KEY (partyId) REFERENCES WIParty(id);
 
 END;

@@ -91,15 +91,13 @@ CREATE TABLE WIListCandidate (
 	PRIMARY KEY (id)
 );
 
-CREATE TABLE WIFilledVotingPaper (
-	id BIGSERIAL  NOT NULL,
+CREATE TABLE WIFilledVotingPaper (	
 	electoralDistrictId SMALLINT NOT NULL,	
 	partyId BIGINT,
 	directCandidateId BIGINT,	
 	FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number),	
 	FOREIGN KEY (partyId) REFERENCES WIParty (id),
-	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id),	
-	PRIMARY KEY (id)
+	FOREIGN KEY (directCandidateId) REFERENCES WIDirectCandidate (id)	
 );
 
 CREATE TABLE WIDivisor (

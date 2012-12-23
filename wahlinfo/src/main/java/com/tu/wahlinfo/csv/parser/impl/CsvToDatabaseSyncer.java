@@ -88,9 +88,10 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 	public void sync2(File[] files) throws CsvParserException,
 			DatabaseException{
 		// 5 files
-		try {
-			System.gc();
-			LOG.info("Import phase 2");
+                LOG.info("Garbage collection");
+                System.gc();
+                LOG.info("Import phase 2");
+		try {						
 			String query = FileScanner.scanFile(VOTE_IMPORT_SCRIPT_PATH);
 			for (int k = 0; k < 5; k++) {
 				query = query.replace(":filePath" + k,
