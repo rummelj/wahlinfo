@@ -20,10 +20,10 @@ import org.slf4j.LoggerFactory;
 public class VoteAnalysisImpl implements IVoteAnalysis {
 
     private static final String FILE_PATH_SQL_BASE = "/sql/";
-    private static final String FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
-            + "aggregateDirCanVotes.sql";
-    private static final String FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
-            + "aggregatePartyVotes.sql";
+    private static final String FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT =
+            FILE_PATH_SQL_BASE + "aggregateDirCanVotes.sql";
+    private static final String FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT =
+            FILE_PATH_SQL_BASE + "aggregatePartyVotes.sql";
     private static final Logger LOG = LoggerFactory
             .getLogger(VoteAnalysisImpl.class);
     @Inject
@@ -52,27 +52,33 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
     }
 
     @Override
-    public List<DirectCandidate> getDirMandates(ElectionYear electionYear) throws DatabaseException, IOException {
+    public List<DirectCandidate> getDirMandates(ElectionYear electionYear)
+            throws DatabaseException, IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List getListMandates(ElectionYear electionYear) throws DatabaseException, IOException {
+    public List getListMandates(ElectionYear electionYear)
+            throws DatabaseException, IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Map<Party, Integer> getOverhangMandates(ElectionYear electionYear) throws DatabaseException, IOException {
+    public Map<Party, Integer> getOverhangMandates(ElectionYear electionYear)
+            throws DatabaseException, IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Map<Party, Integer> getSeatDistribution(ElectionYear electionYear) throws DatabaseException, IOException {
+    public Map<Party, Integer> getSeatDistribution(ElectionYear electionYear)
+            throws DatabaseException, IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Map<FederalState, Integer> getStateSeatDistribution(ElectionYear electionYear, String partyName) throws DatabaseException, IOException {
+    public Map<FederalState, Integer> getStateSeatDistribution(
+            ElectionYear electionYear, String partyName)
+            throws DatabaseException, IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
