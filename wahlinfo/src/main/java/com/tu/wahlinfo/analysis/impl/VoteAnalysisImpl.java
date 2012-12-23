@@ -40,10 +40,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 
             LOG.debug("Updating direct candidate votes");
             databaseAccessor.executeStatement(FileScanner
-                    .scanFile(FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT));
-            LOG.debug("Done. Performing database cleanup.");
-            this.databaseAccessor.vacuumAndAnalyze("WIPartyVotes",
-                    "WIDirectCandidate");
+                    .scanFile(FILE_PATH_DIR_VOTE_AGGREGATION_SCRIPT));            
             LOG.info("Vote update finished");
         } catch (IOException ex) {
             throw new DatabaseException(
