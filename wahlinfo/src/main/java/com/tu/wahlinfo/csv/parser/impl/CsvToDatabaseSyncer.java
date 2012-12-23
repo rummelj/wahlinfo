@@ -28,6 +28,7 @@ import com.tu.wahlinfo.persistence.IdGenerator;
 public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 
 	private static final String VOTE_IMPORT_SCRIPT_PATH = "/sql/ImportVotes.sql";
+        private static final String CREATE_INDICES_SCRIPT_PATH = "/sql/CreateIndices.sql";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(CsvToDatabaseSyncer.class);
 
@@ -79,7 +80,6 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		databasePersister.persist(directCandidates2009);
 		databasePersister.persist(listCandidates2005);
 		databasePersister.persist(listCandidates2009);
-		this.databaseAccessor.vacuumAndAnalyze();
 		LOG.info("Import phase 1 complete");
 		return csvParser.parseVotesToFiles();
 	}
@@ -98,13 +98,14 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 						files[k].getAbsolutePath());
 			}
 			databaseAccessor.executeStatement(query);
-			LOG.info("Import complete. Performing db clean up");
-			databaseAccessor.vacuumAndAnalyze("WIFilledVotingPaper");
 			LOG.info("Done. Scheduling file deletion");
 			for (File file : files) {
 				file.delete();
 			}
+                        LOG.info("Done. Creating indices. This should take about 10 minutes");
+                        databaseAccessor.executeStatement(FileScanner.scanFile(CREATE_INDICES_SCRIPT_PATH));
 			LOG.info("Done. Vote sync is complete");
+                        LOG.info("Please manually run 'vacuum' and 'analyze' against the db to ensure proper performance");
 
 		} catch (IOException ex) {
 			throw new DatabaseException("Unable to access sql vote import file");

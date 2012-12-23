@@ -44,24 +44,7 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 				throw new DatabaseException("Could not execute " + sql, e);
 			}
 		}
-	}
-
-	@Override
-	public void vacuumAndAnalyze(String... tableNames) throws DatabaseException {
-                if(true){
-                    return;
-                }
-		if (tableNames.length == 0) {
-			this.executeStatement(VACUUM_QUERY);
-			this.executeStatement(ANALYZE_QUERY);
-		} else {
-			for (String table : tableNames) {
-				this.executeStatement(VACUUM_QUERY + table);
-				this.executeStatement(ANALYZE_QUERY + table);
-			}
-		}
-
-	}
+	}	
 
 	@SuppressWarnings("unchecked")
 	@Override
