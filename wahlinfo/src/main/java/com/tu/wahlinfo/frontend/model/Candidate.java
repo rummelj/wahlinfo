@@ -1,21 +1,23 @@
 package com.tu.wahlinfo.frontend.model;
 
-public class DirectCandidate {
+public class Candidate {
 
 	String name;
 	Party party;
 	String electoralDistrict;
 	String federalState;
-	String percentVotesReceived;
 
-	public DirectCandidate(String name, Party party, String electoralDistrict,
-			String federalState, String percentVotesReceived) {
+	public Candidate() {
+
+	}
+
+	public Candidate(String name, Party party, String electoralDistrict,
+			String federalState) {
 		super();
 		this.name = name;
 		this.party = party;
 		this.electoralDistrict = electoralDistrict;
 		this.federalState = federalState;
-		this.percentVotesReceived = percentVotesReceived;
 	}
 
 	public String getName() {
@@ -48,14 +50,6 @@ public class DirectCandidate {
 
 	public void setFederalState(String federalState) {
 		this.federalState = federalState;
-	}
-
-	public String getPercentVotesReceived() {
-		return percentVotesReceived;
-	}
-
-	public void setPercentVotesReceived(String percentVotesReceived) {
-		this.percentVotesReceived = percentVotesReceived;
 	}
 
 }

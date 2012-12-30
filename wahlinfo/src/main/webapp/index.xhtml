@@ -12,16 +12,9 @@
 </h:head>
 <h:body>
 	<div id="content">
-		<h:form>
-			<p:menubar>
-				<p:submenu label="Analysen">
-					<p:menuitem value="Analyse 1"></p:menuitem>
-					<p:menuitem value="Analyse 2"></p:menuitem>
-					<p:menuitem value="Analyse 3"></p:menuitem>
-					<p:menuitem value="Analyse 4"></p:menuitem>
-				</p:submenu>
-			</p:menubar>
-		</h:form>
+		<!-- Dialogs -->
+
+		<!-- Terminal (Admin console) -->
 		<p:dialog widgetVar="terminal" styleClass="terminal" width="600"
 			height="400" header="Admin-Konsole" showEffect="fade"
 			hideEffect="fade">
@@ -32,6 +25,151 @@
 					prompt="wahlinfo $ " />
 			</h:form>
 		</p:dialog>
+
+		<!-- Seat distribution 2005 -->
+		<p:dialog header="Sitzverteilung im Bundestag"
+			widgetVar="seatdistributiondialog2005" dynamic="true"
+			resizable="false">
+			<p:pieChart id="seatdistributionpiechart2005"
+				value="#{analyseController.seatDistribution2005}" legendPosition="w"
+				title="2005" />
+			<p:dataTable id="seatdistributiontable2005" var="partyAndSeats"
+				value="#{analyseController.seatDistributionTable2005}">
+				<f:facet name="header">  
+            		Tabellarische Darstellung  
+       		 	</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{partyAndSeats.name}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Anzahl Sitze" />
+					</f:facet>
+					<h:outputText value="#{partyAndSeats.seats}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<!-- Seat distribution 2009 -->
+		<p:dialog header="Sitzverteilung im Bundestag"
+			widgetVar="seatdistributiondialog2009" dynamic="true"
+			resizable="false">
+			<p:pieChart id="seatdistributionpiechart2009"
+				value="#{analyseController.seatDistribution2009}" legendPosition="w"
+				title="2009" />
+			<p:dataTable id="seatdistributiontable2009" var="partyAndSeats"
+				value="#{analyseController.seatDistributionTable2009}">
+				<f:facet name="header">  
+            		Tabellarische Darstellung  
+       		 	</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{partyAndSeats.name}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Anzahl Sitze" />
+					</f:facet>
+					<h:outputText value="#{partyAndSeats.seats}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<!-- Members of Bundestag 2005 -->
+		<p:dialog header="Mitglieder des Bundestages"
+			widgetVar="membersofbundestagdialog2005" dynamic="true"
+			resizable="false">
+			<p:dataTable id="membersofbundestagtable2005" var="candidate"
+				value="#{analyseController.membersOfBundestag2005}" scrollRows="10"
+				scrollable="true" scrollHeight="400">
+				<f:facet name="header">  
+            		2005  
+       		 	</f:facet>
+				<p:column width="200" sortBy="#{candidate.name}">
+					<f:facet name="header">
+						<h:outputText value="Name" />
+					</f:facet>
+					<h:outputText value="#{candidate.name}" />
+				</p:column>
+				<p:column width="70" sortBy="#{candidate.party.name}">
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{candidate.party.name}" />
+				</p:column>
+				<p:column width="250" sortBy="#{candidate.electoralDistrict}">
+					<f:facet name="header">
+						<h:outputText value="Wahlkreis" />
+					</f:facet>
+					<h:outputText value="#{candidate.electoralDistrict}" />
+				</p:column>
+				<p:column width="150" sortBy="#{candidate.federalState}">
+					<f:facet name="header">
+						<h:outputText value="Bundesland" />
+					</f:facet>
+					<h:outputText value="#{candidate.federalState}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<!-- Members of Bundestag 2009 -->
+		<p:dialog header="Mitglieder des Bundestages"
+			widgetVar="membersofbundestagdialog2009" dynamic="true"
+			resizable="false">
+			<p:dataTable id="membersofbundestagtable2009" var="candidate"
+				value="#{analyseController.membersOfBundestag2009}" scrollRows="10"
+				scrollable="true" scrollHeight="400">
+				<f:facet name="header">  
+            		2009  
+       		 	</f:facet>
+				<p:column width="200" sortBy="#{candidate.name}">
+					<f:facet name="header">
+						<h:outputText value="Name" />
+					</f:facet>
+					<h:outputText value="#{candidate.name}" />
+				</p:column>
+				<p:column width="70" sortBy="#{candidate.party.name}">
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{candidate.party.name}" />
+				</p:column>
+				<p:column width="250" sortBy="#{candidate.electoralDistrict}">
+					<f:facet name="header">
+						<h:outputText value="Wahlkreis" />
+					</f:facet>
+					<h:outputText value="#{candidate.electoralDistrict}" />
+				</p:column>
+				<p:column width="150" sortBy="#{candidate.federalState}">
+					<f:facet name="header">
+						<h:outputText value="Bundesland" />
+					</f:facet>
+					<h:outputText value="#{candidate.federalState}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<h:form>
+			<p:menubar>
+				<p:submenu label="Sitzverteilung">
+					<p:menuitem value="2009"
+						onclick="seatdistributiondialog2009.show()"></p:menuitem>
+					<p:menuitem value="2005"
+						onclick="seatdistributiondialog2005.show()"></p:menuitem>
+				</p:submenu>
+				<p:submenu label="Mandate">
+					<p:menuitem value="2009"
+						onclick="membersofbundestagdialog2009.show()"></p:menuitem>
+					<p:menuitem value="2005"
+						onclick="membersofbundestagdialog2005.show()"></p:menuitem>
+				</p:submenu>
+			</p:menubar>
+		</h:form>
 		<p:dock>
 			<p:menuitem label="Terminal" icon="resources/images/terminal.png"
 				url="#" onclick="terminal.show();term.focus();" />

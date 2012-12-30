@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tu.wahlinfo.model.DatabaseResult;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
@@ -44,12 +45,12 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 				throw new DatabaseException("Could not execute " + sql, e);
 			}
 		}
-	}	
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, List<String>> executeQuery(String query,
-			String... columnNames) throws DatabaseException {
+	public DatabaseResult executeQuery(String query, String... columnNames)
+			throws DatabaseException {
 		LOG.debug("Executing query {}", query);
 
 		Map<String, List<String>> result = new HashMap<String, List<String>>();
@@ -80,6 +81,6 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 				result.get(columnNames[0]).add(row.toString());
 			}
 		}
-		return result;
+		return new DatabaseResultImpl(result);
 	}
 }

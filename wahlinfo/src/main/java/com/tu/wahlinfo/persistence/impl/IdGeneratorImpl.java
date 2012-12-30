@@ -1,11 +1,9 @@
 package com.tu.wahlinfo.persistence.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import com.tu.wahlinfo.model.DatabaseResult;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.persistence.IdGenerator;
@@ -48,10 +46,10 @@ public class IdGeneratorImpl implements IdGenerator {
 	}
 
 	private Long getCurrentId() throws DatabaseException {
-		Map<String, List<String>> hibernate_sequence = databaseAccessor
-				.executeQuery("SELECT * FROM hibernate_sequence", "next_val");
-		Long currentValue = Long.valueOf(hibernate_sequence.get("next_val")
-				.get(0));
+		DatabaseResult hibernate_sequence = databaseAccessor.executeQuery(
+				"SELECT * FROM hibernate_sequence", "next_val");
+		Long currentValue = Long.valueOf(hibernate_sequence.iterator().next()
+				.get("next_val"));
 		return currentValue;
 	}
 

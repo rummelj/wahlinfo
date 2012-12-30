@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
-import com.tu.wahlinfo.frontend.model.DirectCandidate;
+import com.tu.wahlinfo.frontend.model.Candidate;
 import com.tu.wahlinfo.frontend.model.FederalState;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -29,7 +29,7 @@ public interface IVoteAnalysis {
 	 * @param electionYear
 	 * @return
 	 */
-	List<DirectCandidate> getDirMandates(ElectionYear electionYear)
+	List<Candidate> getDirMandates(ElectionYear electionYear)
 			throws DatabaseException, IOException;
 
 	/**
@@ -38,8 +38,8 @@ public interface IVoteAnalysis {
 	 * @param electionYear
 	 * @return
 	 */
-	List getListMandates(ElectionYear electionYear) throws DatabaseException,
-			IOException;
+	List<Candidate> getListMandates(ElectionYear electionYear)
+			throws DatabaseException, IOException;
 
 	/**
 	 * Compare content of WIStatePartySeatDistribution (= nominal seat amount)

@@ -1,7 +1,6 @@
 package com.tu.wahlinfo.persistence;
 
-import java.util.List;
-import java.util.Map;
+import com.tu.wahlinfo.model.DatabaseResult;
 
 /**
  * Provides access to the database on a very low level.
@@ -9,7 +8,7 @@ import java.util.Map;
  * @author Johannes
  * 
  */
-public interface DatabaseAccessor {		
+public interface DatabaseAccessor {
 
 	/**
 	 * Executes sql as is. This method does not sanitise any parameters, so you
@@ -50,7 +49,7 @@ public interface DatabaseAccessor {
 	 *             number of columns is wrong or the name of the columns is not
 	 *             unique.
 	 */
-	Map<String, List<String>> executeQuery(String query, String... columnNames)
+	DatabaseResult executeQuery(String query, String... columnNames)
 			throws DatabaseException;
 
 }
