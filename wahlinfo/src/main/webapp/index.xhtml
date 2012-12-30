@@ -154,6 +154,96 @@
 			</p:dataTable>
 		</p:dialog>
 
+		<!-- Info about one electoral district -->
+		<p:dialog header="Informationen zu einem Wahlkreis"
+			widgetVar="wahlkreisinfodialog" dynamic="true" resizable="false">
+			<h:form id="wahlkreisinfodialogform">
+				<table>
+					<tr>
+						<td><p:panel header="Wahljahr">
+								<p:selectOneListbox id="wahlkreisinfowizarddistrictscrollyear"
+									value="#{wahlkreisInfoWizard.electionYear}"
+									style="height:50px;width:350px">
+									<f:selectItems value="#{wahlkreisInfoWizard.electionYears}"
+										var="electionYear" itemLabel="#{electionYear}"
+										itemValue="#{electionYear}" />
+									<p:ajax event="change" update="wahlkreisinfodata" />
+								</p:selectOneListbox>
+							</p:panel></td>
+						<td rowspan="2"><p:panel header="Informationen"
+								id="wahlkreisinfodata" style="height:500px;width:450px">
+								<h3>
+									<h:outputText
+										value="#{wahlkreisInfoWizard.district} (#{wahlkreisInfoWizard.electionYear})" />
+								</h3>
+								<p>
+									Wahlbeteiligung:&nbsp;<strong> <h:outputText
+											value="#{wahlkreisInfoWizard.wahlbeteiligung}" />
+									</strong><br /> Gewählter Direktkandidat:&nbsp;<strong><h:outputText
+											value="#{wahlkreisInfoWizard.directCandidate}" /></strong>
+								</p>
+								<br />
+								<p:dataTable id="voteDetailsInElectoralDistrict"
+									var="voteDetail" value="#{wahlkreisInfoWizard.voteDetails}"
+									scrollable="true" scrollHeight="200">
+									<f:facet name="header">  
+            							Statistiken
+       		 						</f:facet>
+									<p:column width="100">
+										<f:facet name="header">
+											<h:outputText style="font-size:x-small" value="Partei" />
+										</f:facet>
+										<h:outputText value="#{voteDetail.party.name}" />
+									</p:column>
+									<p:column width="140">
+										<f:facet name="header">
+											<h:outputText value="#Stimmen" style="font-size:x-small" />
+											<br />
+											<h:outputText value="absolut" style="font-size:x-small" />
+										</f:facet>
+										<h:outputText style="color: green; font-size:small"
+											rendered="#{voteDetail.comparisonToLastYearInVotesReceived ge 0}"
+											value="#{voteDetail.votesReceived} (+#{voteDetail.comparisonToLastYearInVotesReceived})" />
+										<h:outputText style="color: red; font-size:small"
+											rendered="#{voteDetail.comparisonToLastYearInVotesReceived le 0}"
+											value="#{voteDetail.votesReceived} (#{voteDetail.comparisonToLastYearInVotesReceived})" />
+									</p:column>
+									<p:column width="110">
+										<f:facet name="header">
+											<h:outputText value="#Stimmen" style="font-size:x-small" />
+											<br />
+											<h:outputText value="Prozent" style="font-size:x-small" />
+										</f:facet>
+										<h:outputText style="color: green; font-size:small"
+											rendered="#{voteDetail.comparisonToLastYearInPercentageVotesReceived ge 0}"
+											value="#{voteDetail.percentageVotesReceived} (+#{voteDetail.comparisonToLastYearInPercentageVotesReceived})" />
+										<h:outputText style="color: red; font-size:small"
+											rendered="#{voteDetail.comparisonToLastYearInPercentageVotesReceived le 0}"
+											value="#{voteDetail.percentageVotesReceived} (#{voteDetail.comparisonToLastYearInPercentageVotesReceived})" />
+
+									</p:column>
+								</p:dataTable>
+
+							</p:panel></td>
+					</tr>
+					<tr>
+						<td><p:panel header="Wahlkreis">
+								<p:selectOneListbox
+									id="wahlkreisinfowizarddistrictscrolldistrict"
+									value="#{wahlkreisInfoWizard.district}"
+									style="height:300px;width:350px">
+									<f:selectItems value="#{wahlkreisInfoWizard.districts}"
+										var="district" itemLabel="#{district}" itemValue="#{district}" />
+									<p:ajax event="change" update="wahlkreisinfodata" />
+								</p:selectOneListbox>
+							</p:panel></td>
+						<td></td>
+					</tr>
+				</table>
+			</h:form>
+		</p:dialog>
+
+
 		<h:form>
 			<p:menubar>
 				<p:submenu label="Sitzverteilung">
@@ -171,6 +261,9 @@
 			</p:menubar>
 		</h:form>
 		<p:dock>
+			<p:menuitem label="Wahlkreisinfo"
+				icon="resources/images/fragezeichen.png" url="#"
+				onclick="wahlkreisinfodialog.show()" />
 			<p:menuitem label="Terminal" icon="resources/images/terminal.png"
 				url="#" onclick="terminal.show();term.focus();" />
 		</p:dock>

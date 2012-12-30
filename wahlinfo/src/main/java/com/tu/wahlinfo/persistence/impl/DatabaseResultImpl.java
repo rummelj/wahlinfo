@@ -61,4 +61,17 @@ public class DatabaseResultImpl implements DatabaseResult {
 		};
 	}
 
+	@Override
+	public List<String> toList() {
+		if (data.keySet().size() != 1) {
+			throw new UnsupportedOperationException(
+					"Cannot convert a result from the database to a list if there are more than 1 columns contained (or none)");
+		}
+		for (Entry<String, List<String>> dataEntry : data.entrySet()) {
+			return dataEntry.getValue();
+		}
+		// Cannot happen
+		return null;
+	}
+
 }

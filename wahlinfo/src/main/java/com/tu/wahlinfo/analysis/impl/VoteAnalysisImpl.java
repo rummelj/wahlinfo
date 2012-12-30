@@ -18,6 +18,7 @@ import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
 import com.tu.wahlinfo.frontend.model.FederalState;
 import com.tu.wahlinfo.frontend.model.Party;
+import com.tu.wahlinfo.frontend.model.PartyDetailVote;
 import com.tu.wahlinfo.model.DatabaseResult;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -154,5 +155,34 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 		}
 
 		return result;
+	}
+
+	@Override
+	public float getVoteParticipation(ElectionYear electionYear,
+			Integer electoralDistrictNumber) {
+		// TODO Auto-generated method stub
+		return 35.7f;
+	}
+
+	@Override
+	public Candidate getVotedDirectCandidate(ElectionYear year,
+			Integer electoralDistrictNumber) {
+		// TODO Auto-generated method stub
+		return new Candidate("Hans Meier", new Party("APPD"), "Entenhausen",
+				"Hintertupfing");
+	}
+
+	@Override
+	public List<PartyDetailVote> getVoteDetails(ElectionYear year,
+			Integer electoralDistrictNumber) {
+		// TODO Auto-generated method stub
+		List<PartyDetailVote> details = new ArrayList<PartyDetailVote>(3);
+		details.add(new PartyDetailVote(new Party("ABC"), 12345, 39.4f, -5000,
+				-2.9f));
+		details.add(new PartyDetailVote(new Party("DEF"), 8000, 12f, 7500,
+				11.3f));
+		details.add(new PartyDetailVote(new Party("GHI"), 95421, 48.6f, 4400,
+				20.3f));
+		return details;
 	}
 }

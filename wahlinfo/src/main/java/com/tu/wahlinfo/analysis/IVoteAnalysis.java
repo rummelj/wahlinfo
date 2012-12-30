@@ -8,6 +8,7 @@ import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
 import com.tu.wahlinfo.frontend.model.FederalState;
 import com.tu.wahlinfo.frontend.model.Party;
+import com.tu.wahlinfo.frontend.model.PartyDetailVote;
 import com.tu.wahlinfo.persistence.DatabaseException;
 
 public interface IVoteAnalysis {
@@ -71,4 +72,33 @@ public interface IVoteAnalysis {
 	Map<FederalState, Integer> getStateSeatDistribution(
 			ElectionYear electionYear, String partyName)
 			throws DatabaseException, IOException;
+
+	/**
+	 * Returns the participation in percent.
+	 * 
+	 * @param electionYear
+	 * @param electoralDistrictNumber
+	 */
+	float getVoteParticipation(ElectionYear electionYear,
+			Integer electoralDistrictNumber);
+
+	/**
+	 * Returns the name of the candidate that was voted as a direct candidate in
+	 * this electoral district and year.
+	 * 
+	 * @param year
+	 * @param selectedNumber
+	 */
+	Candidate getVotedDirectCandidate(ElectionYear year,
+			Integer electoralDistrictNumber);
+
+	/**
+	 * Returns all vote details about all parties in this electoral district and
+	 * year.
+	 * 
+	 * @param year
+	 * @param selectedNumber
+	 */
+	List<PartyDetailVote> getVoteDetails(ElectionYear year,
+			Integer electoralDistrictNumber);
 }

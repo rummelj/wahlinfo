@@ -1,14 +1,14 @@
 package com.tu.wahlinfo.frontend.controller;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -23,7 +23,12 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 
 @Named
 @SessionScoped
-public class AnalyseController {
+public class AnalyseController implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5504368253639578387L;
 
 	@Inject
 	IVoteAnalysis voteAnalysis;

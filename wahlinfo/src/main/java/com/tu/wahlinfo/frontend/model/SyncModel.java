@@ -16,7 +16,6 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 @SessionScoped
 public class SyncModel {
 
-	int progress;
 
 	@Inject
 	ICsvToDatabaseSyncer csvToDatabaseSyncer;

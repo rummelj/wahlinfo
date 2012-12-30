@@ -1,5 +1,6 @@
 package com.tu.wahlinfo.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,4 +11,10 @@ import java.util.Map;
  */
 public interface DatabaseResult extends Iterable<Map<String, String>> {
 
+	/**
+	 * This only works if the query returns a result with only one column.
+	 * 
+	 * @return
+	 */
+	List<String> toList();
 }
