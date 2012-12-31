@@ -23,15 +23,7 @@ public class TerminalController {
 	ICsvToDatabaseSyncer csvToDatabaseSyncer;
 
 	@Inject
-	IVoteAnalysis voteAnalysis;
-        
-        @PostConstruct
-        void init(){
-            
-            ServletContext servletContext = (ServletContext) FacesContext
-    .getCurrentInstance().getExternalContext().getContext();
-            System.out.println(servletContext.getServerInfo());
-        }
+	IVoteAnalysis voteAnalysis;                
 
 	public String handleCommand(String command, String[] params) {
 		if (command.equals("launchSync"))
