@@ -9,15 +9,11 @@ import javax.inject.Inject;
 @Singleton
 public class StartupManager {
 
-	@Inject
-	DatabaseSetupTrigger databaseSetupTrigger;
+    @Inject
+    DatabaseSetupTrigger databaseSetupTrigger;    
 
-	@Inject
-	CsvToDatabaseSyncerTrigger csvToDatabaseSyncerTrigger;
-
-	@PostConstruct
-	public void init() {
-		databaseSetupTrigger.init();
-	}
-
+    @PostConstruct
+    public void init() {
+        databaseSetupTrigger.init();
+    }
 }

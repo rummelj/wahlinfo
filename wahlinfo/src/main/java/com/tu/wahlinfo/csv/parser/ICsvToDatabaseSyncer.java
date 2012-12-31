@@ -11,10 +11,12 @@ public interface ICsvToDatabaseSyncer {
 	/**
 	 * Processes all csv entities and stores them into the database.
 	 * 
+         * @param is server environment is glassfish 
+         * 
 	 * @throws CsvParserException
 	 * @throws DatabaseException
 	 */
-	File[] sync() throws CsvParserException, DatabaseException;
+	File[] sync(boolean isGfEnv) throws CsvParserException, DatabaseException;
 
 	/**
 	 * Write votes from files to db. Expects exactly 5 files (bad impl i

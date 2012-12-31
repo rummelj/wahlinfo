@@ -73,8 +73,8 @@ public class CsvParser implements ICsvParser {
 	}	
 	
 	@Override
-	public File[] parseVotesToFiles() throws CsvParserException {
-		return new VoteFileGeneratorImpl(this).createVoteFiles();		
+	public File[] parseVotesToFiles(boolean isGfEnv) throws CsvParserException {
+		return new VoteFileGeneratorImpl(this, isGfEnv).createVoteFiles();		
 	}
 
 	/**

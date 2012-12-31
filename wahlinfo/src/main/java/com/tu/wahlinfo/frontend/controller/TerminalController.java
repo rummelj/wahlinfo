@@ -11,6 +11,9 @@ import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.CsvParserException;
 import com.tu.wahlinfo.csv.parser.ICsvToDatabaseSyncer;
 import com.tu.wahlinfo.persistence.DatabaseException;
+import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 
 @Named
 @SessionScoped
@@ -21,6 +24,14 @@ public class TerminalController {
 
 	@Inject
 	IVoteAnalysis voteAnalysis;
+        
+        @PostConstruct
+        void init(){
+            
+            ServletContext servletContext = (ServletContext) FacesContext
+    .getCurrentInstance().getExternalContext().getContext();
+            System.out.println(servletContext.getServerInfo());
+        }
 
 	public String handleCommand(String command, String[] params) {
 		if (command.equals("launchSync"))
@@ -43,7 +54,10 @@ public class TerminalController {
 	}
 
 	public void launchSync() throws CsvParserException, DatabaseException {
-		File[] voteFiles = csvToDatabaseSyncer.sync();
+                boolean isGfEnv = ((ServletContext) FacesContext.
+                        getCurrentInstance().getExternalContext().getContext()).
+                        getServerInfo().startsWith("GlassFish");
+		File[] voteFiles = csvToDatabaseSyncer.sync(isGfEnv);
 		csvToDatabaseSyncer.sync2(voteFiles);
 		voteAnalysis.updateVoteBase();
 	}

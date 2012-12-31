@@ -11,7 +11,7 @@ public class VoteFileGeneratorTest {
 
 	@BeforeClass
 	public static void setup() {
-		generator = new VoteFileGeneratorImpl(new CsvParser());
+		generator = new VoteFileGeneratorImpl(new CsvParser(),true);
 	}
 
 	@Test		

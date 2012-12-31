@@ -21,9 +21,11 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 	private static final String OUTPUT_FILE_TYPE = ".csv";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VoteFileGeneratorImpl.class);
+        private static boolean isGfEnv;
 
-	public VoteFileGeneratorImpl(ICsvParser parser) {
+	public VoteFileGeneratorImpl(ICsvParser parser, boolean isGfEnv) {
 		super(parser);
+                this.isGfEnv = isGfEnv;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -121,7 +123,12 @@ public class VoteFileGeneratorImpl extends AbstractVoteFileGenerator {
 	}
 
 	File createOutputFile(int number) throws IOException {
-		File file = new File(OUTPUT_FILE_PREFIX + number + OUTPUT_FILE_TYPE);
+                File file;
+                if(!isGfEnv){
+                    file = new File(OUTPUT_FILE_PREFIX + number + OUTPUT_FILE_TYPE);
+                } else {
+                    file = File.createTempFile(OUTPUT_FILE_PREFIX + number, OUTPUT_FILE_TYPE);
+                }
 		LOG.info("Created file: " + file.getAbsolutePath());
 		return file;
 	}
