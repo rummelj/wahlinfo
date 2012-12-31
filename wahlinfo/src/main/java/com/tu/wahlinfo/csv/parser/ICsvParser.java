@@ -23,11 +23,13 @@ public interface ICsvParser {
 	/**
 	 * Parses all votes to several files prefixed by the constant of the class
 	 * "AbstractVoteFileGenerator".
+         * 
+         * @param if server environment is glassfish server
 	 * 
 	 * @throws CsvParserException
 	 *             In case an exception occurred while accessing the csv files.
 	 */
-	public File[] parseVotesToFiles() throws CsvParserException;
+	public File[] parseVotesToFiles(boolean isGfEnv) throws CsvParserException;
 
 	/**
 	 * Parses all available parties from the internally available candidate

@@ -54,7 +54,7 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 	}
 
 	@Override
-	public File[] sync() throws CsvParserException, DatabaseException {
+	public File[] sync(boolean isGfEnv) throws CsvParserException, DatabaseException {
 		LOG.info("Import phase 1");
 		ArrayList<Persistable> elections = new ArrayList<Persistable>(
 				csvParser.parseElections());
@@ -81,7 +81,7 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		databasePersister.persist(listCandidates2005);
 		databasePersister.persist(listCandidates2009);
 		LOG.info("Import phase 1 complete");
-		return csvParser.parseVotesToFiles();
+		return csvParser.parseVotesToFiles(isGfEnv);
 	}
 
 	@Override
