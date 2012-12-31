@@ -18,6 +18,7 @@ import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
 import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.FederalState;
+import com.tu.wahlinfo.frontend.model.OverhangMandate;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.frontend.model.PartyDetailVote;
 import com.tu.wahlinfo.model.DatabaseResult;
@@ -32,8 +33,8 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 			+ "aggregateDirCanVotes.sql";
 	private static final String FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
 			+ "aggregatePartyVotes.sql";
-        private static final String FILE_PATH_OVERHANG_MANDATES_SCRIPT = FILE_PATH_SQL_BASE
-                        + "OverhangMandatesForElection";
+	private static final String FILE_PATH_OVERHANG_MANDATES_SCRIPT = FILE_PATH_SQL_BASE
+			+ "OverhangMandatesForElection.sql";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VoteAnalysisImpl.class);
 
@@ -64,7 +65,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	private static final String STATE_SEAT_DISTRIBUTION_QUERY = "select fs.name, dv.seats "
 			+ "from lowerdistributionview:electionYear dv, wiparty p, wifederalstate fs "
 			+ "where dv.partyid = p.id and p.name=':partyName' and fs.federalstateid = dv.federalstateid;";
-        
+
 	@Inject
 	DatabaseAccessor databaseAccessor;
 
@@ -120,15 +121,21 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	}
 
 	@Override
-	public Map<Party, Integer> getOverhangMandates(ElectionYear electionYear)
+	public List<OverhangMandate> getOverhangMandates(ElectionYear electionYear)
 			throws DatabaseException, IOException {
-		
-                String query = FileScanner.scanFile(FILE_PATH_OVERHANG_MANDATES_SCRIPT).
-                        replaceAll(":electionYear", electionYear.toCleanString());
-                DatabaseResult queryResult = databaseAccessor.executeQuery(query);
-                // TODO: fill map as needed
-                //query has fsName, pName, overhangMandates
-		return new HashMap<Party, Integer>();
+		String query = FileScanner.scanFile(FILE_PATH_OVERHANG_MANDATES_SCRIPT)
+				.replaceAll(":electionYear", electionYear.toCleanString());
+		DatabaseResult queryResult = databaseAccessor.executeQuery(query,
+				"pName", "fsName", "overhangMandates");
+
+		List<OverhangMandate> result = new ArrayList<OverhangMandate>(16);
+		for (Map<String, String> queryResultRow : queryResult) {
+			result.add(new OverhangMandate(new Party(queryResultRow
+					.get("pName")), new FederalState(queryResultRow
+					.get("fsName")), Integer.valueOf(queryResultRow
+					.get("overhangMandates"))));
+		}
+		return result;
 	}
 
 	@Override

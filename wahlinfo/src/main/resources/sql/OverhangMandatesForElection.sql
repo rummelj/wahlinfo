@@ -7,7 +7,7 @@ with MandatesPerPartyAndState as (
     group by ed.federalStateId, dc.partyId
 )
 
-select  fs.name as fsName, p.name as pName, (mps.num - ldv.seats) as overhangMandates
+select  p.name as pName, fs.name as fsName, (mps.num - ldv.seats) as overhangMandates
 from    MandatesPerPartyAndState mps, LowerDistributionView:electionYear ldv, WIFederalState fs, WIParty p
 where   mps.federalStateId  = ldv.federalStateId    and
         ldv.federalStateId  = fs.federalStateId     and

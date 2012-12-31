@@ -312,6 +312,68 @@
 			</p:dataTable>
 		</p:dialog>
 
+		<!-- Überhangmandate 2005 -->
+		<p:dialog header="Überhangmandate 2005"
+			widgetVar="overhangMandatesdialog2005" dynamic="true"
+			resizable="false">
+			<p:dataTable id="overhangMandatesdialogtable2005" var="mandate"
+				value="#{analyseController.overhangMandates2005}" scrollable="true"
+				scrollHeight="250">
+				<f:facet name="header">  
+            							Anzahl Überhangmandate 2005
+       		 						</f:facet>
+				<p:column width="100" sortBy="#{mandate.party.name}">
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{mandate.party.name}" />
+				</p:column>
+				<p:column width="200" sortBy="#{mandate.federalState.name}">
+					<f:facet name="header">
+						<h:outputText style="font-size:small" value="Bundesland" />
+					</f:facet>
+					<h:outputText value="#{mandate.federalState.name}" />
+				</p:column>
+				<p:column width="80" sortBy="#{mandate.numberOfMandates}">
+					<f:facet name="header">
+						<h:outputText style="font-size:small" value="# Mandate" />
+					</f:facet>
+					<h:outputText value="#{mandate.numberOfMandates}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<!-- Überhangmandate 2009 -->
+		<p:dialog header="Überhangmandate 2009"
+			widgetVar="overhangMandatesdialog2009" dynamic="true"
+			resizable="false">
+			<p:dataTable id="overhangMandatesdialogtable2009" var="mandate"
+				value="#{analyseController.overhangMandates2009}" scrollable="true"
+				scrollHeight="250">
+				<f:facet name="header">  
+            							Anzahl Überhangmandate 2009
+       		 						</f:facet>
+				<p:column width="100" sortBy="#{mandate.party.name}">
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{mandate.party.name}" />
+				</p:column>
+				<p:column width="200" sortBy="#{mandate.federalState.name}">
+					<f:facet name="header">
+						<h:outputText style="font-size:small" value="Bundesland" />
+					</f:facet>
+					<h:outputText value="#{mandate.federalState.name}" />
+				</p:column>
+				<p:column width="80" sortBy="#{mandate.numberOfMandates}">
+					<f:facet name="header">
+						<h:outputText style="font-size:small" value="# Mandate" />
+					</f:facet>
+					<h:outputText value="#{mandate.numberOfMandates}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
 		<h:form>
 			<p:menubar>
 				<p:submenu label="Sitzverteilung">
@@ -330,6 +392,13 @@
 					<p:menuitem value="2009" onclick="wahlkreissiegerdialog2009.show()"></p:menuitem>
 					<p:menuitem value="2005" onclick="wahlkreissiegerdialog2005.show()"></p:menuitem>
 				</p:submenu>
+				<p:submenu label="Überhangmandate">
+					<p:menuitem value="2009"
+						onclick="overhangMandatesdialog2009.show()"></p:menuitem>
+					<p:menuitem value="2005"
+						onclick="overhangMandatesdialog2005.show()"></p:menuitem>
+				</p:submenu>
+
 			</p:menubar>
 		</h:form>
 		<p:dock>

@@ -20,6 +20,7 @@ import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
 import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
+import com.tu.wahlinfo.frontend.model.OverhangMandate;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.frontend.model.PartyAndSeats;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -152,5 +153,20 @@ public class AnalyseController implements Serializable {
 			}
 		});
 		return data;
+	}
+
+	public List<OverhangMandate> getOverhangMandates2009()
+			throws DatabaseException, IOException {
+		return getOverhangMandates(ElectionYear._2009);
+	}
+
+	public List<OverhangMandate> getOverhangMandates2005()
+			throws DatabaseException, IOException {
+		return getOverhangMandates(ElectionYear._2005);
+	}
+
+	private List<OverhangMandate> getOverhangMandates(ElectionYear electionYear)
+			throws DatabaseException, IOException {
+		return voteAnalysis.getOverhangMandates(electionYear);
 	}
 }

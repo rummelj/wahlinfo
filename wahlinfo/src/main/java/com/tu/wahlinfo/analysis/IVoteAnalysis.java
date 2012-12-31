@@ -8,6 +8,7 @@ import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
 import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.FederalState;
+import com.tu.wahlinfo.frontend.model.OverhangMandate;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.frontend.model.PartyDetailVote;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -52,7 +53,7 @@ public interface IVoteAnalysis {
 	 * @throws DatabaseException
 	 * @throws IOException
 	 */
-	Map<Party, Integer> getOverhangMandates(ElectionYear electionYear)
+	List<OverhangMandate> getOverhangMandates(ElectionYear electionYear)
 			throws DatabaseException, IOException;
 
 	/**
