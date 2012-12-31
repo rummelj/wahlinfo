@@ -207,23 +207,32 @@ public class DatabasePersisterImpl implements DatabasePersister {
 
 	Map<String, String> convertFederalState(Map<String, String> values)
 			throws DatabaseException {
-		values = removeAllBut(values, "federalStateId", "name",
-				"possibleVotes", "validVotes", "invalidVotes");
-		replaceIfNotContained(values, "federalStateId", null);
-		replaceIfNotContained(values, "possibleVotes", "0");
-		values = fillUpDefault(values, "validVotes", "invalidVotes");
+		values = removeAllBut(values, "federalStateId", "name");
+		replaceIfNotContained(values, "federalStateId", null);		
 		return values;
 	}
 
 	Map<String, String> convertElectoralDistrict(Map<String, String> values)
 			throws DatabaseException {
-		values = removeAllBut(values, "number", "name", "federalStateId",
-				"possibleVotes", "validVotes", "invalidVotes");
-		replaceIfNotContained(values, "number", null);
-		replaceIfNotContained(values, "possibleVotes", "0");
-		values = fillUpDefault(values, "validVotes", "invalidVotes");
+		values = removeAllBut(values, "number", "name", "federalStateId");
+		replaceIfNotContained(values, "number", null);		
 		return values;
 	}
+        
+        Map<String, String> convertElectoralDistrcitVoteData(
+                Map<String, String> values) throws DatabaseException {
+            values = removeAllBut(values, "electoralDistrictId", "electionYear",
+                    "possibleVotes", "submittedVotes", "validDirectVotes",
+                    "validPartyVotes", "invalidDirectVotes", "invalidPartyVotes");
+            checkRequired(values, "electoralDistrictId", "electionYear");
+            replaceIfNotContained(values, "possibleVotes", "0");
+            replaceIfNotContained(values, "submittedVotes", "0");
+            replaceIfNotContained(values, "validDirectVotes", "0");
+            replaceIfNotContained(values, "validPartyVotes", "0");
+            replaceIfNotContained(values, "invalidDirectVotes", "0");
+            replaceIfNotContained(values, "invalidPartyVotes", "0");
+            return values;
+        }
 
 	Map<String, String> convertDirectCandidate(Map<String, String> values)
 			throws DatabaseException {

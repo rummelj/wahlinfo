@@ -62,6 +62,8 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 				csvParser.parseFederalStates());
 		ArrayList<Persistable> electoralDistricts = new ArrayList<Persistable>(
 				csvParser.parseElectoralDistricts());
+                ArrayList<Persistable> electoralDistrictVoteData = new ArrayList<Persistable>(
+                                csvParser.parseDistrictVoteData());
 		ArrayList<Persistable> parties = new ArrayList<Persistable>(
 				csvParser.parseParties());
 		ArrayList<Persistable> directCandidates2005 = new ArrayList<Persistable>(
@@ -75,6 +77,7 @@ public class CsvToDatabaseSyncer implements ICsvToDatabaseSyncer {
 		databasePersister.persist(elections);
 		databasePersister.persist(federalStates);
 		databasePersister.persist(electoralDistricts);
+                databasePersister.persist(electoralDistrictVoteData);
 		databasePersister.persist(parties);
 		databasePersister.persist(directCandidates2005);
 		databasePersister.persist(directCandidates2009);

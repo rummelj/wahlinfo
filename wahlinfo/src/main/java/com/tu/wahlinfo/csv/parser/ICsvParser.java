@@ -7,6 +7,7 @@ import com.tu.wahlinfo.csv.CsvParserException;
 import com.tu.wahlinfo.csv.entities.impl.CsvDirectCandidate;
 import com.tu.wahlinfo.csv.entities.impl.CsvElection;
 import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrict;
+import com.tu.wahlinfo.csv.entities.impl.CsvElectoralDistrictVoteData;
 import com.tu.wahlinfo.csv.entities.impl.CsvFederalState;
 import com.tu.wahlinfo.csv.entities.impl.CsvListCandidate;
 import com.tu.wahlinfo.csv.entities.impl.CsvParty;
@@ -19,6 +20,15 @@ import com.tu.wahlinfo.csv.entities.impl.CsvVoteAggregation;
  * @author cg
  */
 public interface ICsvParser {
+    
+        /**
+         * Parses possible votes, submitted votes, valid votes and invalid votes
+         * for each electoral district and both years
+         * @return
+         * @throws CsvParserException 
+         */
+        public Collection<CsvElectoralDistrictVoteData> parseDistrictVoteData() 
+                throws CsvParserException;
 
 	/**
 	 * Parses all votes to several files prefixed by the constant of the class
