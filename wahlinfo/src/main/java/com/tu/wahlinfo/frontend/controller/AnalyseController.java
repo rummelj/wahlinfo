@@ -2,6 +2,8 @@ package com.tu.wahlinfo.frontend.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +19,7 @@ import org.primefaces.model.chart.PieChartModel;
 import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
+import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.frontend.model.PartyAndSeats;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -126,5 +129,28 @@ public class AnalyseController implements Serializable {
 		List<Candidate> mandates = voteAnalysis.getDirMandates(electionYear);
 		mandates.addAll(voteAnalysis.getListMandates(electionYear));
 		return mandates;
+	}
+
+	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview2009() {
+		return getElectoralDistrictWinnersOverview(ElectionYear._2009);
+	}
+
+	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview2005() {
+		return getElectoralDistrictWinnersOverview(ElectionYear._2005);
+	}
+
+	List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview(
+			ElectionYear electionYear) {
+		List<ElectoralDistrictWinner> data = voteAnalysis
+				.getElectoralDistrictWinnersOverview(electionYear);
+		Collections.sort(data, new Comparator<ElectoralDistrictWinner>() {
+			@Override
+			public int compare(ElectoralDistrictWinner arg0,
+					ElectoralDistrictWinner arg1) {
+				return arg0.getElectoralDistrict().compareTo(
+						arg1.getElectoralDistrict());
+			}
+		});
+		return data;
 	}
 }

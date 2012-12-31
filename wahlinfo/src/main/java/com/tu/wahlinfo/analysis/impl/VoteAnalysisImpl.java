@@ -16,6 +16,7 @@ import com.tu.util.FileScanner;
 import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
+import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.FederalState;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.frontend.model.PartyDetailVote;
@@ -184,5 +185,19 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 		details.add(new PartyDetailVote(new Party("GHI"), 95421, 48.6f, 4400,
 				20.3f));
 		return details;
+	}
+
+	@Override
+	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview(
+			ElectionYear year) {
+		// TODO Auto-generated method stub
+		List<ElectoralDistrictWinner> winners = new ArrayList<ElectoralDistrictWinner>();
+		winners.add(new ElectoralDistrictWinner("ADorf", new Party("CDU"),
+				new Party("SPD")));
+		winners.add(new ElectoralDistrictWinner("BDorf", new Party("SDU"),
+				new Party("MPD")));
+		winners.add(new ElectoralDistrictWinner("CDorf", new Party("SDM"),
+				new Party("LPR")));
+		return winners;
 	}
 }

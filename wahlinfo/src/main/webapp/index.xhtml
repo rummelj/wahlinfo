@@ -223,7 +223,6 @@
 
 									</p:column>
 								</p:dataTable>
-
 							</p:panel></td>
 					</tr>
 					<tr>
@@ -243,6 +242,75 @@
 			</h:form>
 		</p:dialog>
 
+		<!-- Wahlkreissieger 2005 -->
+		<p:dialog header="Informationen zu einem Wahlkreis"
+			widgetVar="wahlkreissiegerdialog2005" dynamic="true"
+			resizable="false">
+			<p:dataTable id="wahlkreissiegerdialogtable2005" var="winner"
+				value="#{analyseController.electoralDistrictWinnersOverview2005}"
+				scrollable="true" scrollHeight="400">
+				<f:facet name="header">  
+            							Gewinner nach Wahlkreisen 2005
+       		 						</f:facet>
+				<p:column width="300" sortBy="#{winner.electoralDistrict}">
+					<f:facet name="header">
+						<h:outputText value="Wahlkreis" />
+					</f:facet>
+					<h:outputText value="#{winner.electoralDistrict}" />
+				</p:column>
+				<p:column width="80">
+					<f:facet name="header">
+						<h:outputText style="font-size:x-small" value="Sieger" />
+						<br />
+						<h:outputText style="font-size:x-small" value="Erststimme" />
+					</f:facet>
+					<h:outputText value="#{winner.winnerFirstVote.name}" />
+				</p:column>
+				<p:column width="80">
+					<f:facet name="header">
+						<h:outputText style="font-size:x-small" value="Sieger" />
+						<br />
+						<h:outputText style="font-size:x-small" value="Zweitstimme" />
+					</f:facet>
+					<h:outputText value="#{winner.winnerSecondVote.name}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<!-- Wahlkreissieger 2009 -->
+		<p:dialog header="Informationen zu einem Wahlkreis"
+			widgetVar="wahlkreissiegerdialog2009" dynamic="true"
+			resizable="false">
+			<p:dataTable id="wahlkreissiegerdialogtable2009" var="winner"
+				value="#{analyseController.electoralDistrictWinnersOverview2009}"
+				scrollable="true" scrollHeight="400">
+				<f:facet name="header">  
+            							Gewinner nach Wahlkreisen 2009
+       		 						</f:facet>
+				<p:column width="300">
+					<f:facet name="header">
+						<h:outputText value="Wahlkreis" />
+					</f:facet>
+					<h:outputText value="#{winner.electoralDistrict}" />
+				</p:column>
+				<p:column width="80">
+					<f:facet name="header">
+						<h:outputText style="font-size:x-small" value="Sieger" />
+						<br />
+						<h:outputText style="font-size:x-small" value="Erststimme" />
+					</f:facet>
+					<h:outputText value="#{winner.winnerFirstVote.name}" />
+				</p:column>
+				<p:column width="80">
+					<f:facet name="header">
+						<h:outputText style="font-size:x-small" value="Sieger" />
+						<br />
+						<h:outputText style="font-size:x-small" value="Zweitstimme" />
+					</f:facet>
+					<h:outputText value="#{winner.winnerSecondVote.name}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
 
 		<h:form>
 			<p:menubar>
@@ -257,6 +325,10 @@
 						onclick="membersofbundestagdialog2009.show()"></p:menuitem>
 					<p:menuitem value="2005"
 						onclick="membersofbundestagdialog2005.show()"></p:menuitem>
+				</p:submenu>
+				<p:submenu label="Wahlkreissieger">
+					<p:menuitem value="2009" onclick="wahlkreissiegerdialog2009.show()"></p:menuitem>
+					<p:menuitem value="2005" onclick="wahlkreissiegerdialog2005.show()"></p:menuitem>
 				</p:submenu>
 			</p:menubar>
 		</h:form>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
+import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.FederalState;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.frontend.model.PartyDetailVote;
@@ -101,4 +102,13 @@ public interface IVoteAnalysis {
 	 */
 	List<PartyDetailVote> getVoteDetails(ElectionYear year,
 			Integer electoralDistrictNumber);
+
+	/**
+	 * Returns an overview for the winners of every electoral district in a
+	 * certain year
+	 * 
+	 * @return
+	 */
+	List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview(
+			ElectionYear year);
 }
