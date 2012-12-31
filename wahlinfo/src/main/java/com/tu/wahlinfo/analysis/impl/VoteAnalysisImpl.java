@@ -31,6 +31,8 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 			+ "aggregateDirCanVotes.sql";
 	private static final String FILE_PATH_LIST_VOTE_AGGREGATION_SCRIPT = FILE_PATH_SQL_BASE
 			+ "aggregatePartyVotes.sql";
+        private static final String FILE_PATH_OVERHANG_MANDATES_SCRIPT = FILE_PATH_SQL_BASE
+                        + "OverhangMandatesForElection";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VoteAnalysisImpl.class);
 
@@ -61,7 +63,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	private static final String STATE_SEAT_DISTRIBUTION_QUERY = "select fs.name, dv.seats "
 			+ "from lowerdistributionview:electionYear dv, wiparty p, wifederalstate fs "
 			+ "where dv.partyid = p.id and p.name=':partyName' and fs.federalstateid = dv.federalstateid;";
-
+        
 	@Inject
 	DatabaseAccessor databaseAccessor;
 
@@ -119,7 +121,12 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	@Override
 	public Map<Party, Integer> getOverhangMandates(ElectionYear electionYear)
 			throws DatabaseException, IOException {
-		// TODO: Urgent
+		
+                String query = FileScanner.scanFile(FILE_PATH_OVERHANG_MANDATES_SCRIPT).
+                        replaceAll(":electionYear", electionYear.toCleanString());
+                DatabaseResult queryResult = databaseAccessor.executeQuery(query);
+                // TODO: fill map as needed
+                //query has fsName, pName, overhangMandates
 		return new HashMap<Party, Integer>();
 	}
 
