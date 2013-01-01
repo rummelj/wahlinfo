@@ -212,22 +212,27 @@ public class CsvParser implements ICsvParser {
                     break;
                 }
                 tmpAggregation = new CsvVoteAggregation(reader.get(0));
-                for (int k = 19; k < reader.getHeaderCount(); k += 4) {
+                for (int k = 11; k < reader.getHeaderCount(); k += 4) {
                     int index = k;
-                    
+                    if (index == 15) {
+                        // skip entry for valid votes
+                        continue;
+                    }
                     partyName = reader.getHeader(index).split(
                             AFFILIATION_DELIMITER)[0];
                     partyId2005 = this
                             .getPartyId(ElectionYear._2005, partyName);
                     partyId2009 = this
                             .getPartyId(ElectionYear._2009, partyName);
-                    
-                    directCandidateId2005 = this.sortedDirectCandidates2005
+                    // first iteration is invalid votes -> null values
+                    if (index != 11) {
+                        directCandidateId2005 = this.sortedDirectCandidates2005
                              .get(Long.parseLong(reader.get(0))).get(
                              partyId2005);
-                    directCandidateId2009 = this.sortedDirectCandidates2009
+                        directCandidateId2009 = this.sortedDirectCandidates2009
                              .get(Long.parseLong(reader.get(0))).get(
                              partyId2009);
+                    }
                     
                     tmpAggregation.addPartialVoteAggregation(
                             directCandidateId2005, directCandidateId2009,
