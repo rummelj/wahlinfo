@@ -81,29 +81,32 @@ public interface IVoteAnalysis {
 	 * 
 	 * @param electionYear
 	 * @param electoralDistrictNumber
+	 * @param detailAnalysis
 	 */
 	float getVoteParticipation(ElectionYear electionYear,
-			Integer electoralDistrictNumber);
+			Integer electoralDistrictNumber, boolean detailAnalysis);
 
 	/**
 	 * Returns the name of the candidate that was voted as a direct candidate in
 	 * this electoral district and year.
 	 * 
 	 * @param year
+	 * @param detailAnalysis
 	 * @param selectedNumber
 	 */
 	Candidate getVotedDirectCandidate(ElectionYear year,
-			Integer electoralDistrictNumber);
+			Integer electoralDistrictNumber, boolean detailAnalysis);
 
 	/**
 	 * Returns all vote details about all parties in this electoral district and
 	 * year.
 	 * 
 	 * @param year
+	 * @param detailAnalysis
 	 * @param selectedNumber
 	 */
 	List<PartyDetailVote> getVoteDetails(ElectionYear year,
-			Integer electoralDistrictNumber);
+			Integer electoralDistrictNumber, boolean detailAnalysis);
 
 	/**
 	 * Returns an overview for the winners of every electoral district in a
@@ -116,6 +119,7 @@ public interface IVoteAnalysis {
 
 	/**
 	 * Q6
+	 * 
 	 * @param electionYear
 	 * @return
 	 */

@@ -11,7 +11,7 @@
 	<h:outputStylesheet library="css" name="layout.css" />
 </h:head>
 <h:body>
-	<div id="content">
+	<div id="content" style="width: 80%; margin: auto">
 		<p:dock style="color:black">
 			<p:menuitem value="Sitzverteilung 2009"
 				icon="resources/images/piechart.png" url="q12009.xhtml" />
@@ -40,6 +40,37 @@
 			<p:menuitem value="Terminal" icon="resources/images/terminal.png"
 				url="terminal.xhtml" />
 		</p:dock>
+
+		<p:dataTable id="wahlkreissiegerdialogtable2005" var="winner"
+			value="#{analyseController.electoralDistrictWinnersOverview2005}"
+			scrollable="true" scrollHeight="400">
+			<f:facet name="header">  
+            							Gewinner nach Wahlkreisen 2005
+       		 						</f:facet>
+			<p:column width="300" sortBy="#{winner.electoralDistrict}">
+				<f:facet name="header">
+					<h:outputText value="Wahlkreis" />
+				</f:facet>
+				<h:outputText value="#{winner.electoralDistrict}" />
+			</p:column>
+			<p:column width="80">
+				<f:facet name="header">
+					<h:outputText style="font-size:x-small" value="Sieger" />
+					<br />
+					<h:outputText style="font-size:x-small" value="Erststimme" />
+				</f:facet>
+				<h:outputText value="#{winner.winnerFirstVote.name}" />
+			</p:column>
+			<p:column width="80">
+				<f:facet name="header">
+					<h:outputText style="font-size:x-small" value="Sieger" />
+					<br />
+					<h:outputText style="font-size:x-small" value="Zweitstimme" />
+				</f:facet>
+				<h:outputText value="#{winner.winnerSecondVote.name}" />
+			</p:column>
+		</p:dataTable>
+
 	</div>
 </h:body>
 </html>

@@ -11,7 +11,7 @@
 	<h:outputStylesheet library="css" name="layout.css" />
 </h:head>
 <h:body>
-	<div id="content">
+	<div id="content" style="width: 80%; margin: auto">
 		<p:dock style="color:black">
 			<p:menuitem value="Sitzverteilung 2009"
 				icon="resources/images/piechart.png" url="q12009.xhtml" />
@@ -40,6 +40,13 @@
 			<p:menuitem value="Terminal" icon="resources/images/terminal.png"
 				url="terminal.xhtml" />
 		</p:dock>
+
+		<h:form>
+			<p:terminal commandHandler="#{terminalController.handleCommand}"
+				width="100%" height="100%"
+				welcomeMessage="Hallo zur Wahlinformationsverwaltung. Was möchten Sie tun?"
+				prompt="wahlinfo $ " />
+		</h:form>
 	</div>
 </h:body>
 </html>

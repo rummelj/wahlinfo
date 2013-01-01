@@ -11,7 +11,7 @@
 	<h:outputStylesheet library="css" name="layout.css" />
 </h:head>
 <h:body>
-	<div id="content">
+	<div id="content" style="width: 80%; margin: auto">
 		<p:dock style="color:black">
 			<p:menuitem value="Sitzverteilung 2009"
 				icon="resources/images/piechart.png" url="q12009.xhtml" />
@@ -40,6 +40,57 @@
 			<p:menuitem value="Terminal" icon="resources/images/terminal.png"
 				url="terminal.xhtml" />
 		</p:dock>
+
+		<p:dataTable id="closestdialogtable2009" var="close"
+			value="#{analyseController.closestWinnerOrLoser2009}"
+			scrollable="true" scrollHeight="250">
+			<f:facet name="header">  
+            							Knappste Ergebnisse 2009
+       		 						</f:facet>
+			<p:column width="250">
+				<f:facet name="header">
+					<h:outputText value="Wahlkreis" />
+				</f:facet>
+				<h:outputText value="#{close.candidate.electoralDistrict}" />
+			</p:column>
+			<p:column width="100">
+				<f:facet name="header">
+					<h:outputText value="Partei" />
+				</f:facet>
+				<h:outputText value="#{close.candidate.party.name}" />
+			</p:column>
+			<p:column width="200">
+				<f:facet name="header">
+					<h:outputText value="Kandidat" />
+				</f:facet>
+				<h:outputText value="#{close.candidate.name}" />
+			</p:column>
+			<p:column width="120">
+				<f:facet name="header">
+					<h:outputText value="# Stimmen" />
+				</f:facet>
+				<h:outputText value="#{close.votesReceived}" />
+			</p:column>
+			<p:column width="100">
+				<f:facet name="header">
+					<h:outputText value="Gegenpartei" />
+				</f:facet>
+				<h:outputText value="#{close.opponent.party.name}" />
+			</p:column>
+			<p:column width="200">
+				<f:facet name="header">
+					<h:outputText value="Gegenkandidat" />
+				</f:facet>
+				<h:outputText value="#{close.opponent.name}" />
+			</p:column>
+			<p:column width="120">
+				<f:facet name="header">
+					<h:outputText value="# Stimmen" />
+				</f:facet>
+				<h:outputText value="#{close.opponentVotesReceived}" />
+			</p:column>
+		</p:dataTable>
+
 	</div>
 </h:body>
 </html>

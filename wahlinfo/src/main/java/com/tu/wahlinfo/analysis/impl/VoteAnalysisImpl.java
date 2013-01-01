@@ -175,14 +175,14 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 
 	@Override
 	public float getVoteParticipation(ElectionYear electionYear,
-			Integer electoralDistrictNumber) {
+			Integer electoralDistrictNumber, boolean detailAnalysis) {
 		// TODO Auto-generated method stub
 		return 35.7f;
 	}
 
 	@Override
 	public Candidate getVotedDirectCandidate(ElectionYear year,
-			Integer electoralDistrictNumber) {
+			Integer electoralDistrictNumber, boolean detailAnalysis) {
 		// TODO Auto-generated method stub
 		return new Candidate("Hans Meier", new Party("APPD"), "Entenhausen",
 				"Hintertupfing");
@@ -190,7 +190,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 
 	@Override
 	public List<PartyDetailVote> getVoteDetails(ElectionYear year,
-			Integer electoralDistrictNumber) {
+			Integer electoralDistrictNumber, boolean detailAnalysis) {
 		// TODO Auto-generated method stub
 		List<PartyDetailVote> details = new ArrayList<PartyDetailVote>(3);
 		details.add(new PartyDetailVote(new Party("ABC"), 12345, 39.4f, -5000,

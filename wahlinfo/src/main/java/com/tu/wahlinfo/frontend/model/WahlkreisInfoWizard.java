@@ -108,18 +108,19 @@ public class WahlkreisInfoWizard implements Serializable {
 		}
 	}
 
-	public String getWahlbeteiligung() {
-		return voteAnalysis.getVoteParticipation(year, getSelectedNumber())
-				+ "%";
+	public String getWahlbeteiligung(boolean detailAnalysis) {
+		return voteAnalysis.getVoteParticipation(year, getSelectedNumber(),
+				detailAnalysis) + "%";
 	}
 
-	public String getDirectCandidate() {
-		return voteAnalysis.getVotedDirectCandidate(year, getSelectedNumber())
-				.getName();
+	public String getDirectCandidate(boolean detailAnalysis) {
+		return voteAnalysis.getVotedDirectCandidate(year, getSelectedNumber(),
+				detailAnalysis).getName();
 	}
 
-	public List<PartyDetailVote> getVoteDetails() {
-		return voteAnalysis.getVoteDetails(year, getSelectedNumber());
+	public List<PartyDetailVote> getVoteDetails(boolean detailAnalysis) {
+		return voteAnalysis.getVoteDetails(year, getSelectedNumber(),
+				detailAnalysis);
 	}
 
 	Integer getSelectedNumber() {
