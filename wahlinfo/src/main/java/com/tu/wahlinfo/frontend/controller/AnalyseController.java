@@ -19,6 +19,7 @@ import org.primefaces.model.chart.PieChartModel;
 import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
+import com.tu.wahlinfo.frontend.model.ClosestWinnerOrLoser;
 import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.OverhangMandate;
 import com.tu.wahlinfo.frontend.model.Party;
@@ -168,5 +169,18 @@ public class AnalyseController implements Serializable {
 	private List<OverhangMandate> getOverhangMandates(ElectionYear electionYear)
 			throws DatabaseException, IOException {
 		return voteAnalysis.getOverhangMandates(electionYear);
+	}
+
+	public List<ClosestWinnerOrLoser> getClosestWinnerOrLoser2005() {
+		return getClosestWinnerOrLoser(ElectionYear._2005);
+	}
+
+	public List<ClosestWinnerOrLoser> getClosestWinnerOrLoser2009() {
+		return getClosestWinnerOrLoser(ElectionYear._2009);
+	}
+
+	private List<ClosestWinnerOrLoser> getClosestWinnerOrLoser(
+			ElectionYear electionYear) {
+		return voteAnalysis.getClosestWinnerOrLosers(electionYear);
 	}
 }
