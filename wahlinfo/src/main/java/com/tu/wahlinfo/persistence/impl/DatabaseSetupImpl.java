@@ -1,23 +1,20 @@
 package com.tu.wahlinfo.persistence.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tu.util.FileScanner;
 import com.tu.wahlinfo.model.Persistable;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.persistence.DatabasePersister;
 import com.tu.wahlinfo.persistence.DatabaseSetup;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Johannes
@@ -35,7 +32,7 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 			.getLogger(DatabaseSetupImpl.class);
 
 	private static final String INIT_SCRIPT_PATH = "/sql/init.sql";
-	private static final boolean SETUP_ENABLED = false;
+	private static final boolean SETUP_ENABLED = true;
 
 	@Inject
 	DatabaseAccessor databaseAccessor;

@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS WIFederalState CASCADE;
 DROP TABLE IF EXISTS WIElectoralDistrict CASCADE;
 DROP TABLE IF EXISTS WIElection CASCADE;
 DROP TABLE IF EXISTS WIDivisor CASCADE;
+DROP TABLE IF EXISTS WIElectoralDistrictVoteData CASCADE;
 -- no longer used in further releases
 DROP TABLE IF EXISTS WIPartySeatDistribution CASCADE;
 DROP TABLE IF EXISTS WIStatePartySeatDistribution  CASCADE;
@@ -29,20 +30,14 @@ CREATE TABLE WIElection (
 
 CREATE TABLE WIFederalState (
 	federalStateId BIGINT  NOT NULL,
-	name VARCHAR(255),
-	possibleVotes BIGINT  NOT NULL,
-	validVotes BIGINT  NOT NULL DEFAULT 0,
-	invalidVotes BIGINT  NOT NULL DEFAULT 0,
+	name VARCHAR(255),	
 	PRIMARY KEY (federalStateId)
 );
 
 CREATE TABLE WIElectoralDistrict (
 	number SMALLINT  NOT NULL,
 	name VARCHAR(255),
-	federalStateId BIGINT,
-	possibleVotes BIGINT NOT NULL,
-	validVotes BIGINT NOT NULL DEFAULT 0,
-	invalidVotes BIGINT NOT NULL DEFAULT 0,
+	federalStateId BIGINT,	
 	FOREIGN KEY (federalStateId) REFERENCES WIFederalState (federalStateId),
 	PRIMARY KEY (number)
 );
@@ -104,4 +99,18 @@ CREATE TABLE WIDivisor (
 	id BIGINT,
 	value SMALLINT NOT NULL,
 	PRIMARY KEY (id)
+);
+
+CREATE TABLE WIElectoralDistrictVoteData (
+        electoralDistrictId BIGINT,
+        electionYear VARCHAR(4),
+        possibleVotes INTEGER NOT NULL DEFAULT(0),
+        submittedVotes INTEGER NOT NULL DEFAULT(0),
+        validDirectVotes INTEGER NOT NULL DEFAULT(0),
+        validPartyVotes INTEGER NOT NULL DEFAULT(0),
+        invalidDirectVotes INTEGER NOT NULL DEFAULT(0),
+        invalidPartyVotes INTEGER NOT NULL DEFAULT(0),
+        FOREIGN KEY (electoralDistrictId) REFERENCES WIElectoralDistrict (number),
+        FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
+        PRIMARY KEY (electoralDistrictId, electionYear)
 );
