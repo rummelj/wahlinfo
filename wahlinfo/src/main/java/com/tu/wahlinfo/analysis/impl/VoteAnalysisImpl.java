@@ -16,6 +16,7 @@ import com.tu.util.FileScanner;
 import com.tu.wahlinfo.analysis.IVoteAnalysis;
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
+import com.tu.wahlinfo.frontend.model.ClosestWinnerOrLoser;
 import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.FederalState;
 import com.tu.wahlinfo.frontend.model.OverhangMandate;
@@ -213,5 +214,21 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 		winners.add(new ElectoralDistrictWinner("CDorf", new Party("SDM"),
 				new Party("LPR")));
 		return winners;
+	}
+
+	@Override
+	public List<ClosestWinnerOrLoser> getClosestWinnerOrLosers(
+			ElectionYear electionYear) {
+		// TODO: 10 for each party
+		List<ClosestWinnerOrLoser> close = new ArrayList<ClosestWinnerOrLoser>();
+		// Close winner
+		close.add(new ClosestWinnerOrLoser(new Candidate("Hans Meier",
+				new Party("CSU"), "ADorf", "Bayern"), 10000, new Candidate(
+				"Hans Georg", new Party("SPD"), "Adorf", "Bayern"), 9950));
+		// Close loser
+		close.add(new ClosestWinnerOrLoser(new Candidate("Hans Meier",
+				new Party("CSU"), "ADorf", "Bayern"), 10000, new Candidate(
+				"Hans Georg", new Party("SPD"), "Adorf", "Bayern"), 10050));
+		return close;
 	}
 }

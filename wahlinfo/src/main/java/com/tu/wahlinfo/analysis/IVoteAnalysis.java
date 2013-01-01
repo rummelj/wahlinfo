@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
+import com.tu.wahlinfo.frontend.model.ClosestWinnerOrLoser;
 import com.tu.wahlinfo.frontend.model.ElectoralDistrictWinner;
 import com.tu.wahlinfo.frontend.model.FederalState;
 import com.tu.wahlinfo.frontend.model.OverhangMandate;
@@ -112,4 +113,12 @@ public interface IVoteAnalysis {
 	 */
 	List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview(
 			ElectionYear year);
+
+	/**
+	 * Q6
+	 * @param electionYear
+	 * @return
+	 */
+	List<ClosestWinnerOrLoser> getClosestWinnerOrLosers(
+			ElectionYear electionYear);
 }

@@ -374,6 +374,114 @@
 			</p:dataTable>
 		</p:dialog>
 
+		<!-- Closest 2005 -->
+		<p:dialog header="Knappste Ergebnisse 2005"
+			widgetVar="closestdialog2005" dynamic="true" resizable="false">
+			<p:dataTable id="closestdialogtable2005" var="close"
+				value="#{analyseController.closestWinnerOrLoser2005}"
+				scrollable="true" scrollHeight="250">
+				<f:facet name="header">  
+            							Knappste Ergebnisse 2005
+       		 						</f:facet>
+				<p:column width="250">
+					<f:facet name="header">
+						<h:outputText value="Wahlkreis" />
+					</f:facet>
+					<h:outputText value="#{close.candidate.electoralDistrict}" />
+				</p:column>
+				<p:column width="100">
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{close.candidate.party.name}" />
+				</p:column>
+				<p:column width="200">
+					<f:facet name="header">
+						<h:outputText value="Kandidat" />
+					</f:facet>
+					<h:outputText value="#{close.candidate.name}" />
+				</p:column>
+				<p:column width="120">
+					<f:facet name="header">
+						<h:outputText value="# Stimmen" />
+					</f:facet>
+					<h:outputText value="#{close.votesReceived}" />
+				</p:column>
+				<p:column width="100">
+					<f:facet name="header">
+						<h:outputText value="Gegenpartei" />
+					</f:facet>
+					<h:outputText value="#{close.opponent.party.name}" />
+				</p:column>
+				<p:column width="200">
+					<f:facet name="header">
+						<h:outputText value="Gegenkandidat" />
+					</f:facet>
+					<h:outputText value="#{close.opponent.name}" />
+				</p:column>
+				<p:column width="120">
+					<f:facet name="header">
+						<h:outputText value="# Stimmen" />
+					</f:facet>
+					<h:outputText value="#{close.opponentVotesReceived}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<!-- Closest 2009 -->
+		<p:dialog header="Knappste Ergebnisse 2009"
+			widgetVar="closestdialog2009" dynamic="true" resizable="false">
+			<p:dataTable id="closestdialogtable2009" var="close"
+				value="#{analyseController.closestWinnerOrLoser2009}"
+				scrollable="true" scrollHeight="250">
+				<f:facet name="header">  
+            							Knappste Ergebnisse 2009
+       		 						</f:facet>
+				<p:column width="250">
+					<f:facet name="header">
+						<h:outputText value="Wahlkreis" />
+					</f:facet>
+					<h:outputText value="#{close.candidate.electoralDistrict}" />
+				</p:column>
+				<p:column width="100">
+					<f:facet name="header">
+						<h:outputText value="Partei" />
+					</f:facet>
+					<h:outputText value="#{close.candidate.party.name}" />
+				</p:column>
+				<p:column width="200">
+					<f:facet name="header">
+						<h:outputText value="Kandidat" />
+					</f:facet>
+					<h:outputText value="#{close.candidate.name}" />
+				</p:column>
+				<p:column width="120">
+					<f:facet name="header">
+						<h:outputText value="# Stimmen" />
+					</f:facet>
+					<h:outputText value="#{close.votesReceived}" />
+				</p:column>
+				<p:column width="100">
+					<f:facet name="header">
+						<h:outputText value="Gegenpartei" />
+					</f:facet>
+					<h:outputText value="#{close.opponent.party.name}" />
+				</p:column>
+				<p:column width="200">
+					<f:facet name="header">
+						<h:outputText value="Gegenkandidat" />
+					</f:facet>
+					<h:outputText value="#{close.opponent.name}" />
+				</p:column>
+				<p:column width="120">
+					<f:facet name="header">
+						<h:outputText value="# Stimmen" />
+					</f:facet>
+					<h:outputText value="#{close.opponentVotesReceived}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
 		<h:form>
 			<p:menubar>
 				<p:submenu label="Sitzverteilung">
@@ -398,7 +506,10 @@
 					<p:menuitem value="2005"
 						onclick="overhangMandatesdialog2005.show()"></p:menuitem>
 				</p:submenu>
-
+				<p:submenu label="Knappste Ergebnisse">
+					<p:menuitem value="2009" onclick="closestdialog2009.show()"></p:menuitem>
+					<p:menuitem value="2005" onclick="closestdialog2005.show()"></p:menuitem>
+				</p:submenu>
 			</p:menubar>
 		</h:form>
 		<p:dock>
