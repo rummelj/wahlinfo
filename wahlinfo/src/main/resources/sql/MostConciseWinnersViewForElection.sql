@@ -1,4 +1,4 @@
-create or replace view MostConciseWinners:electionYear as (
+create or replace view MostConciseWinnersView:electionYear as (
 
 	with RankedDirectCandidates as (
 
