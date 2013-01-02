@@ -11,8 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 public class Benchmark {
+
+	static final Random rnd = new Random();
 
 	Map<String, Float> urls;
 	float averageWaitTime;
@@ -69,11 +72,29 @@ public class Benchmark {
 			System.out.println(url + " answered after "
 					+ (timeAfter - timeBefore) + "ms");
 			try {
-				Thread.sleep((long) (averageWaitTime * 1000));
+				Thread.sleep(selectWaitTime());
 			} catch (InterruptedException e) {
 				System.out.println("Interrupted");
 			}
 		}
+	}
+
+	long selectWaitTime() {
+		long absoluteMilis = (long) averageWaitTime * 1000;
+		int rnd = getRandomNumber(8, 12);
+		return absoluteMilis * (rnd / 10);
+	}
+
+	/**
+	 * Both inclusive.
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	int getRandomNumber(int from, int to) {
+		int low = rnd.nextInt(to - from + 1);
+		return from + low;
 	}
 
 	private void callUrl(String url) throws IOException {
