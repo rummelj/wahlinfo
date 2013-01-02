@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Main {
 
-	private static final int testRunTimeInMiliseconds = 1 * 30 * 1000;
+	private static final int testRunTimeInMiliseconds = 5 * 60 * 1000;
 	private static final Scanner in = new Scanner(System.in);
 
 	public static void main(String[] args) throws InterruptedException {
