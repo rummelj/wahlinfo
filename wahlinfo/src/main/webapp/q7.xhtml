@@ -11,7 +11,7 @@
 	<h:outputStylesheet library="css" name="layout.css" />
 </h:head>
 <h:body>
-	<div id="content" style="width: 80%; margin: auto">
+	<div id="content" style="margin: auto; width: 80%">
 		<p:dock style="color:black">
 			<p:menuitem value="Sitzverteilung 2009"
 				icon="resources/images/piechart.png" url="q12009.xhtml" />
@@ -42,20 +42,20 @@
 		</p:dock>
 
 		<h:form id="wahlkreisinfodialogform">
-			<table>
+			<table style="width: 100%">
 				<tr>
 					<td><p:panel header="Wahljahr">
 							<p:selectOneListbox id="wahlkreisinfowizarddistrictscrollyear"
 								value="#{wahlkreisInfoWizard.electionYear}"
-								style="height:50px;width:350px">
+								style="height:50px; width:100%">
 								<f:selectItems value="#{wahlkreisInfoWizard.electionYears}"
 									var="electionYear" itemLabel="#{electionYear}"
 									itemValue="#{electionYear}" />
 								<p:ajax event="change" update="wahlkreisinfodata" />
 							</p:selectOneListbox>
 						</p:panel></td>
-					<td rowspan="2"><p:panel header="Informationen"
-							id="wahlkreisinfodata" style="height:500px;width:450px">
+					<td rowspan="2"><p:panel header="Informationen (Detail)"
+							id="wahlkreisinfodata" style="height:500px;width:100%">
 							<h3>
 								<h:outputText
 									value="#{wahlkreisInfoWizard.district} (#{wahlkreisInfoWizard.electionYear})" />
@@ -69,7 +69,7 @@
 							<br />
 							<p:dataTable id="voteDetailsInElectoralDistrict" var="voteDetail"
 								value="#{wahlkreisInfoWizard.getVoteDetails(true)}"
-								scrollable="true" scrollHeight="200">
+								scrollable="true" scrollHeight="200" style="width:420px;">
 								<f:facet name="header">  
             							Statistiken
        		 						</f:facet>
@@ -114,7 +114,7 @@
 							<p:selectOneListbox
 								id="wahlkreisinfowizarddistrictscrolldistrict"
 								value="#{wahlkreisInfoWizard.district}"
-								style="height:300px;width:350px">
+								style="height:300px;width:100%">
 								<f:selectItems value="#{wahlkreisInfoWizard.districts}"
 									var="district" itemLabel="#{district}" itemValue="#{district}" />
 								<p:ajax event="change" update="wahlkreisinfodata" />
