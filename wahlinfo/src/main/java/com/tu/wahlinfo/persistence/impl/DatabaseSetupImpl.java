@@ -27,12 +27,13 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 	private static final String SQL_UPPER_DISTRIBUTION_VIEW = "/sql/UpperDistributionViewForElection.sql";
 	private static final String SQL_LOWER_DISTRIBUTION_VIEW = "/sql/LowerDistributionViewForElection.sql";
 	private static final String SQL_ELECTED_CANDIDATES_VIEWS = "/sql/ElectedCandidatesViewsForElection.sql";
+        private static final String SQL_MOST_CONCISE_WINNERS_VIEW = "/sql/MostConciseWinnersViewForElection";
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(DatabaseSetupImpl.class);
 
 	private static final String INIT_SCRIPT_PATH = "/sql/init.sql";
-	private static final boolean SETUP_ENABLED = true;
+	private static final boolean SETUP_ENABLED = false;
 
 	@Inject
 	DatabaseAccessor databaseAccessor;
@@ -123,6 +124,8 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 					.scanFile(SQL_LOWER_DISTRIBUTION_VIEW);
 			String electedCandidatesViews = FileScanner
 					.scanFile(SQL_ELECTED_CANDIDATES_VIEWS);
+                        String mostConciseWinnersView = FileScanner.
+                                scanFile(SQL_MOST_CONCISE_WINNERS_VIEW);
 			LOG.debug("Creating upper distribution views");
 			this.databaseAccessor.executeStatement(upperDistributionView
 					.replace(":electionYear", "2005"));
@@ -138,6 +141,10 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 					.replace(":electionYear", "2005"));
 			this.databaseAccessor.executeStatement(electedCandidatesViews
 					.replace(":electionYear", "2009"));
+                        this.databaseAccessor.executeStatement(mostConciseWinnersView
+                                        .replace(":electionYear", "2005"));
+                        this.databaseAccessor.executeStatement(mostConciseWinnersView
+                                        .replace(":electionYear", "2009"));
 			LOG.info("View setup completed.");
 		} catch (IOException ex) {
 			LOG.error("Could not read at least one view sql file");
