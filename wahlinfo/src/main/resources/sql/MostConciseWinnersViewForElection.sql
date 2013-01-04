@@ -28,12 +28,13 @@ create or replace view MostConciseWinnersView:electionYear as (
 
 	WinnerTopTen as (
 
-		select	p.name as pname, dc.name as cname, ed.name as edname, rwd.voteDiff, rwd.rank
-		from	RankedWinnersDiff rwd, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed
-		where	rwd.rank	<= 10	and
-			rwd.id		= dc.id	and
-			rwd.partyId	= p.id	and
-			rwd.electoralDistrictId	= ed.number
+		select	p.name as pName, dc.name as cName, ed.name as edName, fs.name as fsName, rwd.voteDiff, rwd.rank
+		from	RankedWinnersDiff rwd, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed, WIFederalState fs
+		where	rwd.rank            <= 10               and
+			rwd.id              = dc.id             and
+			rwd.partyId         = p.id              and
+			rwd.electoralDistrictId	= ed.number     and
+                        ed.federalStateId   = fs.federalStateId 
 		order by p.name asc, rwd.rank asc
 
 	),
@@ -62,12 +63,13 @@ create or replace view MostConciseWinnersView:electionYear as (
 
 	LooserCandidatesDiff as (
 
-		select	p.name as pname, lc.name as cname, ed.name as edname, (lc.receivedVotes - dc.receivedVotes) as voteDiff, rank() over (partition by lc.partyId order by (lc.receivedVotes - dc.receivedVotes) desc)
-		from	LooserCandidates lc, DirectMandatesView:electionYear dmv, WIParty p, WIElectoralDistrict ed, WIDirectCandidate dc
+		select	p.name as pName, lc.name as cName, ed.name as edName, fs.name as fsName, (lc.receivedVotes - dc.receivedVotes) as voteDiff, rank() over (partition by lc.partyId order by (lc.receivedVotes - dc.receivedVotes) desc)
+		from	LooserCandidates lc, DirectMandatesView:electionYear dmv, WIParty p, WIElectoralDistrict ed, WIDirectCandidate dc, WIFederalState fs
 		where	dmv.directCandidateId	= dc.id				and
 			lc.electoralDistrictId	= dc.electoralDistrictId	and
 			lc.partyId		= p.id				and
-			lc.electoralDistrictId	= ed.number			
+			lc.electoralDistrictId	= ed.number                     and
+                        ed.federalStateId       = fs.federalStateId
 		
 	),
 

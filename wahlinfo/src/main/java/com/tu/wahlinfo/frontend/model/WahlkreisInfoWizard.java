@@ -19,6 +19,7 @@ import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.model.DatabaseResult;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
+import java.io.IOException;
 
 @Named
 @SessionScoped
@@ -109,18 +110,33 @@ public class WahlkreisInfoWizard implements Serializable {
 	}
 
 	public String getWahlbeteiligung(boolean detailAnalysis) {
-		return voteAnalysis.getVoteParticipation(year, getSelectedNumber(),
-				detailAnalysis) + "%";
+                try {
+                    return voteAnalysis.getVoteParticipation(year, getSelectedNumber(),
+                                    detailAnalysis) + "%";
+                } catch (DatabaseException ex) {
+                    LOG.error("Could not retrieve election particiption", ex);
+                    return "-1";
+                }
 	}
 
 	public String getDirectCandidate(boolean detailAnalysis) {
-		return voteAnalysis.getVotedDirectCandidate(year, getSelectedNumber(),
-				detailAnalysis).getName();
+                try {
+                    return voteAnalysis.getVotedDirectCandidate(year, getSelectedNumber(),
+                                    detailAnalysis).getName();
+                } catch (DatabaseException ex){
+                    LOG.error("Could not receive vote direct candidate", ex);
+                    return "-1";
+                }
 	}
 
 	public List<PartyDetailVote> getVoteDetails(boolean detailAnalysis) {
-		return voteAnalysis.getVoteDetails(year, getSelectedNumber(),
-				detailAnalysis);
+                try {
+                    return voteAnalysis.getVoteDetails(year, getSelectedNumber(),
+                        		detailAnalysis);
+                } catch(DatabaseException | IOException ex){
+                    LOG.error("Could not retrieve party votes details", ex);
+                    return new ArrayList<>();
+                }
 	}
 
 	Integer getSelectedNumber() {

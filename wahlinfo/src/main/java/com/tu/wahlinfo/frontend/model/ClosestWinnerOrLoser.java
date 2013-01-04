@@ -3,21 +3,20 @@ package com.tu.wahlinfo.frontend.model;
 public class ClosestWinnerOrLoser {
 
 	Candidate candidate;
-	Integer votesReceived;
-	Candidate opponent;
-	Integer opponentVotesReceived;
+	Integer voteDiff;
+        Integer rank;
+	
 
 	public ClosestWinnerOrLoser() {
 
 	}
 
-	public ClosestWinnerOrLoser(Candidate candidate, Integer votesReceived,
-			Candidate opponent, Integer opponentVotesReceived) {
+	public ClosestWinnerOrLoser(Candidate candidate, Integer voteDiff,
+			Integer rank) {
 		super();
 		this.candidate = candidate;
-		this.votesReceived = votesReceived;
-		this.opponent = opponent;
-		this.opponentVotesReceived = opponentVotesReceived;
+		this.voteDiff = voteDiff;
+                this.rank = rank;
 	}
 
 	public Candidate getCandidate() {
@@ -29,26 +28,26 @@ public class ClosestWinnerOrLoser {
 	}
 
 	public Integer getVotesReceived() {
-		return votesReceived;
+		return voteDiff;
 	}
 
 	public void setVotesReceived(Integer votesReceived) {
-		this.votesReceived = votesReceived;
+		this.voteDiff = votesReceived;
 	}
 
-	public Candidate getOpponent() {
-		return opponent;
-	}
+        public Integer getVoteDiff() {
+            return voteDiff;
+        }
 
-	public void setOpponent(Candidate opponent) {
-		this.opponent = opponent;
-	}
+        public void setVoteDiff(Integer voteDiff) {
+            this.voteDiff = voteDiff;
+        }
 
-	public Integer getOpponentVotesReceived() {
-		return opponentVotesReceived;
-	}
+        public Integer getRank() {
+            return rank;
+        }
 
-	public void setOpponentVotesReceived(Integer opponentVotesReceived) {
-		this.opponentVotesReceived = opponentVotesReceived;
-	}
+        public void setRank(Integer rank) {
+            this.rank = rank;
+        }
 }

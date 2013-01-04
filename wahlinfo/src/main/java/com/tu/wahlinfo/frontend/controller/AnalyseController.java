@@ -133,16 +133,19 @@ public class AnalyseController implements Serializable {
 		return mandates;
 	}
 
-	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview2009() {
+	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview2009() 
+                        throws DatabaseException, IOException {
 		return getElectoralDistrictWinnersOverview(ElectionYear._2009);
 	}
 
-	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview2005() {
+	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview2005() 
+                        throws DatabaseException, IOException {
 		return getElectoralDistrictWinnersOverview(ElectionYear._2005);
 	}
 
 	List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview(
-			ElectionYear electionYear) {
+			ElectionYear electionYear) 
+                        throws DatabaseException, IOException {
 		List<ElectoralDistrictWinner> data = voteAnalysis
 				.getElectoralDistrictWinnersOverview(electionYear);
 		Collections.sort(data, new Comparator<ElectoralDistrictWinner>() {
@@ -171,16 +174,19 @@ public class AnalyseController implements Serializable {
 		return voteAnalysis.getOverhangMandates(electionYear);
 	}
 
-	public List<ClosestWinnerOrLoser> getClosestWinnerOrLoser2005() {
+	public List<ClosestWinnerOrLoser> getClosestWinnerOrLoser2005() 
+                        throws DatabaseException, IOException {
 		return getClosestWinnerOrLoser(ElectionYear._2005);
 	}
 
-	public List<ClosestWinnerOrLoser> getClosestWinnerOrLoser2009() {
+	public List<ClosestWinnerOrLoser> getClosestWinnerOrLoser2009() 
+                        throws DatabaseException, IOException {
 		return getClosestWinnerOrLoser(ElectionYear._2009);
 	}
 
 	private List<ClosestWinnerOrLoser> getClosestWinnerOrLoser(
-			ElectionYear electionYear) {
+			ElectionYear electionYear) 
+                throws DatabaseException, IOException {
 		return voteAnalysis.getClosestWinnerOrLosers(electionYear);
 	}
 }

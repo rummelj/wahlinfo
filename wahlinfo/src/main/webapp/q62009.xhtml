@@ -67,27 +67,15 @@
 			</p:column>
 			<p:column width="120">
 				<f:facet name="header">
-					<h:outputText value="# Stimmen" />
+					<h:outputText value="Stimmendifferenz" />
 				</f:facet>
-				<h:outputText value="#{close.votesReceived}" />
+                            <h:outputText value="#{close.voteDiff}" />
 			</p:column>
 			<p:column width="100">
 				<f:facet name="header">
-					<h:outputText value="Gegenpartei" />
+					<h:outputText value="Rang" />
 				</f:facet>
-				<h:outputText value="#{close.opponent.party.name}" />
-			</p:column>
-			<p:column width="200">
-				<f:facet name="header">
-					<h:outputText value="Gegenkandidat" />
-				</f:facet>
-				<h:outputText value="#{close.opponent.name}" />
-			</p:column>
-			<p:column width="120">
-				<f:facet name="header">
-					<h:outputText value="# Stimmen" />
-				</f:facet>
-				<h:outputText value="#{close.opponentVotesReceived}" />
+                            <h:outputText value="#{close.rank}" />
 			</p:column>
 		</p:dataTable>
 

@@ -84,7 +84,8 @@ public interface IVoteAnalysis {
 	 * @param detailAnalysis
 	 */
 	float getVoteParticipation(ElectionYear electionYear,
-			Integer electoralDistrictNumber, boolean detailAnalysis);
+			Integer electoralDistrictNumber, boolean detailAnalysis)
+                        throws DatabaseException;
 
 	/**
 	 * Returns the name of the candidate that was voted as a direct candidate in
@@ -95,7 +96,8 @@ public interface IVoteAnalysis {
 	 * @param selectedNumber
 	 */
 	Candidate getVotedDirectCandidate(ElectionYear year,
-			Integer electoralDistrictNumber, boolean detailAnalysis);
+			Integer electoralDistrictNumber, boolean detailAnalysis)
+                        throws DatabaseException;
 
 	/**
 	 * Returns all vote details about all parties in this electoral district and
@@ -106,7 +108,8 @@ public interface IVoteAnalysis {
 	 * @param selectedNumber
 	 */
 	List<PartyDetailVote> getVoteDetails(ElectionYear year,
-			Integer electoralDistrictNumber, boolean detailAnalysis);
+			Integer electoralDistrictNumber, boolean detailAnalysis)
+                        throws DatabaseException, IOException;
 
 	/**
 	 * Returns an overview for the winners of every electoral district in a
@@ -115,7 +118,8 @@ public interface IVoteAnalysis {
 	 * @return
 	 */
 	List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview(
-			ElectionYear year);
+			ElectionYear year)
+                        throws DatabaseException, IOException;
 
 	/**
 	 * Q6
@@ -124,5 +128,6 @@ public interface IVoteAnalysis {
 	 * @return
 	 */
 	List<ClosestWinnerOrLoser> getClosestWinnerOrLosers(
-			ElectionYear electionYear);
+			ElectionYear electionYear)
+                        throws DatabaseException;
 }
