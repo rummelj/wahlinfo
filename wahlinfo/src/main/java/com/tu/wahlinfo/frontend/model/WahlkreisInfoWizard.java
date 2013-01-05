@@ -1,11 +1,13 @@
 package com.tu.wahlinfo.frontend.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -19,7 +21,6 @@ import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.model.DatabaseResult;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
-import java.io.IOException;
 
 @Named
 @SessionScoped
@@ -110,37 +111,41 @@ public class WahlkreisInfoWizard implements Serializable {
 	}
 
 	public String getWahlbeteiligung(boolean detailAnalysis) {
-                try {
-                    return voteAnalysis.getVoteParticipation(year, getSelectedNumber(),
-                                    detailAnalysis) + "%";
-                } catch (DatabaseException ex) {
-                    LOG.error("Could not retrieve election particiption", ex);
-                    return "-1";
-                }
+		try {
+			return voteAnalysis.getVoteParticipation(getElectionYearObj(),
+					getSelectedNumber(), detailAnalysis) + "%";
+		} catch (DatabaseException ex) {
+			LOG.error("Could not retrieve election particiption", ex);
+			return "-1";
+		}
 	}
 
 	public String getDirectCandidate(boolean detailAnalysis) {
-                try {
-                    return voteAnalysis.getVotedDirectCandidate(year, getSelectedNumber(),
-                                    detailAnalysis).getName();
-                } catch (DatabaseException ex){
-                    LOG.error("Could not receive vote direct candidate", ex);
-                    return "-1";
-                }
+		try {
+			return voteAnalysis.getVotedDirectCandidate(getElectionYearObj(),
+					getSelectedNumber(), detailAnalysis).getName();
+		} catch (DatabaseException ex) {
+			LOG.error("Could not receive vote direct candidate", ex);
+			return "-1";
+		}
 	}
 
 	public List<PartyDetailVote> getVoteDetails(boolean detailAnalysis) {
-                try {
-                    return voteAnalysis.getVoteDetails(year, getSelectedNumber(),
-                        		detailAnalysis);
-                } catch(DatabaseException | IOException ex){
-                    LOG.error("Could not retrieve party votes details", ex);
-                    return new ArrayList<>();
-                }
+		try {
+			return voteAnalysis.getVoteDetails(getElectionYearObj(),
+					getSelectedNumber(), detailAnalysis);
+		} catch (DatabaseException | IOException ex) {
+			LOG.error("Could not retrieve party votes details", ex);
+			return new ArrayList<>();
+		}
+	}
+
+	private ElectionYear getElectionYearObj() {
+		return year == null ? ElectionYear._2005 : year;
 	}
 
 	Integer getSelectedNumber() {
-		return districts.get(district);
+		return districts.get(getDistrict());
 	}
 
 }

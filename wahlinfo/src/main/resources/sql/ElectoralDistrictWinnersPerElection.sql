@@ -6,7 +6,7 @@ with StateWinners as (
 	group by pv.federalStateId
 )
 
-select	ed.name as edName, p.name as directVoteWinner, p1.name as listVoteWinner, fs.name
+select	ed.name as edName, p.name as directVoteWinner, p1.name as listVoteWinner
 from	DirectMandatesView2009 dmv, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed, WIPartyVotes pv, StateWinners sw, WIParty p1, WIFederalState fs
 where	dmv.directCandidateId	= dc.id			and
 	dc.partyId		= p.id			and

@@ -100,10 +100,10 @@
 									</f:facet>
 									<h:outputText style="color: green; font-size:small"
 										rendered="#{voteDetail.comparisonToLastYearInPercentageVotesReceived ge 0}"
-										value="#{voteDetail.percentageVotesReceived} (+#{voteDetail.comparisonToLastYearInPercentageVotesReceived})" />
+										value="#{voteDetail.percentageVotesReceivedAsString} (+#{voteDetail.comparisonToLastYearInPercentageVotesReceivedAsString})" />
 									<h:outputText style="color: red; font-size:small"
 										rendered="#{voteDetail.comparisonToLastYearInPercentageVotesReceived le 0}"
-										value="#{voteDetail.percentageVotesReceived} (#{voteDetail.comparisonToLastYearInPercentageVotesReceived})" />
+										value="#{voteDetail.percentageVotesReceivedAsString} (#{voteDetail.comparisonToLastYearInPercentageVotesReceivedAsString})" />
 
 								</p:column>
 							</p:dataTable>

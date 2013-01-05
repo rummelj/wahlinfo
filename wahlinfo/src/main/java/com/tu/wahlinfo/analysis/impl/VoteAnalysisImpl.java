@@ -36,10 +36,10 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 			+ "aggregatePartyVotes.sql";
 	private static final String FILE_PATH_OVERHANG_MANDATES_SCRIPT = FILE_PATH_SQL_BASE
 			+ "OverhangMandatesForElection.sql";
-        private static final String FILE_PATH_PARTY_VOTE_STATISTICS_SCRIPT = FILE_PATH_SQL_BASE
-                        + "PartyVoteStatisticsPerElectoralDistrict.sql";
-        private static final String FILE_PATH_ELECTORAL_DISTRICT_WINNER_SCRIPT = FILE_PATH_SQL_BASE
-                        + "ElectoralDistrictWinnersPerElection.sql";        
+	private static final String FILE_PATH_PARTY_VOTE_STATISTICS_SCRIPT = FILE_PATH_SQL_BASE
+			+ "PartyVoteStatisticsPerElectoralDistrict.sql";
+	private static final String FILE_PATH_ELECTORAL_DISTRICT_WINNER_SCRIPT = FILE_PATH_SQL_BASE
+			+ "ElectoralDistrictWinnersPerElection.sql";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VoteAnalysisImpl.class);
 
@@ -70,35 +70,35 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 	private static final String STATE_SEAT_DISTRIBUTION_QUERY = "select fs.name, dv.seats "
 			+ "from lowerdistributionview:electionYear dv, wiparty p, wifederalstate fs "
 			+ "where dv.partyid = p.id and p.name=':partyName' and fs.federalstateid = dv.federalstateid;";
-        
-        private static final String VOTE_PARTICIPATION_QUERY = "select edvd.submittedVotes / (cast (edvd.possibleVotes as float)) as participation "
-                + "from WIElectoralDistrictVoteData edvd "
-                + "where edvd.electoralDistrictId = :number and edvd.electionYear = ':electionYear';";
-        
-        private static final String VOTE_PARTICIPATION_DETAIL_QUERY = "with Submitted as ("
-                + "select count(*) as votes"
-                + "from WIFilledVotingPaper fvp, WIParty p "
-                + "where fvp.partyId = p.id and fvp.electoralDistrictId = :number and p.electionYear = ':electionYear' "
-                + ") "
-                + "select (submitted.votes + edvd.invalidPartyVotes)  / (cast (edvd.possibleVotes as float)) as participation "
-                + "from Submitted submitted, WIElectoralDistrictVoteData edvd "
-                + "where edvd.electoralDistrictId = :number and edvd.electionYear = ':electionYear'; ";
-        
-        private static final String VOTED_DIRECT_CANDIDATE_QUERY = "select distinct on (ed.number) dc.name as cName, p.name as pName, ed.name as edName, fs.name as fsName "
-                + "from DirectMandatesView:electionYear dmv, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed, WIFederalState fs "
-                + "where dmv.directCandidateId = dc.id and dc.partyId = p.id and dc.electoralDistrictId = ed.number "
-                + "and ed.federalStateId = fs.federalStateId and ed.number = :number;";
-        
-        private static final String VOTED_DIRECT_CANDIDATE_DETAIL_QUERY = "with DistrictVotes as ( "
-                + "select fvp.directCandidateId, count(*) as receivedVotes "
-                + "from WIFilledVotingPaper fvp , WIDirectCandidate dc "
-                + "where fvp.directCandidateId = dc.id and dc.electoralDistrictId = :number and dc.electionYear = ':electionYear' "
-                + "group by dc.directCandidateId    "
-                + ") "
-                + "select distinct on (ed.number) dc.name as cName, p.name as pName, ed.name as edName, fs.name as fsName "
-                + "from DistrictVotes dv, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed, WIFederalState fs "
-                + "where dv.directCandidateId = dc.id and dc.partyId = p.id and dc.electoralDistrictId = ed.number "
-                + "and ed.federalStateId = fs.federalStateId and dv.receivedVotes = ( select max(dv1.receivedVotes) from DistrictVotes dv1);";                
+
+	private static final String VOTE_PARTICIPATION_QUERY = "select edvd.submittedVotes / (cast (edvd.possibleVotes as float)) as participation "
+			+ "from WIElectoralDistrictVoteData edvd "
+			+ "where edvd.electoralDistrictId = :number and edvd.electionYear = ':electionYear';";
+
+	private static final String VOTE_PARTICIPATION_DETAIL_QUERY = "with Submitted as ("
+			+ "select count(*) as votes"
+			+ "from WIFilledVotingPaper fvp, WIParty p "
+			+ "where fvp.partyId = p.id and fvp.electoralDistrictId = :number and p.electionYear = ':electionYear' "
+			+ ") "
+			+ "select (submitted.votes + edvd.invalidPartyVotes)  / (cast (edvd.possibleVotes as float)) as participation "
+			+ "from Submitted submitted, WIElectoralDistrictVoteData edvd "
+			+ "where edvd.electoralDistrictId = :number and edvd.electionYear = ':electionYear'; ";
+
+	private static final String VOTED_DIRECT_CANDIDATE_QUERY = "select distinct on (ed.number) dc.name as cName, p.name as pName, ed.name as edName, fs.name as fsName "
+			+ "from DirectMandatesView:electionYear dmv, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed, WIFederalState fs "
+			+ "where dmv.directCandidateId = dc.id and dc.partyId = p.id and dc.electoralDistrictId = ed.number "
+			+ "and ed.federalStateId = fs.federalStateId and ed.number = :number;";
+
+	private static final String VOTED_DIRECT_CANDIDATE_DETAIL_QUERY = "with DistrictVotes as ( "
+			+ "select fvp.directCandidateId, count(*) as receivedVotes "
+			+ "from WIFilledVotingPaper fvp , WIDirectCandidate dc "
+			+ "where fvp.directCandidateId = dc.id and dc.electoralDistrictId = :number and dc.electionYear = ':electionYear' "
+			+ "group by dc.directCandidateId    "
+			+ ") "
+			+ "select distinct on (ed.number) dc.name as cName, p.name as pName, ed.name as edName, fs.name as fsName "
+			+ "from DistrictVotes dv, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed, WIFederalState fs "
+			+ "where dv.directCandidateId = dc.id and dc.partyId = p.id and dc.electoralDistrictId = ed.number "
+			+ "and ed.federalStateId = fs.federalStateId and dv.receivedVotes = ( select max(dv1.receivedVotes) from DistrictVotes dv1);";
 
 	@Inject
 	DatabaseAccessor databaseAccessor;
@@ -208,100 +208,109 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 
 	@Override
 	public float getVoteParticipation(ElectionYear electionYear,
-			Integer electoralDistrictNumber, boolean detailAnalysis) 
-                        throws DatabaseException{
-                String query = null;
-		if(detailAnalysis){
-                    query = VOTE_PARTICIPATION_DETAIL_QUERY;
-                } else {
-                    query = VOTE_PARTICIPATION_QUERY;
-                }
-                query = query.replaceAll(":electionYear", electionYear.toCleanString());
-                query = query.replaceAll(":number", Integer.toString(electoralDistrictNumber));
-                DatabaseResult queryResult = databaseAccessor.executeQuery(query, "participation");
+			Integer electoralDistrictNumber, boolean detailAnalysis)
+			throws DatabaseException {
+		String query = null;
+		if (detailAnalysis) {
+			query = VOTE_PARTICIPATION_DETAIL_QUERY;
+		} else {
+			query = VOTE_PARTICIPATION_QUERY;
+		}
+		query = query.replaceAll(":electionYear", electionYear.toCleanString());
+		query = query.replaceAll(":number",
+				Integer.toString(electoralDistrictNumber));
+		DatabaseResult queryResult = databaseAccessor.executeQuery(query,
+				"participation");
 		return 100 * Float.parseFloat(queryResult.toList().get(0));
 	}
 
 	@Override
 	public Candidate getVotedDirectCandidate(ElectionYear year,
-			Integer electoralDistrictNumber, boolean detailAnalysis) 
-                        throws DatabaseException {
+			Integer electoralDistrictNumber, boolean detailAnalysis)
+			throws DatabaseException {
 		String query = null;
-                if(detailAnalysis){
-                    query = VOTED_DIRECT_CANDIDATE_DETAIL_QUERY;
-                } else {
-                    query = VOTED_DIRECT_CANDIDATE_QUERY;
-                }
-                query = query.replaceAll(":electionYear", year.toCleanString());
-                query = query.replaceAll(":number", Integer.toString(electoralDistrictNumber));
-                DatabaseResult queryResult = databaseAccessor.executeQuery(query, "cName", "pName", "edName", "fsName");  
-                Candidate res = null;
-                int counter = 0;
-                for(Map<String,String> queryResultRow : queryResult){
-                    if(counter >= 1){
-                        throw new DatabaseException("Received more than one elected candidate");
-                    }
-                    res = new Candidate(queryResultRow.get("cName"), new Party(queryResultRow.get("pName")),
-                            queryResultRow.get("edName"), queryResultRow.get("fsName"));
-                    counter++;
-                }
-		return res;		
+		if (detailAnalysis) {
+			query = VOTED_DIRECT_CANDIDATE_DETAIL_QUERY;
+		} else {
+			query = VOTED_DIRECT_CANDIDATE_QUERY;
+		}
+		query = query.replaceAll(":electionYear", year.toCleanString());
+		query = query.replaceAll(":number",
+				Integer.toString(electoralDistrictNumber));
+		DatabaseResult queryResult = databaseAccessor.executeQuery(query,
+				"cName", "pName", "edName", "fsName");
+		Candidate res = null;
+		int counter = 0;
+		for (Map<String, String> queryResultRow : queryResult) {
+			if (counter >= 1) {
+				throw new DatabaseException(
+						"Received more than one elected candidate");
+			}
+			res = new Candidate(queryResultRow.get("cName"), new Party(
+					queryResultRow.get("pName")), queryResultRow.get("edName"),
+					queryResultRow.get("fsName"));
+			counter++;
+		}
+		return res;
 	}
 
 	@Override
 	public List<PartyDetailVote> getVoteDetails(ElectionYear year,
-			Integer electoralDistrictNumber, boolean detailAnalysis) 
-                        throws DatabaseException, IOException {
-                //no aggregated data available -> detailAnalysis not important
-                String query = FileScanner.scanFile(FILE_PATH_PARTY_VOTE_STATISTICS_SCRIPT);
+			Integer electoralDistrictNumber, boolean detailAnalysis)
+			throws DatabaseException, IOException {
+		// no aggregated data available -> detailAnalysis not important
+		String query = FileScanner
+				.scanFile(FILE_PATH_PARTY_VOTE_STATISTICS_SCRIPT);
 		DatabaseResult queryResult = databaseAccessor.executeQuery(
-                        query.replaceAll(":number", Integer.toString(electoralDistrictNumber)),
-                        "pName", "receivedVotes", "percentVotes", "voteDiff", "percentDiff");
-                List<PartyDetailVote> details = new ArrayList<PartyDetailVote>();
-                for(Map<String,String> queryResultRow: queryResult){
-                    details.add(new PartyDetailVote(new Party(queryResultRow.get("pName")), 
-                            Integer.parseInt(queryResultRow.get("receivedVotes")), 
-                            100 * Float.parseFloat(queryResultRow.get("percentVotes")), 
-                            Integer.parseInt(queryResultRow.get("voteDiff")), 
-                            100 * Float.parseFloat(queryResultRow.get("percentDiff"))));
-                }		
+				query.replaceAll(":number",
+						Integer.toString(electoralDistrictNumber)), "pName",
+				"receivedVotes", "percentVotes", "voteDiff", "percentDiff");
+		List<PartyDetailVote> details = new ArrayList<PartyDetailVote>();
+		for (Map<String, String> queryResultRow : queryResult) {
+			details.add(new PartyDetailVote(new Party(queryResultRow
+					.get("pName")), Integer.parseInt(queryResultRow
+					.get("receivedVotes")), 100 * Float
+					.parseFloat(queryResultRow.get("percentVotes")), Integer
+					.parseInt(queryResultRow.get("voteDiff")), 100 * Float
+					.parseFloat(queryResultRow.get("percentDiff"))));
+		}
 		return details;
 	}
 
 	@Override
 	public List<ElectoralDistrictWinner> getElectoralDistrictWinnersOverview(
-			ElectionYear year) 
-                        throws DatabaseException, IOException{
-                String query = FileScanner.scanFile(FILE_PATH_ELECTORAL_DISTRICT_WINNER_SCRIPT);
-                DatabaseResult queryResult = databaseAccessor.executeQuery(query.replaceAll(
-                        ":electionYear", year.toCleanString()), "edName", "directVoteWinner",
-                        "listVoteWinner");
-                List<ElectoralDistrictWinner> winners = new ArrayList<ElectoralDistrictWinner>();
-                for(Map<String,String> queryResultRow: queryResult){
-                    winners.add(new ElectoralDistrictWinner(
-                            queryResultRow.get("edName"),
-                            new Party(queryResultRow.get("firstVoteWinner")),
-                            new Party(queryResultRow.get("listVoteWinner"))));
-                }		
+			ElectionYear year) throws DatabaseException, IOException {
+		String query = FileScanner
+				.scanFile(FILE_PATH_ELECTORAL_DISTRICT_WINNER_SCRIPT);
+		DatabaseResult queryResult = databaseAccessor.executeQuery(
+				query.replaceAll(":electionYear", year.toCleanString()),
+				"edName", "directVoteWinner", "listVoteWinner");
+		List<ElectoralDistrictWinner> winners = new ArrayList<ElectoralDistrictWinner>();
+		for (Map<String, String> queryResultRow : queryResult) {
+			winners.add(new ElectoralDistrictWinner(queryResultRow
+					.get("edName"), new Party(queryResultRow
+					.get("directVoteWinner")), new Party(queryResultRow
+					.get("listVoteWinner"))));
+		}
 		return winners;
 	}
 
 	@Override
 	public List<ClosestWinnerOrLoser> getClosestWinnerOrLosers(
-			ElectionYear electionYear) 
-                        throws DatabaseException {
+			ElectionYear electionYear) throws DatabaseException {
 		DatabaseResult queryResult = databaseAccessor.executeQuery(
-                        "select * from MostConciseWinnersView" + electionYear.toCleanString(),
-                        "pName", "cName", "edName", "fsName", "voteDiff", "rank");
+				"select * from MostConciseWinnersView"
+						+ electionYear.toCleanString(), "pName", "cName",
+				"edName", "fsName", "voteDiff", "rank");
 		List<ClosestWinnerOrLoser> close = new ArrayList<ClosestWinnerOrLoser>();
-                for(Map<String,String> queryResultRow: queryResult){
-                         close.add(new ClosestWinnerOrLoser(
-                                 new Candidate(queryResultRow.get("cName"), 
-                                 new Party(queryResultRow.get("pName")), 
-                                 queryResultRow.get("edName"), queryResultRow.get("fsName")),
-                                 Integer.parseInt(queryResultRow.get("voteDiff")),
-                                 Integer.parseInt(queryResultRow.get("rank"))));
-                }
+		for (Map<String, String> queryResultRow : queryResult) {
+			close.add(new ClosestWinnerOrLoser(
+					new Candidate(queryResultRow.get("cName"), new Party(
+							queryResultRow.get("pName")), queryResultRow
+							.get("edName"), queryResultRow.get("fsName")),
+					Integer.parseInt(queryResultRow.get("voteDiff")), Integer
+							.parseInt(queryResultRow.get("rank"))));
+		}
 		return close;
 	}
 }

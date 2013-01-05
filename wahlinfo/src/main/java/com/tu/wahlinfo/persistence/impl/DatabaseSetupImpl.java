@@ -33,7 +33,7 @@ public class DatabaseSetupImpl implements DatabaseSetup {
 			.getLogger(DatabaseSetupImpl.class);
 
 	private static final String INIT_SCRIPT_PATH = "/sql/init.sql";
-	private static final boolean SETUP_ENABLED = true;
+	private static final boolean SETUP_ENABLED = false;
 
 	@Inject
 	DatabaseAccessor databaseAccessor;

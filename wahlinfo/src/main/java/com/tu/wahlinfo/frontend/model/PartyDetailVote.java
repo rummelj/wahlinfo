@@ -40,6 +40,10 @@ public class PartyDetailVote {
 		return percentageVotesReceived;
 	}
 
+	public String getPercentageVotesReceivedAsString() {
+		return String.format("%.2f", percentageVotesReceived);
+	}
+
 	public void setPercentageVotesReceived(float percentageVotesReceived) {
 		this.percentageVotesReceived = percentageVotesReceived;
 	}
@@ -55,6 +59,11 @@ public class PartyDetailVote {
 
 	public float getComparisonToLastYearInPercentageVotesReceived() {
 		return comparisonToLastYearInPercentageVotesReceived;
+	}
+
+	public String getComparisonToLastYearInPercentageVotesReceivedAsString() {
+		return String.format("%.2f",
+				comparisonToLastYearInPercentageVotesReceived);
 	}
 
 	public void setComparisonToLastYearInPercentageVotesReceived(
