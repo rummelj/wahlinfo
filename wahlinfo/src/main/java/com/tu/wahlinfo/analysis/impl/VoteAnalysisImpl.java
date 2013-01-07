@@ -76,7 +76,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 			+ "where edvd.electoralDistrictId = :number and edvd.electionYear = ':electionYear';";
 
 	private static final String VOTE_PARTICIPATION_DETAIL_QUERY = "with Submitted as ("
-			+ "select count(*) as votes"
+			+ "select count(*) as votes "
 			+ "from WIFilledVotingPaper fvp, WIParty p "
 			+ "where fvp.partyId = p.id and fvp.electoralDistrictId = :number and p.electionYear = ':electionYear' "
 			+ ") "
@@ -93,7 +93,7 @@ public class VoteAnalysisImpl implements IVoteAnalysis {
 			+ "select fvp.directCandidateId, count(*) as receivedVotes "
 			+ "from WIFilledVotingPaper fvp , WIDirectCandidate dc "
 			+ "where fvp.directCandidateId = dc.id and dc.electoralDistrictId = :number and dc.electionYear = ':electionYear' "
-			+ "group by dc.directCandidateId    "
+			+ "group by fvp.directCandidateId    "
 			+ ") "
 			+ "select distinct on (ed.number) dc.name as cName, p.name as pName, ed.name as edName, fs.name as fsName "
 			+ "from DistrictVotes dv, WIDirectCandidate dc, WIParty p, WIElectoralDistrict ed, WIFederalState fs "
