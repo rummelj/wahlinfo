@@ -12,35 +12,38 @@
 </h:head>
 <h:body>
 	<div id="content" style="width: 550px; margin: auto">
-		<p:dock style="color:black">
-			<p:menuitem value="Sitzverteilung 2009"
-				icon="resources/images/piechart.png" url="q12009.xhtml" />
-			<p:menuitem value="Sitzverteilung 2005"
-				icon="resources/images/piechart.png" url="q12005.xhtml" />
-			<p:menuitem value="Mitglieder 2009"
-				icon="resources/images/people.png" url="q22009.xhtml" />
-			<p:menuitem value="Mitglieder 2005"
-				icon="resources/images/people.png" url="q22005.xhtml" />
-			<p:menuitem value="Wahlkreisinformationen"
-				icon="resources/images/district.png" url="q3.xhtml" />
-			<p:menuitem value="Sieger 2009" icon="resources/images/winner.png"
-				url="q42009.xhtml" />
-			<p:menuitem value="Sieger 2005" icon="resources/images/winner.png"
-				url="q42005.xhtml" />
-			<p:menuitem value="Überhangmandate 2009"
-				icon="resources/images/plus.png" url="q52009.xhtml" />
-			<p:menuitem value="Überhangmandate 2005"
-				icon="resources/images/plus.png" url="q52005.xhtml" />
-			<p:menuitem value="Knappste Sieger 2009"
-				icon="resources/images/knapp.jpg" url="q62009.xhtml" />
-			<p:menuitem value="Knappste Sieger 2005"
-				icon="resources/images/knapp.jpg" url="q62005.xhtml" />
-			<p:menuitem value="Wahlkreisinformationen (Detail)"
-				icon="resources/images/district.png" url="q7.xhtml" />
-			<p:menuitem value="Terminal" icon="resources/images/terminal.png"
-				url="terminal.xhtml" />
-		</p:dock>
-
+		<h:form>
+			<p:dock style="color:black">
+				<p:menuitem value="Sitzverteilung 2009"
+					icon="resources/images/piechart.png" url="q12009.xhtml" />
+				<p:menuitem value="Sitzverteilung 2005"
+					icon="resources/images/piechart.png" url="q12005.xhtml" />
+				<p:menuitem value="Mitglieder 2009"
+					icon="resources/images/people.png" url="q22009.xhtml" />
+				<p:menuitem value="Mitglieder 2005"
+					icon="resources/images/people.png" url="q22005.xhtml" />
+				<p:menuitem value="Wahlkreisinformationen"
+					icon="resources/images/district.png" url="q3.xhtml" />
+				<p:menuitem value="Sieger 2009" icon="resources/images/winner.png"
+					url="q42009.xhtml" />
+				<p:menuitem value="Sieger 2005" icon="resources/images/winner.png"
+					url="q42005.xhtml" />
+				<p:menuitem value="Überhangmandate 2009"
+					icon="resources/images/plus.png" url="q52009.xhtml" />
+				<p:menuitem value="Überhangmandate 2005"
+					icon="resources/images/plus.png" url="q52005.xhtml" />
+				<p:menuitem value="Knappste Sieger 2009"
+					icon="resources/images/knapp.jpg" url="q62009.xhtml" />
+				<p:menuitem value="Knappste Sieger 2005"
+					icon="resources/images/knapp.jpg" url="q62005.xhtml" />
+				<p:menuitem value="Wahlkreisinformationen (Detail)"
+					icon="resources/images/district.png" url="q7.xhtml" />
+				<p:menuitem value="Terminal" icon="resources/images/terminal.png"
+					url="terminal.xhtml" />
+				<p:menuitem value="Vote" icon="resources/images/vote.png"
+					action="#{voteController.selectVotePaperParameters()}" />
+			</p:dock>
+		</h:form>
 		<p:dataTable id="wahlkreissiegerdialogtable2009" var="winner"
 			value="#{analyseController.electoralDistrictWinnersOverview2009}"
 			scrollable="true" scrollHeight="400">

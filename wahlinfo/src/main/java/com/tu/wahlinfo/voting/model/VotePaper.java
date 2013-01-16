@@ -1,10 +1,14 @@
 package com.tu.wahlinfo.voting.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
@@ -168,6 +172,68 @@ public class VotePaper {
 			}
 		}
 		this.secondVote = secondVote;
+	}
+
+	public List<Candidate> getDirectCandidates() {
+		List<Candidate> result = new ArrayList<Candidate>(
+				getPossibleFirstVotes().size());
+		for (Candidate candidate : getPossibleFirstVotes().values()) {
+			result.add(candidate);
+		}
+
+		Collections.sort(result, new Comparator<Candidate>() {
+
+			@Override
+			public int compare(Candidate arg0, Candidate arg1) {
+				return getRank(arg1) - getRank(arg0);
+			}
+
+			public int getRank(Candidate c) {
+				for (Entry<Integer, Candidate> entry : getPossibleFirstVotes()
+						.entrySet()) {
+					if (entry.getValue().equals(c)) {
+						return entry.getKey();
+					}
+				}
+				return 0;
+			}
+
+		});
+
+		return result;
+	}
+
+	public List<Candidate> getPartiesListCandidates(Party party) {
+		return listCandidates.get(party);
+	}
+
+	public List<Party> getListParties() {
+		List<Party> result = new ArrayList<Party>(getPossibleSecondVotes()
+				.size());
+		for (Party party : getPossibleSecondVotes().values()) {
+			result.add(party);
+		}
+
+		Collections.sort(result, new Comparator<Party>() {
+
+			@Override
+			public int compare(Party arg0, Party arg1) {
+				return getRank(arg1) - getRank(arg0);
+			}
+
+			public int getRank(Party c) {
+				for (Entry<Integer, Party> entry : getPossibleSecondVotes()
+						.entrySet()) {
+					if (entry.getValue().equals(c)) {
+						return entry.getKey();
+					}
+				}
+				return 0;
+			}
+
+		});
+
+		return result;
 	}
 
 	public Map<Integer, Candidate> getPossibleFirstVotes() {

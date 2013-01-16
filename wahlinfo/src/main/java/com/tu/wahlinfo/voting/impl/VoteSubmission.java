@@ -92,21 +92,21 @@ public class VoteSubmission implements IVoteSubmission {
 			Integer electoralDistrictNumber) {
 		// NOTE: Think about caching this similar to electoralDistricts
 		// TODO Auto-generated method stub
-		return null;
+		return new HashMap<Party, List<Candidate>>();
 	}
 
 	private Map<Integer, Candidate> getPossibleFirstVotes(
 			Integer electoralDistrictNumber) {
 		// NOTE: Think about caching this similar to electoralDistricts
 		// TODO Auto-generated method stub
-		return null;
+		return new HashMap<Integer, Candidate>();
 	}
 
 	private Map<Integer, Party> getPossibleSecondVotes(
 			Integer electoralDistrictNumber) {
 		// NOTE: Think about caching this similar to electoralDistricts
 		// TODO Auto-generated method stub
-		return null;
+		return new HashMap<Integer, Party>();
 	}
 
 	/**
@@ -116,13 +116,13 @@ public class VoteSubmission implements IVoteSubmission {
 	 * @throws DatabaseException
 	 */
 	@Override
-	public synchronized void vote(VotePaper votePaper, String tan)
+	public synchronized boolean vote(VotePaper votePaper, String tan)
 			throws DatabaseException {
 		if (!isVoteOpen(votePaper.getElectionYear())) {
 			LOG.error(
 					"Tried to vote an an election that is closed. Vote rejected. {}",
 					votePaper.getElectionYear());
-			return;
+			return false;
 		}
 
 		try {
@@ -131,7 +131,7 @@ public class VoteSubmission implements IVoteSubmission {
 			LOG.error(
 					"A tan {} not authorised to vote was found. Vote was rejected!",
 					tan);
-			return;
+			return false;
 		}
 
 		try {
@@ -139,12 +139,13 @@ public class VoteSubmission implements IVoteSubmission {
 		} catch (DatabaseException e) {
 			LOG.error("Could not vote (Tan = {}): {}", tan, votePaper);
 			LOG.error("No vote was persisted. Tan is still valid.");
-			return;
+			return false;
 		}
 		LOG.info("Succesfully voted (Tan = {}): {} ", tan, votePaper);
 
 		tanValidator.invalidate(votePaper, tan);
 		LOG.info("Succesfully invalidated tan {}", tan);
+		return true;
 	}
 
 	/**

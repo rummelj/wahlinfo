@@ -17,7 +17,7 @@ public interface IVoteSubmission {
 	VotePaper generateVotePaper(ElectionYear electionYear,
 			Integer electoralDistrictNumber);
 
-	void vote(VotePaper votePaper, String tan) throws DatabaseException;
+	boolean vote(VotePaper votePaper, String tan) throws DatabaseException;
 
 	void closeVote(ElectionYear year);
 
