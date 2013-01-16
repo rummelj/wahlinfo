@@ -12,13 +12,21 @@ public class VotePaperSelectionModel implements Serializable {
 	 */
 	private static final long serialVersionUID = -8715220852936470403L;
 
-	Integer electoralDistrict;
+	String electoralDistrict;
 
-	public Integer getElectoralDistrict() {
+	public Integer getElectoralDistrictAsNumber() {
+		try {
+			return Integer.valueOf(electoralDistrict);
+		} catch (NumberFormatException e) {
+			return 1;
+		}
+	}
+
+	public String getElectoralDistrict() {
 		return electoralDistrict;
 	}
 
-	public void setElectoralDistrict(Integer electoralDistrict) {
+	public void setElectoralDistrict(String electoralDistrict) {
 		this.electoralDistrict = electoralDistrict;
 	}
 

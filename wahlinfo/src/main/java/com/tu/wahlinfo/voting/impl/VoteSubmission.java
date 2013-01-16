@@ -2,6 +2,7 @@ package com.tu.wahlinfo.voting.impl;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,6 +18,7 @@ import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.frontend.model.Candidate;
 import com.tu.wahlinfo.frontend.model.Party;
 import com.tu.wahlinfo.model.DatabaseResult;
+import com.tu.wahlinfo.persistence.Database;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.voting.ITanValidator;
@@ -38,6 +40,9 @@ public class VoteSubmission implements IVoteSubmission {
 
 	@Inject
 	ITanValidator tanValidator;
+
+	@Inject
+	Database database;
 
 	Map<String, Integer> electoralDistricts;
 
@@ -90,23 +95,67 @@ public class VoteSubmission implements IVoteSubmission {
 
 	private Map<Party, List<Candidate>> getListCandidates(
 			Integer electoralDistrictNumber) {
-		// NOTE: Think about caching this similar to electoralDistricts
-		// TODO Auto-generated method stub
-		return new HashMap<Party, List<Candidate>>();
+		try {
+			DatabaseResult dbResult = databaseAccessor
+					.executeQuery(
+							"select c.name as cname, c.rank, p.name as pname from WIListCandidate c, WIElectoralDistrict e, WIParty p where c.federalstateid = e.federalstateid and c.partyid = p.id and c.electionyear='2009' and e.number="
+									+ database.sanitise(electoralDistrictNumber
+											.toString()) + ";", "name", "rank",
+							"pname");
+
+			Map<Party, List<Candidate>> result = new HashMap<Party, List<Candidate>>();
+			for (Map<String, String> row : dbResult) {
+				String name = row.get("name");
+				String pname = row.get("pname");
+				if (!result.containsKey(pname)) {
+					result.put(new Party(pname), new LinkedList<Candidate>());
+				}
+				result.get(new Party(pname)).add(
+						new Candidate(name, new Party(pname), "", ""));
+			}
+			return result;
+		} catch (DatabaseException e) {
+			LOG.error("Error retrieving list candidates", e);
+			return new HashMap<Party, List<Candidate>>();
+		}
+
 	}
 
 	private Map<Integer, Candidate> getPossibleFirstVotes(
 			Integer electoralDistrictNumber) {
-		// NOTE: Think about caching this similar to electoralDistricts
-		// TODO Auto-generated method stub
-		return new HashMap<Integer, Candidate>();
+		DatabaseResult dbResult;
+		try {
+			dbResult = databaseAccessor
+					.executeQuery(
+							"select c.name as cname, p.name as pname from WIDirectCandidate c, WIParty p where c.electionyear = '2009' and (c.partyid = null or c.partyid = p.id) and c.electoraldistrictid = "
+									+ database.sanitise(electoralDistrictNumber
+											.toString()) + ";", "name", "pname");
+		} catch (DatabaseException e) {
+			LOG.error("Error retrieving possible first votes", e);
+			return new HashMap<Integer, Candidate>();
+		}
+		// TODO: Get rank!
+		int rank = 1;
+		Map<Integer, Candidate> result = new HashMap<Integer, Candidate>();
+		for (Map<String, String> row : dbResult) {
+			result.put(rank++,
+					new Candidate(row.get("name"), new Party(row.get("pname")),
+							"", ""));
+		}
+		return result;
 	}
 
 	private Map<Integer, Party> getPossibleSecondVotes(
 			Integer electoralDistrictNumber) {
 		// NOTE: Think about caching this similar to electoralDistricts
 		// TODO Auto-generated method stub
-		return new HashMap<Integer, Party>();
+		Map<Integer, Party> result = new HashMap<Integer, Party>();
+		result.put(1, new Party("CSU"));
+		result.put(2, new Party("GRUENE"));
+		result.put(3, new Party("FDP"));
+		result.put(4, new Party("SPD"));
+
+		return result;
 	}
 
 	/**
@@ -175,7 +224,7 @@ public class VoteSubmission implements IVoteSubmission {
 	@Override
 	public boolean isVoteOpen(ElectionYear year) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

@@ -44,7 +44,8 @@ public class VoteController implements Serializable {
 	public String openVotePage() {
 		voteModel.setTan("");
 		voteModel.setVotePaper(voteSubmission.generateVotePaper(
-				ElectionYear._2009, votePaperSelectionModel.electoralDistrict));
+				ElectionYear._2009,
+				votePaperSelectionModel.getElectoralDistrictAsNumber()));
 		return "votepaper";
 	}
 
@@ -64,6 +65,14 @@ public class VoteController implements Serializable {
 	}
 
 	public String getElectoralDistrictName() {
+		if (voteSubmission != null) {
+			LOG.info(voteSubmission.toString());
+			LOG.info(voteSubmission.getElectoralDistricts(ElectionYear._2009)
+					.toString());
+		} else {
+			LOG.error("voteSubmission is null");
+		}
+
 		for (Entry<String, Integer> ed : voteSubmission.getElectoralDistricts(
 				ElectionYear._2009).entrySet()) {
 			if (ed.getValue().equals(

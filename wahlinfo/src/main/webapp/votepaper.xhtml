@@ -12,123 +12,123 @@
 	<h:outputStylesheet library="css" name="layout.css" />
 </h:head>
 <h:body>
-	<span style="font: bold 23px arial">Stimmzettel</span>
-	<br />
-	<span style="font: bold 12px arial">für die Wahl zum Deutschen
-		Bundestag<br /> im Wahlkreis <h:outputText
-			value="#{votePaperSelectionModel.electoralDistrict} #{voteController.getElectoralDistrictName()}" /><br />
-		am <h:outputText value="#{voteController.today}" /><br />
-	</span>
-	<span style="font: bold 28px arial">Sie haben 2 Stimmen</span>
-	<br />
-	<img alt="" src="resources/images/votepaper.png" width="335px"
-		height="70px" />
-	<h:form id="form">
+	<div id="content"
+		style="width: 870px; margin: auto; background: white; text-align: center;">
+		<span style="font: bold 23px arial">Stimmzettel</span> <br /> <span
+			style="font: bold 12px arial">für die Wahl zum Deutschen
+			Bundestag<br /> im Wahlkreis <h:outputText
+				value="#{votePaperSelectionModel.electoralDistrict} #{voteController.getElectoralDistrictName()}" /><br />
+			am <h:outputText value="#{voteController.today}" /><br />
+		</span> <span style="font: bold 28px arial">Sie haben 2 Stimmen</span> <br />
+		<img alt="" src="resources/images/votepaper.png" width="335px"
+			height="70px" />
+		<h:form id="form">
 
-		<table style="width: 800px;" cellpadding="7px" cellspacing="0px">
-			<tr>
-				<td class="label"
-					style="width: 400px; padding-bottom: 0px; text-align: right; font: bold 23px arial; color: black">hier
-					1 Stimme</td>
-				<td class="label"
-					style="width: 400px; padding-bottom: 0px; text-align: left; font: bold 23px arial; color: #3477c8">hier
-					1 Stimme</td>
-			</tr>
-			<tr>
-				<td class="label"
-					style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: right; font: bold 12px arial">für
-					die Wahl</td>
-				<td class="label"
-					style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: left; font: bold 12px arial; color: #3477c8">für
-					die Wahl</td>
-			</tr>
-			<tr>
-				<td class="label"
-					style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: right; font: bold 18px arial">eines/einer
-					Wahlkreisabgeordneten</td>
-				<td class="label"
-					style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: left; font: bold 18px arial; color: #3477c8">einer
-					Landesliste (Partei)</td>
-			</tr>
-			<tr>
-				<td class="label"
-					style="width: 400px; padding-top: 0px; text-align: right; font: bold 12px arial"></td>
-				<td class="label"
-					style="width: 400px; padding-top: 0px; text-align: left; font: bold 12px arial; color: #3477c8">-
-					maßgebende Stimme für die Verteilung der<br />Sitze insgesamt auf
-					die einzelnen Parteien -
-				</td>
-			</tr>
-			<tr>
-				<td class="label"
-					style="width: 400px; text-align: right; font: bold 18px arial;">Erststimme</td>
-				<td class="label"
-					style="width: 400px; text-align: left; font: bold 18px arial; color: #3477c8">Zweitstimme</td>
-			</tr>
-		</table>
-		<table style="width: 840px;" cellpadding="7px" cellspacing="0px">
-			<tr>
-				<td valign="top">
-					<table style="width: 420px; border-collapse: collapse;"
-						border="1px">
-						<c:forEach items="#{voteModel.votePaper.directCandidates}"
-							var="direktkandidat" varStatus="status">
-							<tr style="height: 75px;">
-								<td class="label"
-									style="width: 14px; font: bold 18px arial; text-align: center;"
-									valign="top"><h:outputText value="#{status.count}" /></td>
-								<td class="label" width="276px" valign="top"
-									style="text-align: left;"><h:outputText
-										style="font: bold 18px arial; margin-left:4px;"
-										value="#{direktkandidat.name}, " /></td>
-								<td class="label" width="100px" style="text-align: left;"><h:outputText
-										style="font: bold 18px arial; margin-left:4px;"
-										value="#{direktkandidat.party.name}" /></td>
-								<td class="inputfield" style="width: 30px;"><h:selectOneRadio
-										id="group1#{status.count}" name="#{status.count}">
-										<f:selectItem itemValue="true" />
-									</h:selectOneRadio></td>
-							</tr>
-						</c:forEach>
-					</table>
-				</td>
-				<td valign="top">
-					<table
-						style="width: 420px; color: #3477c8; border-color: #3477c8; border-collapse: collapse;"
-						border="1px">
-						<c:forEach items="#{voteModel.votePaper.listParties}"
-							var="landesliste" varStatus="status">
-							<tr style="height: 75px;">
-								<td class="inputfield" style="width: 30px;"><h:selectOneRadio
-										id="group2#{status.count}" name="#{status.count}"
-										onclick="uncheckSameRadio(this, 'group2');document.getElementById('form:zweitstimme').value = this.name;">
-										<f:selectItem itemValue="true" selected="true" />
-									</h:selectOneRadio></td>
-								<td class="label" width="100px" style="text-align: left;"><h:outputText
-										style="font: bold 18px arial; margin-left:4px;"
-										value="#{landesliste.name}" /></td>
-								<td class="label" width="276px" style="text-align: left;">
-									<c:forEach
-										items="#{voteModel.votePaper.getPartiesListCandidates(landesliste)}"
-										var="listenkandidat" varStatus="innerStatus">
-										<h:outputText
-											value="#{listenkandidat.name}#{not innerStatus.last ? ', ' : ''}" />
-									</c:forEach>
-								</td>
-								<td class="label"
-									style="width: 14px; font: bold 18px arial; text-align: center;"
-									valign="top"><h:outputText value="#{status.count}" /></td>
-							</tr>
-						</c:forEach>
-					</table>
-				</td>
-			</tr>
-		</table>
+			<table style="width: 870px;" cellpadding="7px" cellspacing="0px">
+				<tr>
+					<td class="label"
+						style="width: 400px; padding-bottom: 0px; text-align: right; font: bold 23px arial; color: black">hier
+						1 Stimme</td>
+					<td class="label"
+						style="width: 400px; padding-bottom: 0px; text-align: left; font: bold 23px arial; color: #3477c8">hier
+						1 Stimme</td>
+				</tr>
+				<tr>
+					<td class="label"
+						style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: right; font: bold 12px arial">für
+						die Wahl</td>
+					<td class="label"
+						style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: left; font: bold 12px arial; color: #3477c8">für
+						die Wahl</td>
+				</tr>
+				<tr>
+					<td class="label"
+						style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: right; font: bold 18px arial">eines/einer
+						Wahlkreisabgeordneten</td>
+					<td class="label"
+						style="width: 400px; padding-top: 0px; padding-bottom: 0px; text-align: left; font: bold 18px arial; color: #3477c8">einer
+						Landesliste (Partei)</td>
+				</tr>
+				<tr>
+					<td class="label"
+						style="width: 400px; padding-top: 0px; text-align: right; font: bold 12px arial"></td>
+					<td class="label"
+						style="width: 400px; padding-top: 0px; text-align: left; font: bold 12px arial; color: #3477c8">-
+						maßgebende Stimme für die Verteilung der<br />Sitze insgesamt auf
+						die einzelnen Parteien -
+					</td>
+				</tr>
+				<tr>
+					<td class="label"
+						style="width: 400px; text-align: right; font: bold 18px arial;">Erststimme</td>
+					<td class="label"
+						style="width: 400px; text-align: left; font: bold 18px arial; color: #3477c8">Zweitstimme</td>
+				</tr>
+			</table>
+			<table style="width: 840px;" cellpadding="7px" cellspacing="0px">
+				<tr>
+					<td valign="top">
+						<table style="width: 420px; border-collapse: collapse;"
+							border="1px">
+							<c:forEach items="#{voteModel.votePaper.directCandidates}"
+								var="direktkandidat" varStatus="status">
+								<tr style="height: 75px;">
+									<td class="label"
+										style="width: 14px; font: bold 18px arial; text-align: center;"
+										valign="top"><h:outputText value="#{status.count}" /></td>
+									<td class="label" width="276px" valign="top"
+										style="text-align: left;"><h:outputText
+											style="font: bold 18px arial; margin-left:4px;"
+											value="#{direktkandidat.name}, " /></td>
+									<td class="label" width="100px" style="text-align: left;"><h:outputText
+											style="font: bold 18px arial; margin-left:4px;"
+											value="#{direktkandidat.party.name}" /></td>
+									<td class="inputfield" style="width: 30px;"><h:selectOneRadio
+											id="group1#{status.count}" name="#{status.count}">
+											<f:selectItem itemValue="true" />
+										</h:selectOneRadio></td>
+								</tr>
+							</c:forEach>
+						</table>
+					</td>
+					<td valign="top">
+						<table
+							style="width: 420px; color: #3477c8; border-color: #3477c8; border-collapse: collapse;"
+							border="1px">
+							<c:forEach items="#{voteModel.votePaper.listParties}"
+								var="landesliste" varStatus="status">
+								<tr style="height: 75px;">
+									<td class="inputfield" style="width: 30px;"><h:selectOneRadio
+											id="group2#{status.count}" name="#{status.count}"
+											onclick="uncheckSameRadio(this, 'group2');document.getElementById('form:zweitstimme').value = this.name;">
+											<f:selectItem itemValue="true" selected="true" />
+										</h:selectOneRadio></td>
+									<td class="label" width="100px" style="text-align: left;"><h:outputText
+											style="font: bold 18px arial; margin-left:4px;"
+											value="#{landesliste.name}" /></td>
+									<td class="label" width="276px" style="text-align: left;">
+										<c:forEach
+											items="#{voteModel.votePaper.getPartiesListCandidates(landesliste)}"
+											var="listenkandidat" varStatus="innerStatus">
+											<h:outputText
+												value="#{listenkandidat.name}#{not innerStatus.last ? ', ' : ''}" />
+										</c:forEach>
+									</td>
+									<td class="label"
+										style="width: 14px; font: bold 18px arial; text-align: center;"
+										valign="top"><h:outputText value="#{status.count}" /></td>
+								</tr>
+							</c:forEach>
+						</table>
+					</td>
+				</tr>
+			</table>
 
-		<br />
-		<h:commandButton id="btn_submit" type="submit"
-			actionListener="#{voteController.vote}" value="Stimme abgeben"
-			style="width: 400px;" />
-	</h:form>
+			<br />
+			<h:commandButton id="btn_submit" type="submit"
+				actionListener="#{voteController.vote}" value="Stimme abgeben"
+				style="width: 400px;" />
+		</h:form>
+	</div>
 </h:body>
 </html>
