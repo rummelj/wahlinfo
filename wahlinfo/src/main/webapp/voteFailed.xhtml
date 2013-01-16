@@ -9,14 +9,22 @@
 <h:head>
 	<title>Wahlinformationssystem</title>
 	<h:outputStylesheet library="css" name="layout.css" />
-	<meta http-equiv="refresh"
-		content="5; URL=http://localhost:8080/wahlinfo/votepaper.xhtml" />
+	<script type="text/javascript">
+		window.onload = function(){
+			setTimeout("document.getElementById('form:btn').click();", 5000);
+			}
+	</script>
 </h:head>
 <h:body>
-	<div id="content"
-		style="background: red; height: 100%; width: 100%; text-align: center">
-		<h1>Stimmabgabe fehlgeschlagen!</h1>
-		<h1>Bitte versuchen Sie es erneut!</h1>
-	</div>
+	<h:form id="form">
+		<div id="content"
+			style="background: red; height: 100%; width: 100%; text-align: center">
+			<h1>Stimmabgabe fehlgeschlagen!</h1>
+			<h1>Bitte versuchen Sie es erneut!</h1>
+			<h:commandButton id="btn" name="btn"
+				action="#{voteController.openVotePage}" ajax="false"
+				style="display:none" />
+		</div>
+	</h:form>
 </h:body>
 </html>

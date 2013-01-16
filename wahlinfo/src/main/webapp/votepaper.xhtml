@@ -99,9 +99,8 @@
 								var="landesliste" varStatus="status">
 								<tr style="height: 75px;">
 									<td class="inputfield" style="width: 30px;"><h:selectOneRadio
-											id="group2#{status.count}" name="#{status.count}"
-											onclick="uncheckSameRadio(this, 'group2');document.getElementById('form:zweitstimme').value = this.name;">
-											<f:selectItem itemValue="true" selected="true" />
+											id="group2#{status.count}" name="#{status.count}">
+											<f:selectItem itemValue="true" />
 										</h:selectOneRadio></td>
 									<td class="label" width="100px" style="text-align: left;"><h:outputText
 											style="font: bold 18px arial; margin-left:4px;"
@@ -123,10 +122,20 @@
 					</td>
 				</tr>
 			</table>
-
+			<br />
+			<h3>
+				<h:outputLabel
+					value="Gegen Sie hier das Passwort ein, dass Sie erhalten haben"
+					style="color:red;" />
+			</h3>
+			<br />
+			<h:inputText value="#{voteModel.tan}" size="20"
+				style="padding: 10px; background:red; color:white;" />
+			<br />
+			<br />
 			<br />
 			<h:commandButton id="btn_submit" type="submit"
-				actionListener="#{voteController.vote}" value="Stimme abgeben"
+				action="#{voteController.vote}" value="Stimme abgeben"
 				style="width: 400px;" />
 		</h:form>
 	</div>

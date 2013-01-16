@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map.Entry;
 
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,7 +17,7 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.voting.IVoteSubmission;
 
 @Named
-@SessionScoped
+@ApplicationScoped
 public class VoteController implements Serializable {
 
 	/**

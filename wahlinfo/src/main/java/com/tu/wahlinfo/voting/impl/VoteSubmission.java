@@ -57,6 +57,9 @@ public class VoteSubmission implements IVoteSubmission {
 
 	@Override
 	public Map<String, Integer> getElectoralDistricts(ElectionYear electionYear) {
+		if (electoralDistricts == null) {
+			init();
+		}
 		return electoralDistricts;
 	}
 
@@ -167,6 +170,10 @@ public class VoteSubmission implements IVoteSubmission {
 	@Override
 	public synchronized boolean vote(VotePaper votePaper, String tan)
 			throws DatabaseException {
+		if (votePaper == null || tan == null) {
+			return false;
+		}
+
 		if (!isVoteOpen(votePaper.getElectionYear())) {
 			LOG.error(
 					"Tried to vote an an election that is closed. Vote rejected. {}",
