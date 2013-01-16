@@ -18,4 +18,10 @@ public interface IVoteSubmission {
 
 	void vote(VotePaper votePaper, String tan);
 
+	void closeVote(ElectionYear year);
+
+	void openVote(ElectionYear year);
+
+	boolean isVoteOpen(ElectionYear year);
+
 }

@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.tu.util.ListUtil;
+import com.tu.wahlinfo.model.DatabaseResult;
 import com.tu.wahlinfo.persistence.Database;
 import com.tu.wahlinfo.persistence.DatabaseAccessor;
 import com.tu.wahlinfo.persistence.DatabaseConstants;
@@ -149,4 +150,13 @@ public class DatabaseImpl implements Database {
 		return numberOfBulks;
 	}
 
+	@Override
+	public String getConstants(String key) throws DatabaseException {
+		String cleanKey = sanitise(key);
+		DatabaseResult dbResult = databaseAccessor
+				.executeQuery("select _value from WIConstants where _key = "
+						+ cleanKey + ";", "_value");
+		List<String> resultList = dbResult.toList();
+		return resultList.size() > 0 ? resultList.get(0) : null;
+	}
 }

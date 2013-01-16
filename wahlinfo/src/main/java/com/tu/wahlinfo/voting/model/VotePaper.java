@@ -147,6 +147,12 @@ public class VotePaper {
 	}
 
 	public void setFirstVote(List<Candidate> firstVote) {
+		for (Candidate candidate : firstVote) {
+			if (!possibleFirstVotes.containsValue(candidate)) {
+				throw new IllegalArgumentException(
+						"Cannot vote this candidate " + candidate);
+			}
+		}
 		this.firstVote = firstVote;
 	}
 
@@ -155,6 +161,12 @@ public class VotePaper {
 	}
 
 	public void setSecondVote(List<Party> secondVote) {
+		for (Party party : secondVote) {
+			if (!possibleSecondVotes.containsValue(party)) {
+				throw new IllegalArgumentException("Cannot vote this party "
+						+ party);
+			}
+		}
 		this.secondVote = secondVote;
 	}
 

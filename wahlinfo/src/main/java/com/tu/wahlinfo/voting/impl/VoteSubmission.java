@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ import com.tu.wahlinfo.voting.model.VotePaper;
  * 
  * @author cg
  */
-@Stateless
+@Stateful
 public class VoteSubmission implements IVoteSubmission {
 
 	private static final Logger LOG = LoggerFactory
@@ -115,6 +115,13 @@ public class VoteSubmission implements IVoteSubmission {
 	 */
 	@Override
 	public synchronized void vote(VotePaper votePaper, String tan) {
+		if (!isVoteOpen(votePaper.getElectionYear())) {
+			LOG.error(
+					"Tried to vote an an election that is closed. Vote rejected. {}",
+					votePaper.getElectionYear());
+			return;
+		}
+
 		try {
 			tanValidator.validate(votePaper, tan);
 		} catch (IllegalAccessException e) {
@@ -133,7 +140,7 @@ public class VoteSubmission implements IVoteSubmission {
 		}
 		LOG.info("Succesfully voted (Tan = {}): {} ", tan, votePaper);
 
-		tanValidator.invalidate(votePaper.getElectoralDistrictNumber(), tan);
+		tanValidator.invalidate(votePaper, tan);
 		LOG.info("Succesfully invalidated tan {}", tan);
 	}
 
@@ -147,6 +154,24 @@ public class VoteSubmission implements IVoteSubmission {
 			throws DatabaseException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void closeVote(ElectionYear year) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void openVote(ElectionYear year) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isVoteOpen(ElectionYear year) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

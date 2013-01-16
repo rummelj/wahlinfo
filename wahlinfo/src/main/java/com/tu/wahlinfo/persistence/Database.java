@@ -53,4 +53,14 @@ public interface Database {
 	void bulkInsert(String tableName, Map<String, List<String>> values)
 			throws DatabaseException;
 
+	/**
+	 * Retrieves a constant as stored in WIConstants.
+	 * 
+	 * @param key
+	 *            The key used in WIConstants.
+	 * @return _value column, if the key does not exist, null is returned.
+	 * @throws DatabaseException
+	 *             If there's an error connecting to the database.
+	 */
+	String getConstants(String key) throws DatabaseException;
 }

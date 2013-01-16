@@ -24,6 +24,7 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 
 @Named
 @SessionScoped
+// TODO: This is not a model, refactor to other package
 public class WahlkreisInfoWizard implements Serializable {
 
 	/**

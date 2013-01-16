@@ -15,6 +15,8 @@ DROP TABLE IF EXISTS WIPartySeatDistribution CASCADE;
 DROP TABLE IF EXISTS WIStatePartySeatDistribution  CASCADE;
 DROP TABLE IF EXISTS WIDirectMandateDistribution  CASCADE;
 DROP TABLE IF EXISTS WIListMandateDistribution  CASCADE;
+DROP TABLE IF EXISTS WIConstants CASCADE;
+DROP TABLE IF EXISTS WITan CASCADE;
 
 CREATE TABLE hibernate_sequence(
 	next_val BIGINT NOT NULL,
@@ -114,3 +116,21 @@ CREATE TABLE WIElectoralDistrictVoteData (
         FOREIGN KEY (electionYear) REFERENCES WIElection (electionYear),
         PRIMARY KEY (electoralDistrictId, electionYear)
 );
+
+CREATE TABLE WIConstants (
+	_key VARCHAR(32) NOT NULL,
+	_value VARCHAR(128),
+	PRIMARY KEY (_key)
+);
+
+CREATE TABLE WITan (
+	year VARCHAR(4) NOT NULL,
+	electoralDistrict SMALLINT NOT NULL,
+	tan VARCHAR(255) NOT NULL,
+	PRIMARY KEY(year, electoralDistrict, tan),
+	FOREIGN KEY (year) REFERENCES WIElection (electionYear),
+	FOREIGN KEY (electoralDistrict) REFERENCES WIElectoralDistrict (number)
+);
+
+INSERT INTO WIConstants VALUES ('TanGenerationEnabled', 'false');
+

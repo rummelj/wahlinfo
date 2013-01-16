@@ -1,5 +1,6 @@
 package com.tu.wahlinfo.voting;
 
+import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
 import com.tu.wahlinfo.voting.model.VotePaper;
 
 public interface ITanValidator {
@@ -15,12 +16,18 @@ public interface ITanValidator {
 
 	/**
 	 * Makes a tan ineligible to vote anymore. The district number is passed
-	 * because one tan could be valid for multiple districts and should then
-	 * only be invalidated for this district.
+	 * within the votePaper because one tan could be valid for multiple
+	 * districts and should then only be invalidated for this district.
 	 * 
 	 * @param electoralDistrictNumber
 	 * @param tan
 	 */
-	void invalidate(Integer electoralDistrictNumber, String tan);
+	void invalidate(VotePaper votePaper, String tan);
 
+	/**
+	 * Makes all tans in a certain year invalid.
+	 * 
+	 * @param year
+	 */
+	void invalidateAll(ElectionYear year);
 }
