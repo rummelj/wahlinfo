@@ -75,7 +75,7 @@ public class DatabaseImpl implements Database {
 
 	}
 
-	String sanitise(String value) {
+	public String sanitise(String value) {
 		if (value.equals(DatabaseConstants.NULL)
 				|| value.equals(DatabaseConstants.DEFAULT)) {
 			return value;

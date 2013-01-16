@@ -3,6 +3,7 @@ package com.tu.wahlinfo.voting;
 import java.util.Map;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
+import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.voting.model.VotePaper;
 
 /**
@@ -16,7 +17,7 @@ public interface IVoteSubmission {
 	VotePaper generateVotePaper(ElectionYear electionYear,
 			Integer electoralDistrictNumber);
 
-	void vote(VotePaper votePaper, String tan);
+	void vote(VotePaper votePaper, String tan) throws DatabaseException;
 
 	void closeVote(ElectionYear year);
 

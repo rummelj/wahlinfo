@@ -58,6 +58,9 @@ public class TerminalController {
 			}
 		else if (command.equals("openVote")) {
 			try {
+				if (params.length == 0) {
+					return "Please provide parameter year!";
+				}
 				openVote(params[0]);
 				return "Vote opened for " + params[0];
 			} catch (Exception e) {
@@ -66,6 +69,9 @@ public class TerminalController {
 			}
 		} else if (command.equals("closeVote")) {
 			try {
+				if (params.length == 0) {
+					return "Please provide parameter year!";
+				}
 				closeVote(params[0]);
 				return "Vote closed for " + params[0];
 			} catch (Exception e) {
@@ -74,6 +80,9 @@ public class TerminalController {
 			}
 		} else if (command.equals("invalidateTans")) {
 			try {
+				if (params.length == 0) {
+					return "Please provide parameter year!";
+				}
 				invalidateTans(params[0]);
 				return "All tans invalidated for election year " + params[0];
 			} catch (Exception e) {
@@ -89,7 +98,11 @@ public class TerminalController {
 	}
 
 	private void invalidateTans(String string) {
-		tanValidator.invalidateAll(ElectionYear.build(string));
+		try {
+			tanValidator.invalidateAll(ElectionYear.build(string));
+		} catch (DatabaseException e) {
+			LOG.error("Could not invalidate tans for year {}", string, e);
+		}
 	}
 
 	private void closeVote(String string) {

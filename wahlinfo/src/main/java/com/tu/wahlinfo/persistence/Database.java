@@ -63,4 +63,12 @@ public interface Database {
 	 *             If there's an error connecting to the database.
 	 */
 	String getConstants(String key) throws DatabaseException;
+
+	/**
+	 * Cand be used to sanitise parameters in queries.
+	 * 
+	 * @param dirty
+	 * @return <Quote><Sanitised Value><Quote>
+	 */
+	String sanitise(String dirty);
 }

@@ -112,9 +112,12 @@ public class VoteSubmission implements IVoteSubmission {
 	/**
 	 * This method must be synchronized to avoid race conditions and more votes
 	 * with one tan.
+	 * 
+	 * @throws DatabaseException
 	 */
 	@Override
-	public synchronized void vote(VotePaper votePaper, String tan) {
+	public synchronized void vote(VotePaper votePaper, String tan)
+			throws DatabaseException {
 		if (!isVoteOpen(votePaper.getElectionYear())) {
 			LOG.error(
 					"Tried to vote an an election that is closed. Vote rejected. {}",
@@ -124,7 +127,7 @@ public class VoteSubmission implements IVoteSubmission {
 
 		try {
 			tanValidator.validate(votePaper, tan);
-		} catch (IllegalAccessException e) {
+		} catch (IllegalAccessException | DatabaseException e) {
 			LOG.error(
 					"A tan {} not authorised to vote was found. Vote was rejected!",
 					tan);

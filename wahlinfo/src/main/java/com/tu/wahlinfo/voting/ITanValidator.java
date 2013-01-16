@@ -1,6 +1,7 @@
 package com.tu.wahlinfo.voting;
 
 import com.tu.wahlinfo.csv.entities.impl.ElectionYear;
+import com.tu.wahlinfo.persistence.DatabaseException;
 import com.tu.wahlinfo.voting.model.VotePaper;
 
 public interface ITanValidator {
@@ -10,9 +11,10 @@ public interface ITanValidator {
 	 * 
 	 * @param votePaper
 	 * @param tan
+	 * @throws DatabaseException
 	 */
 	void validate(VotePaper votePaper, String tan)
-			throws IllegalAccessException;
+			throws IllegalAccessException, DatabaseException;
 
 	/**
 	 * Makes a tan ineligible to vote anymore. The district number is passed
@@ -21,13 +23,15 @@ public interface ITanValidator {
 	 * 
 	 * @param electoralDistrictNumber
 	 * @param tan
+	 * @throws DatabaseException 
 	 */
-	void invalidate(VotePaper votePaper, String tan);
+	void invalidate(VotePaper votePaper, String tan) throws DatabaseException;
 
 	/**
 	 * Makes all tans in a certain year invalid.
 	 * 
 	 * @param year
+	 * @throws DatabaseException 
 	 */
-	void invalidateAll(ElectionYear year);
+	void invalidateAll(ElectionYear year) throws DatabaseException;
 }
