@@ -10,6 +10,56 @@
 <h:head>
 	<title>Wahlinformationssystem</title>
 	<h:outputStylesheet library="css" name="layout.css" />
+	<script type="text/javascript">
+		function deselectFirst(count){
+			var i = 0;
+			while(true){
+				i = i + 1;
+				if(i == count){
+					document.getElementById('form:firstVoteIndex').value = (i - 1) + "";
+					continue;
+				}
+				var id = 'form:group1' + i + ':0';
+				var sel = document.getElementById(id);
+				if(sel == null){
+					break;
+				}
+				sel.checked = false;
+			}
+		};
+
+		function deselectSecond(count){
+			var i = 0;
+			while(true){
+				i = i + 1;
+				if(i == count){
+					document.getElementById('form:secondVoteIndex').value = (i - 1) + "";
+					continue;
+				}
+				var id = 'form:group2' + i + ':0';
+				var sel = document.getElementById(id);
+				if(sel == null){
+					break;
+				}
+				sel.checked = false;
+			}
+		};
+
+		function collectData(){
+			for(var i = 1; i != 3; i++){
+				var j = 1;
+				while(true){
+					var id = 'form:group' + i + j + ':0';
+					j = j + 1;
+					var sel = document.getElementById(id);
+					if(sel == null){
+						break;
+					}
+					sel.checked = false;
+				}
+			}			
+		};
+	</script>
 </h:head>
 <h:body>
 	<div id="content"
@@ -70,7 +120,7 @@
 					<td valign="top">
 						<table style="width: 420px; border-collapse: collapse;"
 							border="1px">
-							<c:forEach items="#{voteModel.votePaper.directCandidates}"
+							<c:forEach items="#{voteController.votePaper.directCandidates}"
 								var="direktkandidat" varStatus="status">
 								<tr style="height: 75px;">
 									<td class="label"
@@ -84,7 +134,8 @@
 											style="font: bold 18px arial; margin-left:4px;"
 											value="#{direktkandidat.party.name}" /></td>
 									<td class="inputfield" style="width: 30px;"><h:selectOneRadio
-											id="group1#{status.count}" name="#{status.count}">
+											id="group1#{status.count}" name="#{status.count}"
+											onchange="deselectFirst(#{status.count})">
 											<f:selectItem itemValue="true" />
 										</h:selectOneRadio></td>
 								</tr>
@@ -95,11 +146,12 @@
 						<table
 							style="width: 420px; color: #3477c8; border-color: #3477c8; border-collapse: collapse;"
 							border="1px">
-							<c:forEach items="#{voteModel.votePaper.listParties}"
+							<c:forEach items="#{voteController.votePaper.listParties}"
 								var="landesliste" varStatus="status">
 								<tr style="height: 75px;">
 									<td class="inputfield" style="width: 30px;"><h:selectOneRadio
-											id="group2#{status.count}" name="#{status.count}">
+											id="group2#{status.count}" name="#{status.count}"
+											onchange="deselectSecond(#{status.count})">
 											<f:selectItem itemValue="true" />
 										</h:selectOneRadio></td>
 									<td class="label" width="100px" style="text-align: left;"><h:outputText
@@ -107,7 +159,7 @@
 											value="#{landesliste.name}" /></td>
 									<td class="label" width="276px" style="text-align: left;">
 										<c:forEach
-											items="#{voteModel.votePaper.getPartiesListCandidates(landesliste)}"
+											items="#{voteController.votePaper.getPartiesListCandidates(landesliste)}"
 											var="listenkandidat" varStatus="innerStatus">
 											<h:outputText
 												value="#{listenkandidat.name}#{not innerStatus.last ? ', ' : ''}" />
@@ -122,10 +174,12 @@
 					</td>
 				</tr>
 			</table>
+			<h:inputHidden id="firstVoteIndex" value="#{voteModel.firstVote}" />
+			<h:inputHidden id="secondVoteIndex" value="#{voteModel.secondVote}" />
 			<br />
 			<h3>
 				<h:outputLabel
-					value="Gegen Sie hier das Passwort ein, dass Sie erhalten haben"
+					value="Gegen Sie hier das Passwort ein, das Sie erhalten haben"
 					style="color:red;" />
 			</h3>
 			<br />
@@ -136,7 +190,7 @@
 			<br />
 			<h:commandButton id="btn_submit" type="submit"
 				action="#{voteController.vote}" value="Stimme abgeben"
-				style="width: 400px;" />
+				style="width: 400px;" onclick="collectData()" />
 		</h:form>
 	</div>
 </h:body>

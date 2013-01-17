@@ -14,15 +14,24 @@ public class VoteModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 1738249439881635100L;
 
-	VotePaper votePaper;
 	String tan;
+	String firstVote;
+	String secondVote;
 
-	public VotePaper getVotePaper() {
-		return votePaper;
+	public String getFirstVote() {
+		return firstVote;
 	}
 
-	public void setVotePaper(VotePaper votePaper) {
-		this.votePaper = votePaper;
+	public void setFirstVote(String firstVote) {
+		this.firstVote = firstVote;
+	}
+
+	public String getSecondVote() {
+		return secondVote;
+	}
+
+	public void setSecondVote(String secondVote) {
+		this.secondVote = secondVote;
 	}
 
 	public String getTan() {

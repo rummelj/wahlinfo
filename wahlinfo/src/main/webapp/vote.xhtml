@@ -15,8 +15,7 @@
 		<h:form>
 			<p:panel header="Daten angeben">
 				<p:outputLabel for="ed">Wahlkreisnummer</p:outputLabel>
-				<p:inputText id="ed"
-					value="#{votePaperSelectionModel.electoralDistrict}"></p:inputText>
+				<p:inputText id="ed" value="#{voteController.electoralDistrict}"></p:inputText>
 				<div style="height: 50px;" />
 				<p:commandButton action="#{voteController.openVotePage}"
 					value="Jetzt wählen!" ajax="false" />
