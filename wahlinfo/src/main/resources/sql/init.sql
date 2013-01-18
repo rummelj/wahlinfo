@@ -27,6 +27,7 @@ INSERT INTO hibernate_sequence VALUES (0);
 
 CREATE TABLE WIElection (
 	electionYear VARCHAR(4) NOT NULL, 
+        canVote BOOLEAN NOT NULL DEFAULT FALSE,
 	PRIMARY KEY (electionYear)
 );
 
