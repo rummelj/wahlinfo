@@ -232,10 +232,12 @@ public class VoteSubmission implements IVoteSubmission {
             String cId = null;
             String pId = null;
             
+            //validate candidate
             db = databaseAccessor.executeQuery(""
                     + "select dc.id as cId " 
                     + "WIDirectCandidate dc " 
-                    + "where dc.electionYear = '2009' and " 
+                    + "where dc.electionYear = '2009' and "
+                    + "dc.electoralDistrictId = " + eId + " and " 
                     + "dc.name = '" + votePaper.getFirstVote().get(0).getName() + "' ",
                     "cId");
             try{
@@ -244,21 +246,37 @@ public class VoteSubmission implements IVoteSubmission {
                 throw new DatabaseException("Corrupt vote data given: Either no match or more than one regarding the direct candidate");
             }
             
-            db = databaseAccessor.executeQuery(""
-                    + "select p.id as pId " 
-                    + "WIParty p " 
-                    + "where p.electionYear = '2009' and " 
-                    + "p.name = '" + votePaper.getSecondVote().get(0).getName() + "' ",
-                    "pId");
-            try{
-                pId = db.toList().get(0);
-            } catch (UnsupportedOperationException ex){
-                throw new DatabaseException("Corrupt vote data given: Either no match or more than one regarding the party");
-            }
+            //validate party
+            db = databaseAccessor.executeQuery(
+                    "select p.id as pId, count(*) as num"
+                    + "WIParty p, WIListCandidate lc, WIElectoralDistrict ed"
+                    + "where p.id = lc.partyId and "
+                    + "lc.federalStateId = ed.federalStateId and "
+                    + "ed.number = " +eId + " and "
+                    + "p.electionYear = '2009' and "
+                    + "p.name = '" + votePaper.getSecondVote().get(0).getName() + "' "
+                    + "group by p.id",
+                    "pId", "num");
+            
+            int counter = 0;
+            
+            for(Map<String,String> row :db){
+                pId = row.get("pId");
+                counter ++;
+                
+                if(Integer.parseInt(row.get("num")) <= 0 ){
+                    throw new DatabaseException("Unable to find list candidates for specified party: " + votePaper.getSecondVote().get(0).getName());
+                }
+                if(counter > 1){
+                    throw new DatabaseException("Found more than one machting party for name: " + votePaper.getSecondVote().get(0).getName());
+                }
+            }                       
+            
+            //execute transaction
             String stmt = FileScanner.scanFile(FILE_PATH_SUBMIT_VOTE_SCRIPT).
                     replace(":electoralDistrictId", eId).
                     replace(":directCandidateId", cId).
-                    replace(":partyId", pId).
+                    replace(":partyId", pId).                    
                     //tar either the valid vote or invalid vote column in WIElectoralDistrictVoteData
                     replace(":ic", (cId == null) ? "in" : "").
                     replace(":ip", (pId == null) ? "in" : "");

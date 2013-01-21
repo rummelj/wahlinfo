@@ -26,5 +26,4 @@ set     :ipvalidPartyVotes = :ipvalidPartyVotes +1
 where   electionYear = '2009' and
         electoralDistrictId = :electoralDistrictId;
 
-
 COMMIT;
