@@ -1,4 +1,4 @@
--- which candidates can be voted in 2009 and the respective district?
+-- which candidates can be voted in 2009 and the respective district
 with EligibleCandidates as (
 	select	dc.name as cName, p.name as pName
 	from	WIDirectCandidate dc left outer join WIParty p on dc.partyId = p.id

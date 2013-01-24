@@ -1,4 +1,4 @@
--- which party can be voted for in which federal state in 2009 and the respective district?
+-- which party can be voted for in which federal state in 2009 and the respective district
 with EligibleParties as (
 	select	distinct p.name
 	from	WIParty p, WIListCandidate lc, WIElectoralDistrict ed

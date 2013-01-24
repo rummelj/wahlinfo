@@ -49,7 +49,11 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 	@Override
 	public DatabaseResult executeQuery(String query, String... columnNames)
 			throws DatabaseException {
-		LOG.debug("Executing query {}", query);
+		if (columnNames.length == 0) {
+			throw new IllegalArgumentException("columnNames must be given!");
+		}
+
+		LOG.info("Executing query {}", query);
 
 		Map<String, List<String>> result = new HashMap<String, List<String>>();
 		for (String columnName : columnNames) {
@@ -73,7 +77,11 @@ public class DatabaseAccessorImpl implements DatabaseAccessor {
 									+ columnNames.length + ">");
 				}
 				for (int i = 0; i < rowArray.length; i++) {
-					result.get(columnNames[i]).add(rowArray[i].toString());
+					if (rowArray[i] != null) {
+						result.get(columnNames[i]).add(rowArray[i].toString());
+					} else {
+						result.get(columnNames[i]).add(null);
+					}
 				}
 			} else {
 				result.get(columnNames[0]).add(row.toString());

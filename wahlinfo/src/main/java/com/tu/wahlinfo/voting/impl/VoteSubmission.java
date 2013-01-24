@@ -136,8 +136,7 @@ public class VoteSubmission implements IVoteSubmission {
 		try {
 			String query = FileScanner.scanFile(
 					FILE_PATH_ORDERED_FIRST_VOTE_SCRIPT).replace(
-					":electoralDistrictId",
-					database.sanitise(electoralDistrictNumber.toString()));
+					":electoralDistrictId", electoralDistrictNumber.toString());
 			dbResult = databaseAccessor.executeQuery(query, "cName", "pName");
 		} catch (DatabaseException | IOException e) {
 			LOG.error("Error retrieving possible first votes", e);
@@ -227,12 +226,12 @@ public class VoteSubmission implements IVoteSubmission {
 	private void persistVoteInDatabase(VotePaper votePaper)
 			throws DatabaseException, IOException {
 		DatabaseResult db;
-		String eId = database.sanitise(votePaper.getElectoralDistrictName());
+		String eId = votePaper.getElectoralDistrictNumber().toString();
 		String cId = null;
 		String pId = null;
 
 		// validate candidate
-		db = databaseAccessor.executeQuery("" + "select dc.id as cId "
+		db = databaseAccessor.executeQuery("select dc.id as cId from "
 				+ "WIDirectCandidate dc "
 				+ "where dc.electionYear = '2009' and "
 				+ "dc.electoralDistrictId = " + eId + " and " + "dc.name = '"
@@ -247,8 +246,8 @@ public class VoteSubmission implements IVoteSubmission {
 		// validate party
 		db = databaseAccessor
 				.executeQuery(
-						"select p.id as pId, count(*) as num"
-								+ "WIParty p, WIListCandidate lc, WIElectoralDistrict ed"
+						"select p.id as pId, count(*) as num from "
+								+ "WIParty p, WIListCandidate lc, WIElectoralDistrict ed "
 								+ "where p.id = lc.partyId and "
 								+ "lc.federalStateId = ed.federalStateId and "
 								+ "ed.number = " + eId + " and "
@@ -277,7 +276,8 @@ public class VoteSubmission implements IVoteSubmission {
 		// execute transaction
 		String stmt = FileScanner.scanFile(FILE_PATH_SUBMIT_VOTE_SCRIPT)
 				.replace(":electoralDistrictId", eId)
-				.replace(":directCandidateId", cId).replace(":partyId", pId)
+				.replace(":directCandidateId", cId)
+				.replace(":partyId", pId)
 				.
 				// tar either the valid vote or invalid vote column in
 				// WIElectoralDistrictVoteData
@@ -315,10 +315,11 @@ public class VoteSubmission implements IVoteSubmission {
 	public boolean isVoteOpen(ElectionYear year) {
 		DatabaseResult db;
 		try {
-			db = databaseAccessor.executeQuery("select canVote "
-					+ "from WIElection " + "where electionYear = '"
-					+ year.toCleanString() + "';");
-			return db.toList().get(0).equals("t");
+			db = databaseAccessor.executeQuery(
+					"select canVote " + "from WIElection "
+							+ "where electionYear = '" + year.toCleanString()
+							+ "';", "open");
+			return db.toList().get(0).equals("true");
 		} catch (DatabaseException | UnsupportedOperationException ex) {
 			LOG.error("Unable to check voting for year " + year.toCleanString());
 			return false;

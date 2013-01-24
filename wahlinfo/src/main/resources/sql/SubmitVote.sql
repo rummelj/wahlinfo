@@ -1,4 +1,4 @@
-BEGIN
+BEGIN;
 
 insert  into WIFilledVotingPaper(electoralDistrictId, directCandidateId, partyId) 
         values (:electoralDistrictId, :directCandidateId, :partyId);
@@ -11,17 +11,17 @@ update  WIPartyVotes
 set     receivedVotes = receivedVotes +1
 where   partyId = :partyId;
 
-update  ElectoralDistrictVoteData
+update  WIElectoralDistrictVoteData
 set     submittedVotes = submittedVotes +1
 where   electionYear = '2009' and
         electoralDistrictId = :electoralDistrictId;
 
-update  ElectoralDistrictVoteData
+update  WIElectoralDistrictVoteData
 set     :icvalidDirectVotes = :icvalidDirectVotes +1
 where   electionYear = '2009' and
         electoralDistrictId = :electoralDistrictId;
 
-update  ElectoralDistrictVoteData
+update  WIElectoralDistrictVoteData
 set     :ipvalidPartyVotes = :ipvalidPartyVotes +1
 where   electionYear = '2009' and
         electoralDistrictId = :electoralDistrictId;
