@@ -4,7 +4,7 @@ with EligibleCandidates as (
 	from	WIDirectCandidate dc left outer join WIParty p on dc.partyId = p.id
 	where	dc.electionYear         = '2009'	and		
 		dc.electoralDistrictId	= :electoralDistrictId and
-                not (p.name             = 'Uebrige') 
+		(p.name is null or not (p.name = 'Uebrige'))
 ),
 
 -- votes from last year

@@ -185,7 +185,7 @@ public class VotePaper {
 
 			@Override
 			public int compare(Candidate arg0, Candidate arg1) {
-				return getRank(arg1) - getRank(arg0);
+				return getRank(arg0) - getRank(arg1);
 			}
 
 			public int getRank(Candidate c) {
@@ -218,7 +218,7 @@ public class VotePaper {
 
 			@Override
 			public int compare(Party arg0, Party arg1) {
-				return getRank(arg1) - getRank(arg0);
+				return getRank(arg0) - getRank(arg1);
 			}
 
 			public int getRank(Party c) {

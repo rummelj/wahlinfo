@@ -146,7 +146,7 @@ public class VoteSubmission implements IVoteSubmission {
 		for (Map<String, String> row : dbResult) {
 			result.put(rank++,
 					new Candidate(row.get("cName"),
-							new Party(row.get("pname")), "", ""));
+							new Party(row.get("pName")), "", ""));
 		}
 		return result;
 	}
