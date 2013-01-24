@@ -20,8 +20,6 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 @Stateless
 public class DatabaseAccessorImpl implements DatabaseAccessor {
 
-	private static final String VACUUM_QUERY = "VACUUM ";
-	private static final String ANALYZE_QUERY = "ANALYZE ";
 	private static Logger LOG = LoggerFactory
 			.getLogger(DatabaseAccessorImpl.class);
 

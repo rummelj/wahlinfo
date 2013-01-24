@@ -22,7 +22,7 @@ public class IdGeneratorImpl implements IdGenerator {
 	 * 
 	 */
 	public IdGeneratorImpl() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/*

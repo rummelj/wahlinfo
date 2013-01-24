@@ -26,6 +26,7 @@ public class FileScanner {
 		}
 
 		InputStreamReader reader = new InputStreamReader(is);
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(reader).useDelimiter("\\Z");
 		String res = scanner.next();
 		scanner.close();
