@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -24,7 +23,6 @@ import com.tu.wahlinfo.persistence.DatabaseException;
 
 @Named
 @SessionScoped
-// TODO: This is not a model, refactor to other package
 public class WahlkreisInfoWizard implements Serializable {
 
 	/**

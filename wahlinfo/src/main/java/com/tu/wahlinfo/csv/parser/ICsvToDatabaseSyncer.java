@@ -1,7 +1,6 @@
 package com.tu.wahlinfo.csv.parser;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.tu.wahlinfo.csv.CsvParserException;
 import com.tu.wahlinfo.persistence.DatabaseException;
@@ -11,8 +10,9 @@ public interface ICsvToDatabaseSyncer {
 	/**
 	 * Processes all csv entities and stores them into the database.
 	 * 
-         * @param is server environment is glassfish 
-         * 
+	 * @param is
+	 *            server environment is glassfish
+	 * 
 	 * @throws CsvParserException
 	 * @throws DatabaseException
 	 */

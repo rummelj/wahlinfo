@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.enterprise.inject.Model;
 
-import com.tu.wahlinfo.voting.model.VotePaper;
-
 @Model
 public class VoteModel implements Serializable {
 

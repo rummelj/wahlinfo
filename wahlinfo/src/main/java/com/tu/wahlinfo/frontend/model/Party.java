@@ -3,7 +3,6 @@ package com.tu.wahlinfo.frontend.model;
 public class Party {
 
 	String name;
-	// TODO: Make enum
 	String color;
 
 	public Party(String name) {

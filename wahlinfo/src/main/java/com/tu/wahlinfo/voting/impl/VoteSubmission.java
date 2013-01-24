@@ -34,12 +34,9 @@ import java.io.IOException;
 @Stateful
 public class VoteSubmission implements IVoteSubmission {
 
-        private static final String FILE_PATH_ORDERED_FIRST_VOTE_SCRIPT = 
-                "/sql/SortedElectableDirectCandidates2009ForElectoralDistrict.sql";
-        private static final String FILE_PATH_ORDERED_SECOND_VOTE_SCRIPT = 
-                "/sql/SortedElectableParties2009ForElectoralDistrict.sql";
-        private static final String FILE_PATH_SUBMIT_VOTE_SCRIPT = 
-                "/sql/SubmiteVote.sql";
+	private static final String FILE_PATH_ORDERED_FIRST_VOTE_SCRIPT = "/sql/SortedElectableDirectCandidates2009ForElectoralDistrict.sql";
+	private static final String FILE_PATH_ORDERED_SECOND_VOTE_SCRIPT = "/sql/SortedElectableParties2009ForElectoralDistrict.sql";
+	private static final String FILE_PATH_SUBMIT_VOTE_SCRIPT = "/sql/SubmitVote.sql";
 	private static final Logger LOG = LoggerFactory
 			.getLogger(VoteSubmission.class);
 
@@ -134,44 +131,45 @@ public class VoteSubmission implements IVoteSubmission {
 
 	private Map<Integer, Candidate> getPossibleFirstVotes(
 			Integer electoralDistrictNumber) {
-		Map<Integer, Candidate> result = new HashMap<>();
-                DatabaseResult dbResult;
+		Map<Integer, Candidate> result = new HashMap<Integer, Candidate>();
+		DatabaseResult dbResult;
 		try {
-                    String query = FileScanner.scanFile(FILE_PATH_ORDERED_FIRST_VOTE_SCRIPT).
-                        replace(":electoralDistrictId", database.sanitise(electoralDistrictNumber.toString()));
-                        dbResult = databaseAccessor.executeQuery(
-                                query, "cName", "pName");			
+			String query = FileScanner.scanFile(
+					FILE_PATH_ORDERED_FIRST_VOTE_SCRIPT).replace(
+					":electoralDistrictId", electoralDistrictNumber.toString());
+			dbResult = databaseAccessor.executeQuery(query, "cName", "pName");
 		} catch (DatabaseException | IOException e) {
 			LOG.error("Error retrieving possible first votes", e);
 			return result;
-		}		
-		int rank = 1;		
+		}
+		int rank = 1;
 		for (Map<String, String> row : dbResult) {
 			result.put(rank++,
-					new Candidate(row.get("cName"), new Party(row.get("pname")),
-							"", ""));
+					new Candidate(row.get("cName"),
+							new Party(row.get("pname")), "", ""));
 		}
 		return result;
 	}
 
 	private Map<Integer, Party> getPossibleSecondVotes(
 			Integer electoralDistrictNumber) {
-                Map<Integer, Party> result = new HashMap<>();
-                
+		Map<Integer, Party> result = new HashMap<>();
+
 		DatabaseResult dbResult;
 		try {
-                    String query = FileScanner.scanFile(FILE_PATH_ORDERED_SECOND_VOTE_SCRIPT).
-                        replace(":electoralDistrictId", database.sanitise(electoralDistrictNumber.toString()));
-                        dbResult = databaseAccessor.executeQuery(
-                                query, "pName");			
+			String query = FileScanner.scanFile(
+					FILE_PATH_ORDERED_SECOND_VOTE_SCRIPT).replace(
+					":electoralDistrictId",
+					database.sanitise(electoralDistrictNumber.toString()));
+			dbResult = databaseAccessor.executeQuery(query, "pName");
 		} catch (DatabaseException | IOException e) {
 			LOG.error("Error retrieving possible second votes", e);
 			return result;
-		}		
+		}
 		int rank = 1;
-		for(Map<String,String> row:dbResult){
-                    result.put(rank++, new Party(row.get("pName")));
-                }
+		for (Map<String, String> row : dbResult) {
+			result.put(rank++, new Party(row.get("pName")));
+		}
 
 		return result;
 	}
@@ -227,102 +225,105 @@ public class VoteSubmission implements IVoteSubmission {
 	 */
 	private void persistVoteInDatabase(VotePaper votePaper)
 			throws DatabaseException, IOException {
-            DatabaseResult db;
-            String eId = database.sanitise(votePaper.getElectoralDistrictName());
-            String cId = null;
-            String pId = null;
-            
-            //validate candidate
-            db = databaseAccessor.executeQuery(""
-                    + "select dc.id as cId " 
-                    + "WIDirectCandidate dc " 
-                    + "where dc.electionYear = '2009' and "
-                    + "dc.electoralDistrictId = " + eId + " and " 
-                    + "dc.name = '" + votePaper.getFirstVote().get(0).getName() + "' ",
-                    "cId");
-            try{
-                cId = db.toList().get(0);
-            } catch (UnsupportedOperationException ex){
-                throw new DatabaseException("Corrupt vote data given: Either no match or more than one regarding the direct candidate");
-            }
-            
-            //validate party
-            db = databaseAccessor.executeQuery(
-                    "select p.id as pId, count(*) as num"
-                    + "WIParty p, WIListCandidate lc, WIElectoralDistrict ed"
-                    + "where p.id = lc.partyId and "
-                    + "lc.federalStateId = ed.federalStateId and "
-                    + "ed.number = " +eId + " and "
-                    + "p.electionYear = '2009' and "
-                    + "p.name = '" + votePaper.getSecondVote().get(0).getName() + "' "
-                    + "group by p.id",
-                    "pId", "num");
-            
-            int counter = 0;
-            
-            for(Map<String,String> row :db){
-                pId = row.get("pId");
-                counter ++;
-                
-                if(Integer.parseInt(row.get("num")) <= 0 ){
-                    throw new DatabaseException("Unable to find list candidates for specified party: " + votePaper.getSecondVote().get(0).getName());
-                }
-                if(counter > 1){
-                    throw new DatabaseException("Found more than one machting party for name: " + votePaper.getSecondVote().get(0).getName());
-                }
-            }                       
-            
-            //execute transaction
-            String stmt = FileScanner.scanFile(FILE_PATH_SUBMIT_VOTE_SCRIPT).
-                    replace(":electoralDistrictId", eId).
-                    replace(":directCandidateId", cId).
-                    replace(":partyId", pId).                    
-                    //tar either the valid vote or invalid vote column in WIElectoralDistrictVoteData
-                    replace(":ic", (cId == null) ? "in" : "").
-                    replace(":ip", (pId == null) ? "in" : "");
-            //submit the vote
-            databaseAccessor.executeStatement(stmt);
+		DatabaseResult db;
+		String eId = votePaper.getElectoralDistrictNumber().toString();
+		String cId = null;
+		String pId = null;
+
+		// validate candidate
+		db = databaseAccessor.executeQuery("select dc.id as cId from "
+				+ "WIDirectCandidate dc "
+				+ "where dc.electionYear = '2009' and "
+				+ "dc.electoralDistrictId = " + eId + " and " + "dc.name = '"
+				+ votePaper.getFirstVote().get(0).getName() + "' ", "cId");
+		try {
+			cId = db.toList().get(0);
+		} catch (UnsupportedOperationException ex) {
+			throw new DatabaseException(
+					"Corrupt vote data given: Either no match or more than one regarding the direct candidate");
+		}
+
+		// validate party
+		db = databaseAccessor
+				.executeQuery(
+						"select p.id as pId, count(*) as num from "
+								+ "WIParty p, WIListCandidate lc, WIElectoralDistrict ed "
+								+ "where p.id = lc.partyId and "
+								+ "lc.federalStateId = ed.federalStateId and "
+								+ "ed.number = " + eId + " and "
+								+ "p.electionYear = '2009' and " + "p.name = '"
+								+ votePaper.getSecondVote().get(0).getName()
+								+ "' " + "group by p.id", "pId", "num");
+
+		int counter = 0;
+
+		for (Map<String, String> row : db) {
+			pId = row.get("pId");
+			counter++;
+
+			if (Integer.parseInt(row.get("num")) <= 0) {
+				throw new DatabaseException(
+						"Unable to find list candidates for specified party: "
+								+ votePaper.getSecondVote().get(0).getName());
+			}
+			if (counter > 1) {
+				throw new DatabaseException(
+						"Found more than one machting party for name: "
+								+ votePaper.getSecondVote().get(0).getName());
+			}
+		}
+
+		// execute transaction
+		String stmt = FileScanner.scanFile(FILE_PATH_SUBMIT_VOTE_SCRIPT)
+				.replace(":electoralDistrictId", eId)
+				.replace(":directCandidateId", cId)
+				.replace(":partyId", pId)
+				.
+				// tar either the valid vote or invalid vote column in
+				// WIElectoralDistrictVoteData
+				replace(":ic", (cId == null) ? "in" : "")
+				.replace(":ip", (pId == null) ? "in" : "");
+		// submit the vote
+		databaseAccessor.executeStatement(stmt);
 	}
 
 	@Override
 	public void closeVote(ElectionYear year) {
-            try{
-		databaseAccessor.executeStatement(
-                        "update WIElection "
-                        + "set canVote = FALSE "
-                        + "where electionYear = '" + year.toCleanString() + "';");
-            } catch (DatabaseException ex){
-                LOG.error("Unable to close voting for year " + year.toCleanString());
-            }
+		try {
+			databaseAccessor.executeStatement("update WIElection "
+					+ "set canVote = FALSE " + "where electionYear = '"
+					+ year.toCleanString() + "';");
+		} catch (DatabaseException ex) {
+			LOG.error("Unable to close voting for year " + year.toCleanString());
+		}
 
 	}
 
 	@Override
 	public void openVote(ElectionYear year) {
-		try{
-		databaseAccessor.executeStatement(
-                        "update WIElection "
-                        + "set canVote = TRUE "
-                        + "where electionYear = '" + year.toCleanString() + "';");
-            } catch (DatabaseException ex){
-                LOG.error("Unable to open voting for year " + year.toCleanString());
-            }
+		try {
+			databaseAccessor.executeStatement("update WIElection "
+					+ "set canVote = TRUE " + "where electionYear = '"
+					+ year.toCleanString() + "';");
+		} catch (DatabaseException ex) {
+			LOG.error("Unable to open voting for year " + year.toCleanString());
+		}
 
 	}
 
 	@Override
 	public boolean isVoteOpen(ElectionYear year) {
-                DatabaseResult db;
-		try{
-		db = databaseAccessor.executeQuery(
-                        "select canVote "
-                        + "from WIElection "
-                        + "where electionYear = '" + year.toCleanString() + "';");
-                return db.toList().get(0).equals("t");
-            } catch (DatabaseException | UnsupportedOperationException ex){
-                LOG.error("Unable to check voting for year " + year.toCleanString());
-                return false;
-            }		
+		DatabaseResult db;
+		try {
+			db = databaseAccessor.executeQuery(
+					"select canVote " + "from WIElection "
+							+ "where electionYear = '" + year.toCleanString()
+							+ "';", "open");
+			return db.toList().get(0).equals("true");
+		} catch (DatabaseException | UnsupportedOperationException ex) {
+			LOG.error("Unable to check voting for year " + year.toCleanString());
+			return false;
+		}
 	}
 
 }
