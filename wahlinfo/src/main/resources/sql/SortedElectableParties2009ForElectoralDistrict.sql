@@ -10,7 +10,7 @@ with EligibleParties as (
 
 -- votes from last year
 LastYearVotes as (
-	select	p.name, case when pv.receivedVotes is null then 0 else pv.receivedVotes end
+	select	p.name, case when pv.receivedVotes is null then 0 else pv.receivedVotes end as receivedVotes
 	from	WIParty p left outer join WIPartyVotes pv on p.id = pv.PartyId, WIElectoralDistrict ed
 	where	p.electionYear		= '2005'		and
 		pv.federalStateId	= ed.federalStateId	and		
